@@ -1,5 +1,6 @@
 const resumeService = require('./resumeService');
 const resumeMapper = require('../modules/resume/resumeMapper');
+const posterRenderService = require('./posterRenderService');
 
 function createPosterModel(resume) {
   if (!resume || !resume.profile) {
@@ -8,7 +9,6 @@ function createPosterModel(resume) {
 
   const skillTags = resumeMapper.getSkillHighlights(resume.skillGroups || [], 3);
   const projects = resumeMapper.getFeaturedProjects(resume.projects || [], 2);
-
   const hasWechatQr = Boolean(resume.profile.contact.wechatQr);
 
   return {
@@ -35,19 +35,8 @@ function getPosterModel() {
   return createPosterModel(resumeService.getResume());
 }
 
-function createPosterRenderPlan(posterModel) {
-  return {
-    canvas: {
-      width: 750,
-      height: 1200
-    },
-    sections: [
-      { id: 'profile', required: true, source: posterModel.profile },
-      { id: 'skills', required: true, source: posterModel.skillTags },
-      { id: 'projects', required: true, source: posterModel.projects },
-      { id: 'contact', required: true, source: posterModel.contact }
-    ]
-  };
+function createPosterRenderPlan(posterModel, themeId) {
+  return posterRenderService.createPosterRenderPlan(posterModel, themeId);
 }
 
 module.exports = {

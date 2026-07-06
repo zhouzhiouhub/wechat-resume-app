@@ -177,16 +177,41 @@ runCheck('theme switcher uses a tappable custom dropdown', () => {
 runCheck('poster model is created from unified resume data', () => {
   const resume = resumeService.getResume();
   const poster = posterService.createPosterModel(resume);
-  const renderPlan = posterService.createPosterRenderPlan(poster);
+  const renderPlan = posterService.createPosterRenderPlan(poster, 'dark');
 
   assert.strictEqual(poster.profile.name, resume.profile.name);
   assert.strictEqual(poster.contact.email, resume.profile.contact.email);
   assert.strictEqual(poster.skillTags.length, 3);
   assert.strictEqual(poster.projects.length, Math.min(resume.projects.length, 2));
+  assert.strictEqual(renderPlan.canvas.width, 750);
+  assert.strictEqual(renderPlan.canvas.height, 1200);
+  assert.strictEqual(renderPlan.canvas.fileType, 'png');
+  assert.strictEqual(renderPlan.palette.background, themeUtils.getThemeVariables('dark')['--resume-bg']);
+  assert.ok(renderPlan.commands.length > 10);
+  assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.name));
+  assert.ok(renderPlan.commands.some((command) => command.type === 'roundRect'));
+  assert.ok(renderPlan.commands.every((command) => ['roundRect', 'text', 'image'].includes(command.type)));
   assert.deepStrictEqual(
     renderPlan.sections.map((section) => section.id),
     ['profile', 'skills', 'projects', 'contact']
   );
+});
+
+runCheck('poster page exposes canvas save interaction', () => {
+  const posterWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'poster', 'poster.wxml'),
+    'utf8'
+  );
+  const posterJs = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'poster', 'poster.js'),
+    'utf8'
+  );
+
+  assert.ok(posterWxml.includes('canvas-id="{{posterCanvasId}}"'));
+  assert.ok(posterWxml.includes('bindtap="onSavePoster"'));
+  assert.ok(posterJs.includes('wx.createCanvasContext'));
+  assert.ok(posterJs.includes('wx.canvasToTempFilePath'));
+  assert.ok(posterJs.includes('wx.saveImageToPhotosAlbum'));
 });
 
 runCheck('missing required fields report a clear validation error', () => {

@@ -2,6 +2,13 @@
   <view wx:if="{{loadError}}" class="error-panel">{{loadError}}</view>
 
   <block wx:elif="{{poster}}">
+    <canvas
+      wx:if="{{renderPlan}}"
+      canvas-id="{{posterCanvasId}}"
+      class="poster-canvas"
+      style="width: {{renderPlan.canvas.width}}px; height: {{renderPlan.canvas.height}}px;"
+    ></canvas>
+
     <view class="poster-card">
       <view class="poster-header">
         <text class="poster-kicker">{{poster.profile.status}}</text>
@@ -56,6 +63,12 @@
     </view>
 
     <view class="poster-actions">
+      <button
+        class="poster-button primary-button save-button"
+        loading="{{isSavingPoster}}"
+        disabled="{{isSavingPoster}}"
+        bindtap="onSavePoster"
+      >{{isSavingPoster ? '生成中' : '保存海报'}}</button>
       <button class="poster-button primary-button" bindtap="onCopyEmail">复制邮箱</button>
       <button class="poster-button secondary-button" bindtap="backHome">返回首页</button>
     </view>

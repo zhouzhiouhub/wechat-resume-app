@@ -13,6 +13,14 @@
   border-radius: 8rpx;
 }
 
+.poster-canvas {
+  position: fixed;
+  top: 0;
+  left: -2000px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .poster-header {
   padding-bottom: 28rpx;
   border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
@@ -185,6 +193,14 @@
   border-radius: 8rpx;
   font-size: 26rpx;
   line-height: 76rpx;
+}
+
+.save-button {
+  grid-column: 1 / -1;
+}
+
+.poster-button[disabled] {
+  opacity: 0.72;
 }
 
 .poster-button::after {
