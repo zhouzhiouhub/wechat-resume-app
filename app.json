@@ -2,7 +2,9 @@
   "pages": [
     "pages/home/home",
     "pages/project-detail/project-detail",
-    "pages/poster/poster"
+    "pages/poster/poster",
+    "pages/admin-dashboard/admin-dashboard",
+    "pages/feedback/feedback"
   ],
   "window": {
     "navigationBarTitleText": "个人简历",

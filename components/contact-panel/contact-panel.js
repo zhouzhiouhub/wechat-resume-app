@@ -25,6 +25,10 @@ Component({
 
     handleOpenPoster() {
       this.triggerEvent('openposter');
+    },
+
+    handleOpenFeedback() {
+      this.triggerEvent('openfeedback');
     }
   }
 });

@@ -1,0 +1,247 @@
+.dashboard-page {
+  min-height: 100vh;
+  padding: 32rpx;
+  background: var(--resume-bg, #f6f7fb);
+  color: var(--resume-text, #111827);
+  box-sizing: border-box;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.dashboard-title-block {
+  min-width: 0;
+}
+
+.dashboard-title,
+.dashboard-subtitle {
+  display: block;
+}
+
+.dashboard-title {
+  color: var(--resume-text, #111827);
+  font-size: 40rpx;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.dashboard-subtitle {
+  margin-top: 8rpx;
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  line-height: 1.4;
+}
+
+.header-button {
+  flex: 0 0 120rpx;
+  min-height: 64rpx;
+  margin: 0;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-size: 24rpx;
+  line-height: 64rpx;
+}
+
+.header-button::after,
+.action-button::after {
+  border: 0;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.metric-card {
+  min-height: 156rpx;
+  padding: 22rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  box-sizing: border-box;
+}
+
+.metric-label,
+.metric-value,
+.metric-meta {
+  display: block;
+}
+
+.metric-label {
+  color: var(--resume-muted, #4b5563);
+  font-size: 23rpx;
+  line-height: 1.35;
+}
+
+.metric-value {
+  margin-top: 12rpx;
+  color: var(--resume-text, #111827);
+  font-size: 42rpx;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.metric-meta {
+  margin-top: 6rpx;
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+}
+
+.dashboard-panel,
+.error-panel {
+  margin-top: 24rpx;
+  padding: 24rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  box-sizing: border-box;
+}
+
+.panel-header,
+.rank-row,
+.event-row,
+.feedback-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.panel-title {
+  color: var(--resume-text, #111827);
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.panel-meta {
+  color: var(--resume-muted, #4b5563);
+  font-size: 22rpx;
+}
+
+.rank-list,
+.event-list,
+.feedback-list {
+  margin-top: 18rpx;
+}
+
+.rank-row,
+.event-row,
+.feedback-row {
+  padding: 18rpx 0;
+  border-top: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.rank-row:first-child,
+.event-row:first-child,
+.feedback-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.rank-name,
+.event-label,
+.feedback-type {
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.rank-count {
+  flex: 0 0 72rpx;
+  height: 48rpx;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-size: 24rpx;
+  font-weight: 800;
+  line-height: 48rpx;
+  text-align: center;
+}
+
+.event-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-target,
+.event-time,
+.feedback-time,
+.feedback-contact,
+.empty-row {
+  color: var(--resume-muted, #4b5563);
+  font-size: 23rpx;
+  line-height: 1.45;
+}
+
+.event-target {
+  display: block;
+  margin-top: 4rpx;
+}
+
+.event-time,
+.feedback-time {
+  flex: 0 0 132rpx;
+  text-align: right;
+}
+
+.feedback-content {
+  display: block;
+  margin-top: 12rpx;
+  color: var(--resume-text, #111827);
+  font-size: 25rpx;
+  line-height: 1.55;
+}
+
+.feedback-contact {
+  display: block;
+  margin-top: 8rpx;
+}
+
+.empty-row {
+  margin-top: 18rpx;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+  text-align: center;
+}
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.action-button {
+  min-height: 76rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  line-height: 76rpx;
+}
+
+.primary-button {
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
+}
+
+.secondary-button {
+  background: var(--resume-danger-soft, #fef2f2);
+  color: var(--resume-danger, #b91c1c);
+}
+
+.error-panel {
+  color: var(--resume-danger, #b91c1c);
+  background: var(--resume-danger-soft, #fef2f2);
+  border-color: var(--resume-danger-border, #fecaca);
+  font-size: 28rpx;
+}

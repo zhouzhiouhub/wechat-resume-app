@@ -4,8 +4,9 @@
     class="avatar-image"
     src="{{profile.avatar}}"
     mode="aspectFill"
+    bindtap="handleAvatarTap"
   ></image>
-  <view wx:else class="avatar-fallback">{{profile.initials}}</view>
+  <view wx:else class="avatar-fallback" bindtap="handleAvatarTap">{{profile.initials}}</view>
 
   <view class="profile-copy">
     <view class="profile-row">

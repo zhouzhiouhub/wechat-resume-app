@@ -1,0 +1,70 @@
+<view class="feedback-page {{themeClass}}">
+  <view class="feedback-header">
+    <text class="feedback-title">留言反馈</text>
+    <text class="feedback-subtitle">问题、评价或机会都可以留下</text>
+  </view>
+
+  <view class="feedback-form">
+    <view class="field-group">
+      <text class="field-label">类型</text>
+      <view class="type-options">
+        <view
+          wx:for="{{typeOptions}}"
+          wx:key="id"
+          class="{{item.isActive ? 'type-option is-active' : 'type-option'}}"
+          data-type="{{item.id}}"
+          bindtap="onSelectType"
+        >
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="field-group">
+      <text class="field-label">称呼</text>
+      <input
+        class="text-input"
+        value="{{form.name}}"
+        maxlength="20"
+        placeholder="可选"
+        bindinput="onInputName"
+      />
+    </view>
+
+    <view class="field-group">
+      <text class="field-label">联系方式</text>
+      <input
+        class="text-input"
+        value="{{form.contact}}"
+        maxlength="80"
+        placeholder="邮箱或微信，可选"
+        bindinput="onInputContact"
+      />
+    </view>
+
+    <view class="field-group">
+      <text class="field-label">内容</text>
+      <textarea
+        class="text-area"
+        value="{{form.content}}"
+        maxlength="300"
+        placeholder="写下想交流的内容"
+        bindinput="onInputContent"
+      ></textarea>
+    </view>
+
+    <view wx:if="{{errors.length}}" class="error-list">
+      <text wx:for="{{errors}}" wx:key="*this" class="error-text">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="feedback-actions">
+    <button class="action-button secondary-button" bindtap="backHome">返回</button>
+    <button
+      class="action-button primary-button"
+      loading="{{isSubmitting}}"
+      disabled="{{isSubmitting}}"
+      bindtap="onSubmitFeedback"
+    >提交</button>
+  </view>
+</view>

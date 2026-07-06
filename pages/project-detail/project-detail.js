@@ -1,5 +1,6 @@
 const resumeService = require('../../services/resumeService');
 const themeService = require('../../services/themeService');
+const analyticsService = require('../../services/analyticsService');
 
 function safeDecode(value) {
   try {
@@ -23,6 +24,15 @@ Page({
 
   onShow() {
     this.loadTheme();
+    this.startStayTimer('project-detail');
+  },
+
+  onHide() {
+    this.recordPageStay();
+  },
+
+  onUnload() {
+    this.recordPageStay();
   },
 
   loadTheme() {
@@ -60,6 +70,45 @@ Page({
       project,
       loadError: ''
     });
+
+    this.activeProjectId = project.id;
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.PROJECT_DETAIL_VIEW, {
+      projectId: project.id,
+      projectName: project.name
+    });
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.PAGE_VIEW, {
+      page: 'project-detail',
+      projectId: project.id
+    });
+  },
+
+  startStayTimer(page) {
+    this.analyticsPage = page;
+    this.analyticsEnterAt = Date.now();
+    this.hasRecordedStay = false;
+  },
+
+  recordPageStay() {
+    if (!this.analyticsEnterAt || this.hasRecordedStay) {
+      return;
+    }
+
+    const durationMs = Math.max(Date.now() - this.analyticsEnterAt, 0);
+
+    this.hasRecordedStay = true;
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.PAGE_STAY, {
+      page: this.analyticsPage || 'project-detail',
+      projectId: this.activeProjectId || '',
+      durationMs
+    });
+  },
+
+  recordAnalyticsEvent(eventName, payload) {
+    try {
+      analyticsService.recordEvent(wx, eventName, payload);
+    } catch (error) {
+      console.warn('[project-detail] analytics skipped', error);
+    }
   },
 
   backHome() {

@@ -70,7 +70,10 @@
         show-scrollbar="{{false}}"
       >
         <view wx:if="{{showProfile}}" class="content-section">
-          <profile-card profile="{{profile}}"></profile-card>
+          <profile-card
+            profile="{{profile}}"
+            bind:avatartap="onAvatarTap"
+          ></profile-card>
         </view>
 
         <view wx:if="{{showSkills}}" class="content-section">
@@ -103,6 +106,7 @@
             bind:copyemail="onCopyEmail"
             bind:showwechatqr="onShowWechatQr"
             bind:openposter="onOpenPoster"
+            bind:openfeedback="onOpenFeedback"
           ></contact-panel>
         </view>
 

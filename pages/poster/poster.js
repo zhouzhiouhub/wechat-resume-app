@@ -1,6 +1,7 @@
 const posterService = require('../../services/posterService');
 const contactService = require('../../services/contactService');
 const themeService = require('../../services/themeService');
+const analyticsService = require('../../services/analyticsService');
 
 Page({
   data: {
@@ -73,6 +74,9 @@ Page({
       .then(() => this.exportPosterImage())
       .then((tempFilePath) => this.savePosterImage(tempFilePath))
       .then(() => {
+        this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.POSTER_SAVE, {
+          page: 'poster'
+        });
         wx.showToast({
           title: '海报已保存',
           icon: 'success'
@@ -203,6 +207,14 @@ Page({
         fail: reject
       });
     });
+  },
+
+  recordAnalyticsEvent(eventName, payload) {
+    try {
+      analyticsService.recordEvent(wx, eventName, payload);
+    } catch (error) {
+      console.warn('[poster] analytics skipped', error);
+    }
   },
 
   onCopyEmail() {

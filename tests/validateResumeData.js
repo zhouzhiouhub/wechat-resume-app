@@ -8,9 +8,12 @@ const contactService = require('../services/contactService');
 const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
 const posterService = require('../services/posterService');
+const analyticsService = require('../services/analyticsService');
+const feedbackService = require('../services/feedbackService');
 const validator = require('../utils/validator');
 const dateUtils = require('../utils/date');
 const themeUtils = require('../utils/theme');
+const tapCounter = require('../utils/tapCounter');
 
 function runCheck(name, check) {
   try {
@@ -20,6 +23,25 @@ function runCheck(name, check) {
     console.error(`[FAIL] ${name}`);
     throw error;
   }
+}
+
+function createMockWxStorage(initialStorage = {}) {
+  const storage = {
+    ...initialStorage
+  };
+
+  return {
+    storage,
+    getStorageSync(key) {
+      return storage[key];
+    },
+    setStorageSync(key, value) {
+      storage[key] = value;
+    },
+    removeStorageSync(key) {
+      delete storage[key];
+    }
+  };
 }
 
 runCheck('resume data maps without validation errors', () => {
@@ -212,6 +234,148 @@ runCheck('poster page exposes canvas save interaction', () => {
   assert.ok(posterJs.includes('wx.createCanvasContext'));
   assert.ok(posterJs.includes('wx.canvasToTempFilePath'));
   assert.ok(posterJs.includes('wx.saveImageToPhotosAlbum'));
+});
+
+runCheck('analytics service builds events and dashboard metrics', () => {
+  const mockWx = createMockWxStorage();
+
+  analyticsService.recordEvent(
+    mockWx,
+    analyticsService.EVENT_NAMES.PAGE_VIEW,
+    { page: 'home' },
+    { now: 1000, eventId: 'event-1' }
+  );
+  analyticsService.recordEvent(
+    mockWx,
+    analyticsService.EVENT_NAMES.PROJECT_OPEN,
+    { projectId: 'wechat-resume-app', projectName: '微信简历小程序' },
+    { now: 2000, eventId: 'event-2' }
+  );
+  analyticsService.recordEvent(
+    mockWx,
+    analyticsService.EVENT_NAMES.CONTACT_COPY,
+    { page: 'home' },
+    { now: 3000, eventId: 'event-3' }
+  );
+  analyticsService.recordEvent(
+    mockWx,
+    analyticsService.EVENT_NAMES.PAGE_STAY,
+    { page: 'home', durationMs: 31000 },
+    { now: 4000, eventId: 'event-4' }
+  );
+  analyticsService.recordEvent(
+    mockWx,
+    analyticsService.EVENT_NAMES.FEEDBACK_SUBMIT,
+    { feedbackType: 'question' },
+    { now: 5000, eventId: 'event-5' }
+  );
+
+  const events = analyticsService.readEvents(mockWx);
+  const metrics = analyticsService.getDashboardMetrics(events);
+
+  assert.strictEqual(events.length, 5);
+  assert.strictEqual(metrics.totalVisits, 1);
+  assert.strictEqual(metrics.projectClickCount, 1);
+  assert.strictEqual(metrics.contactClickCount, 1);
+  assert.strictEqual(metrics.averageStaySeconds, 31);
+  assert.strictEqual(metrics.feedbackSubmitCount, 1);
+  assert.strictEqual(metrics.topProjects[0].name, '微信简历小程序');
+  assert.strictEqual(metrics.recentEvents[0].id, 'event-5');
+  assert.throws(
+    () => analyticsService.createAnalyticsEvent('unknown_event'),
+    /Unknown analytics event/
+  );
+});
+
+runCheck('tap counter triggers only after the configured hidden sequence', () => {
+  let state = tapCounter.createTapState({
+    requiredTaps: 3,
+    timeoutMs: 120
+  });
+
+  state = tapCounter.recordTap(state, 1000);
+  assert.strictEqual(state.count, 1);
+  assert.strictEqual(state.isTriggered, false);
+
+  state = tapCounter.recordTap(state, 1060);
+  assert.strictEqual(state.count, 2);
+  assert.strictEqual(state.isTriggered, false);
+
+  state = tapCounter.recordTap(state, 1120);
+  assert.strictEqual(state.count, 0);
+  assert.strictEqual(state.isTriggered, true);
+
+  state = tapCounter.createTapState({
+    requiredTaps: 3,
+    timeoutMs: 100
+  });
+  state = tapCounter.recordTap(state, 2000);
+  state = tapCounter.recordTap(state, 2201);
+  assert.strictEqual(state.count, 1);
+  assert.strictEqual(state.isTriggered, false);
+});
+
+runCheck('feedback service validates and stores visitor messages', () => {
+  const mockWx = createMockWxStorage();
+  const validInput = {
+    type: 'question',
+    name: '面试官',
+    contact: 'interviewer@example.com',
+    content: '想了解项目性能优化细节'
+  };
+  const validation = feedbackService.validateFeedbackInput(validInput);
+  const record = feedbackService.submitFeedback(mockWx, validInput, {
+    now: 6000,
+    feedbackId: 'feedback-1'
+  });
+  const summary = feedbackService.getFeedbackSummary(feedbackService.readFeedback(mockWx));
+
+  assert.strictEqual(validation.isValid, true);
+  assert.strictEqual(record.id, 'feedback-1');
+  assert.strictEqual(record.typeLabel, '问题');
+  assert.strictEqual(summary.total, 1);
+  assert.strictEqual(summary.typeCounts[0].count, 1);
+  assert.strictEqual(summary.latest[0].id, 'feedback-1');
+  assert.strictEqual(feedbackService.validateFeedbackInput({ content: '短' }).isValid, false);
+  assert.strictEqual(feedbackService.validateFeedbackInput({
+    content: '这是一条有效留言',
+    contact: 'bad@mail'
+  }).isValid, false);
+});
+
+runCheck('M4 pages are registered and wired through isolated entries', () => {
+  const appJson = fs.readFileSync(path.join(__dirname, '..', 'app.json'), 'utf8');
+  const homeWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.wxml'), 'utf8');
+  const homeJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.js'), 'utf8');
+  const profileCardWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'profile-card', 'profile-card.wxml'),
+    'utf8'
+  );
+  const contactPanelWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
+    'utf8'
+  );
+  const dashboardJs = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'admin-dashboard', 'admin-dashboard.js'),
+    'utf8'
+  );
+  const feedbackJs = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'feedback', 'feedback.js'),
+    'utf8'
+  );
+
+  assert.ok(appJson.includes('pages/admin-dashboard/admin-dashboard'));
+  assert.ok(appJson.includes('pages/feedback/feedback'));
+  assert.ok(profileCardWxml.includes('bindtap="handleAvatarTap"'));
+  assert.ok(homeWxml.includes('bind:avatartap="onAvatarTap"'));
+  assert.ok(homeWxml.includes('bind:openfeedback="onOpenFeedback"'));
+  assert.ok(homeJs.includes('tapCounter.recordTap'));
+  assert.ok(homeJs.includes('/pages/admin-dashboard/admin-dashboard'));
+  assert.ok(contactPanelWxml.includes('bindtap="handleOpenFeedback"'));
+  assert.ok(dashboardJs.includes('analyticsService.createDashboardState'));
+  assert.ok(dashboardJs.includes('feedbackService.getFeedbackSummary'));
+  assert.ok(feedbackJs.includes('feedbackService.submitFeedback'));
+  assert.ok(feedbackJs.includes('analyticsService.EVENT_NAMES.FEEDBACK_SUBMIT'));
 });
 
 runCheck('missing required fields report a clear validation error', () => {

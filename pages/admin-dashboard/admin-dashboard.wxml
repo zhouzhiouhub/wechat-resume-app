@@ -1,0 +1,75 @@
+<view class="dashboard-page {{themeClass}}">
+  <view class="dashboard-header">
+    <view class="dashboard-title-block">
+      <text class="dashboard-title">数据看板</text>
+      <text class="dashboard-subtitle">访问、项目、联系与留言</text>
+    </view>
+    <button class="header-button" bindtap="onRefresh">刷新</button>
+  </view>
+
+  <view wx:if="{{loadError}}" class="error-panel">{{loadError}}</view>
+
+  <block wx:else>
+    <view class="metric-grid">
+      <view wx:for="{{metricCards}}" wx:key="id" class="metric-card">
+        <text class="metric-label">{{item.label}}</text>
+        <text class="metric-value">{{item.value}}</text>
+        <text class="metric-meta">{{item.meta}}</text>
+      </view>
+    </view>
+
+    <view class="dashboard-panel">
+      <view class="panel-header">
+        <text class="panel-title">项目热度</text>
+        <text class="panel-meta">点击排行</text>
+      </view>
+      <view wx:if="{{topProjects.length}}" class="rank-list">
+        <view wx:for="{{topProjects}}" wx:key="name" class="rank-row">
+          <text class="rank-name">{{item.name}}</text>
+          <text class="rank-count">{{item.count}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-row">暂无项目点击</view>
+    </view>
+
+    <view class="dashboard-panel">
+      <view class="panel-header">
+        <text class="panel-title">最近事件</text>
+        <text class="panel-meta">最多 8 条</text>
+      </view>
+      <view wx:if="{{recentEvents.length}}" class="event-list">
+        <view wx:for="{{recentEvents}}" wx:key="id" class="event-row">
+          <view class="event-copy">
+            <text class="event-label">{{item.label}}</text>
+            <text wx:if="{{item.targetText}}" class="event-target">{{item.targetText}}</text>
+          </view>
+          <text class="event-time">{{item.timeText}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-row">暂无事件</view>
+    </view>
+
+    <view class="dashboard-panel">
+      <view class="panel-header">
+        <text class="panel-title">留言反馈</text>
+        <text class="panel-meta">{{feedbackSummary.total}} 条</text>
+      </view>
+      <view wx:if="{{latestFeedback.length}}" class="feedback-list">
+        <view wx:for="{{latestFeedback}}" wx:key="id" class="feedback-row">
+          <view class="feedback-heading">
+            <text class="feedback-type">{{item.typeLabel}}</text>
+            <text class="feedback-time">{{item.timeText}}</text>
+          </view>
+          <text class="feedback-content">{{item.content}}</text>
+          <text wx:if="{{item.contact}}" class="feedback-contact">{{item.contact}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-row">暂无留言</view>
+    </view>
+
+    <view class="dashboard-actions">
+      <button class="action-button secondary-button" bindtap="onClearData">清空数据</button>
+      <button class="action-button primary-button" bindtap="backHome">返回首页</button>
+    </view>
+  </block>
+</view>

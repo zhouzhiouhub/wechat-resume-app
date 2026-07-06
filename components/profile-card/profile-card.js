@@ -4,5 +4,11 @@ Component({
       type: Object,
       value: {}
     }
+  },
+
+  methods: {
+    handleAvatarTap() {
+      this.triggerEvent('avatartap');
+    }
   }
 });

@@ -2,6 +2,8 @@ const resumeService = require('../../services/resumeService');
 const contactService = require('../../services/contactService');
 const resumeSectionService = require('../../services/resumeSectionService');
 const themeService = require('../../services/themeService');
+const analyticsService = require('../../services/analyticsService');
+const tapCounter = require('../../utils/tapCounter');
 
 Page({
   data: {
@@ -30,12 +32,22 @@ Page({
   },
 
   onLoad() {
+    this.avatarTapState = tapCounter.createTapState();
     this.loadTheme();
     this.loadResume();
   },
 
   onShow() {
     this.loadTheme();
+    this.startAnalyticsSession('home');
+  },
+
+  onHide() {
+    this.recordPageStay();
+  },
+
+  onUnload() {
+    this.recordPageStay();
   },
 
   loadTheme() {
@@ -66,6 +78,37 @@ Page({
       this.setData({
         loadError: error.message || '简历数据加载失败'
       });
+    }
+  },
+
+  startAnalyticsSession(page) {
+    this.analyticsPage = page;
+    this.analyticsEnterAt = Date.now();
+    this.hasRecordedStay = false;
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.PAGE_VIEW, {
+      page
+    });
+  },
+
+  recordPageStay() {
+    if (!this.analyticsEnterAt || this.hasRecordedStay) {
+      return;
+    }
+
+    const durationMs = Math.max(Date.now() - this.analyticsEnterAt, 0);
+
+    this.hasRecordedStay = true;
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.PAGE_STAY, {
+      page: this.analyticsPage || 'home',
+      durationMs
+    });
+  },
+
+  recordAnalyticsEvent(eventName, payload) {
+    try {
+      analyticsService.recordEvent(wx, eventName, payload);
+    } catch (error) {
+      console.warn('[home] analytics skipped', error);
     }
   },
 
@@ -107,6 +150,14 @@ Page({
       return;
     }
 
+    const project = (this.data.featuredProjects || [])
+      .find((item) => item.id === projectId) || {};
+
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.PROJECT_OPEN, {
+      projectId,
+      projectName: project.name || ''
+    });
+
     wx.navigateTo({
       url: `/pages/project-detail/project-detail?id=${encodeURIComponent(projectId)}`
     });
@@ -114,6 +165,10 @@ Page({
 
   onCopyEmail(event) {
     const email = event.detail && event.detail.email;
+
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.CONTACT_COPY, {
+      page: 'home'
+    });
 
     contactService.copyEmail(wx, email)
       .then(() => {
@@ -133,6 +188,11 @@ Page({
   onShowWechatQr(event) {
     const wechatQr = event.detail && event.detail.wechatQr;
 
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.CONTACT_QR, {
+      page: 'home',
+      hasQr: Boolean(wechatQr)
+    });
+
     contactService.previewWechatQr(wx, wechatQr)
       .catch(() => {
         wx.showToast({
@@ -143,8 +203,38 @@ Page({
   },
 
   onOpenPoster() {
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.POSTER_OPEN, {
+      page: 'home'
+    });
+
     wx.navigateTo({
       url: '/pages/poster/poster'
+    });
+  },
+
+  onOpenFeedback() {
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.FEEDBACK_OPEN, {
+      page: 'home'
+    });
+
+    wx.navigateTo({
+      url: '/pages/feedback/feedback'
+    });
+  },
+
+  onAvatarTap() {
+    this.avatarTapState = tapCounter.recordTap(this.avatarTapState, Date.now());
+
+    if (!this.avatarTapState.isTriggered) {
+      return;
+    }
+
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.ADMIN_OPEN, {
+      source: 'avatar_hidden_tap'
+    });
+
+    wx.navigateTo({
+      url: '/pages/admin-dashboard/admin-dashboard'
     });
   }
 });
