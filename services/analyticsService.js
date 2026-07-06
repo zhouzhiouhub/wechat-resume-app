@@ -1,3 +1,5 @@
+const cloudDataService = require('./cloudDataService');
+
 const STORAGE_KEY = 'resume_analytics_events';
 const MAX_STORED_EVENTS = 200;
 
@@ -124,8 +126,19 @@ function recordEvent(wxApi, eventName, payload = {}, options = {}) {
   const events = readEvents(wxApi);
 
   writeEvents(wxApi, events.concat(event));
+  syncEventToCloud(wxApi, event, options);
 
   return event;
+}
+
+function syncEventToCloud(wxApi, event, options = {}) {
+  if (options.syncCloud === false) {
+    return;
+  }
+
+  cloudDataService.syncAnalyticsEvent(wxApi, event, options)
+    .then((result) => result)
+    .catch(() => null);
 }
 
 function clearEvents(wxApi) {

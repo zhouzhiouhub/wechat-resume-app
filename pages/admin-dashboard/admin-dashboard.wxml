@@ -4,10 +4,16 @@
       <text class="dashboard-title">数据看板</text>
       <text class="dashboard-subtitle">访问、项目、联系与留言</text>
     </view>
-    <button class="header-button" bindtap="onRefresh">刷新</button>
+    <button wx:if="{{isAuthorized}}" class="header-button" bindtap="onRefresh">刷新</button>
   </view>
 
-  <view wx:if="{{loadError}}" class="error-panel">{{loadError}}</view>
+  <view wx:if="{{!isAuthorized}}" class="dashboard-panel protected-panel">
+    <text class="protected-title">看板已保护</text>
+    <text class="protected-copy">{{guardReason}}</text>
+    <button class="action-button primary-button" bindtap="backHome">返回首页</button>
+  </view>
+
+  <view wx:elif="{{loadError}}" class="error-panel">{{loadError}}</view>
 
   <block wx:else>
     <view class="metric-grid">

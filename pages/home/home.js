@@ -3,6 +3,7 @@ const contactService = require('../../services/contactService');
 const resumeSectionService = require('../../services/resumeSectionService');
 const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
+const authService = require('../../services/authService');
 const tapCounter = require('../../utils/tapCounter');
 
 Page({
@@ -15,6 +16,7 @@ Page({
     skillHighlights: [],
     skillGroups: [],
     featuredProjects: [],
+    featuredProjectCount: 0,
     timelineItems: [],
     sections: [],
     activeSection: resumeSectionService.DEFAULT_HOME_SECTION_ID,
@@ -68,6 +70,7 @@ Page({
         skillHighlights: homeResume.skillHighlights,
         skillGroups: homeResume.skillGroups,
         featuredProjects: homeResume.featuredProjects,
+        featuredProjectCount: homeResume.featuredProjects.length,
         timelineItems: homeResume.timeline,
         ...sectionState,
         loadError: ''
@@ -230,6 +233,9 @@ Page({
     }
 
     this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.ADMIN_OPEN, {
+      source: 'avatar_hidden_tap'
+    });
+    authService.grantAdminAccess(wx, {
       source: 'avatar_hidden_tap'
     });
 

@@ -4,6 +4,7 @@
     class="project-cover"
     src="{{project.cover}}"
     mode="aspectFill"
+    lazy-load="{{true}}"
   ></image>
 
   <view class="project-body">

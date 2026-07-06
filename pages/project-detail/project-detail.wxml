@@ -13,7 +13,7 @@
       circular="{{project.gallery.length > 1}}"
     >
       <swiper-item wx:for="{{project.gallery}}" wx:key="*this">
-        <image class="gallery-image" src="{{item}}" mode="aspectFill"></image>
+        <image class="gallery-image" src="{{item}}" mode="aspectFill" lazy-load="{{true}}"></image>
       </swiper-item>
     </swiper>
 

@@ -1,4 +1,5 @@
 const validator = require('../utils/validator');
+const cloudDataService = require('./cloudDataService');
 
 const STORAGE_KEY = 'resume_feedback_records';
 const MAX_STORED_FEEDBACK = 100;
@@ -152,8 +153,19 @@ function submitFeedback(wxApi, input = {}, options = {}) {
   const records = readFeedback(wxApi);
 
   writeFeedback(wxApi, records.concat(record));
+  syncFeedbackToCloud(wxApi, record, options);
 
   return record;
+}
+
+function syncFeedbackToCloud(wxApi, record, options = {}) {
+  if (options.syncCloud === false) {
+    return;
+  }
+
+  cloudDataService.syncFeedbackRecord(wxApi, record, options)
+    .then((result) => result)
+    .catch(() => null);
 }
 
 function clearFeedback(wxApi) {

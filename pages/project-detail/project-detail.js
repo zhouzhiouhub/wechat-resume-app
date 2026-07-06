@@ -1,6 +1,7 @@
 const resumeService = require('../../services/resumeService');
 const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
+const notificationService = require('../../services/notificationService');
 
 function safeDecode(value) {
   try {
@@ -80,6 +81,13 @@ Page({
       page: 'project-detail',
       projectId: project.id
     });
+    this.sendProjectNotification(project);
+  },
+
+  sendProjectNotification(project) {
+    notificationService.sendProjectBrowseNotification(wx, project)
+      .then((result) => result)
+      .catch(() => null);
   },
 
   startStayTimer(page) {

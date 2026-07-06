@@ -1,4 +1,5 @@
 const analyticsService = require('../../services/analyticsService');
+const authService = require('../../services/authService');
 const feedbackService = require('../../services/feedbackService');
 const themeService = require('../../services/themeService');
 
@@ -51,11 +52,16 @@ Page({
     recentEvents: [],
     feedbackSummary: feedbackService.getFeedbackSummary([]),
     latestFeedback: [],
+    isAuthorized: false,
+    guardReason: '',
     loadError: ''
   },
 
   onLoad() {
     this.loadTheme();
+    if (!this.ensureAdminAccess()) {
+      return;
+    }
     this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.ADMIN_OPEN, {
       source: 'dashboard_load'
     });
@@ -64,6 +70,9 @@ Page({
 
   onShow() {
     this.loadTheme();
+    if (!this.ensureAdminAccess()) {
+      return;
+    }
     this.loadDashboard();
   },
 
@@ -76,7 +85,22 @@ Page({
     });
   },
 
+  ensureAdminAccess() {
+    const guardState = authService.getAdminGuardState(wx);
+
+    this.setData({
+      isAuthorized: guardState.isAuthorized,
+      guardReason: guardState.reason
+    });
+
+    return guardState.isAuthorized;
+  },
+
   loadDashboard() {
+    if (!this.data.isAuthorized) {
+      return;
+    }
+
     try {
       const dashboardState = analyticsService.createDashboardState(wx);
       const feedbackRecords = feedbackService.readFeedback(wx);
@@ -107,6 +131,10 @@ Page({
   },
 
   onRefresh() {
+    if (!this.ensureAdminAccess()) {
+      return;
+    }
+
     this.loadDashboard();
     wx.showToast({
       title: '已刷新',
@@ -115,6 +143,10 @@ Page({
   },
 
   onClearData() {
+    if (!this.ensureAdminAccess()) {
+      return;
+    }
+
     wx.showModal({
       title: '清空数据',
       content: '确认清空当前看板数据？',

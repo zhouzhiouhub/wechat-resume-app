@@ -1,6 +1,9 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const appConfig = require('../app.json');
+const projectConfig = require('../project.config.json');
+const envConfig = require('../config/env');
 const resumeData = require('../modules/resume/resumeData');
 const resumeMapper = require('../modules/resume/resumeMapper');
 const resumeService = require('../services/resumeService');
@@ -9,7 +12,11 @@ const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
 const posterService = require('../services/posterService');
 const analyticsService = require('../services/analyticsService');
+const authService = require('../services/authService');
+const cloudDataService = require('../services/cloudDataService');
 const feedbackService = require('../services/feedbackService');
+const notificationService = require('../services/notificationService');
+const releaseCheckService = require('../services/releaseCheckService');
 const validator = require('../utils/validator');
 const dateUtils = require('../utils/date');
 const themeUtils = require('../utils/theme');
@@ -376,6 +383,155 @@ runCheck('M4 pages are registered and wired through isolated entries', () => {
   assert.ok(dashboardJs.includes('feedbackService.getFeedbackSummary'));
   assert.ok(feedbackJs.includes('feedbackService.submitFeedback'));
   assert.ok(feedbackJs.includes('analyticsService.EVENT_NAMES.FEEDBACK_SUBMIT'));
+});
+
+runCheck('cloud data service builds switchable cloud requests', () => {
+  const disabledEnv = {
+    cloud: {
+      enabled: false,
+      envId: '',
+      functionName: 'resumeData'
+    }
+  };
+  const enabledEnv = {
+    cloud: {
+      enabled: true,
+      envId: 'test-env',
+      functionName: 'resumeData'
+    }
+  };
+  const request = cloudDataService.createCloudRequest(
+    cloudDataService.CLOUD_ACTIONS.RECORD_ANALYTICS,
+    { event: { name: 'page_view' } },
+    { now: 7000 }
+  );
+
+  assert.strictEqual(cloudDataService.isCloudEnabled({ envConfig: disabledEnv }), false);
+  assert.strictEqual(cloudDataService.isCloudEnabled({ envConfig: enabledEnv }), true);
+  assert.strictEqual(request.action, 'recordAnalytics');
+  assert.strictEqual(request.meta.client, 'miniprogram');
+  assert.strictEqual(request.meta.requestedAt, 7000);
+});
+
+runCheck('admin auth service protects dashboard with expiring local grant', () => {
+  const mockWx = createMockWxStorage();
+  const testEnv = {
+    admin: {
+      localAccessTtlMs: 500,
+      allowedOpenIds: ['OPENID_ADMIN']
+    }
+  };
+  const grant = authService.grantAdminAccess(mockWx, {
+    now: 1000,
+    envConfig: testEnv,
+    source: 'test'
+  });
+  const guardState = authService.getAdminGuardState(mockWx, {
+    now: 1200
+  });
+  const expiredGuardState = authService.getAdminGuardState(mockWx, {
+    now: 1601
+  });
+  const request = authService.createAdminCheckRequest('OPENID_ADMIN', {
+    envConfig: testEnv
+  });
+
+  assert.strictEqual(grant.expiresAt, 1500);
+  assert.strictEqual(guardState.isAuthorized, true);
+  assert.strictEqual(expiredGuardState.isAuthorized, false);
+  assert.deepStrictEqual(request.allowedOpenIds, ['OPENID_ADMIN']);
+});
+
+runCheck('notification service creates non-blocking project browse payloads', () => {
+  const testEnv = {
+    subscription: {
+      enabled: true,
+      projectBrowseTemplateId: 'template-id',
+      page: 'pages/admin-dashboard/admin-dashboard'
+    }
+  };
+  const notification = notificationService.createProjectBrowseNotification(
+    {
+      id: 'wechat-resume-app',
+      name: '微信简历小程序',
+      role: '独立开发'
+    },
+    {
+      envConfig: testEnv,
+      toUser: 'OPENID_ADMIN',
+      now: 1783305600000
+    }
+  );
+
+  assert.strictEqual(notification.type, 'project_browse');
+  assert.strictEqual(notification.templateId, 'template-id');
+  assert.strictEqual(notification.toUser, 'OPENID_ADMIN');
+  assert.strictEqual(notification.page, 'pages/admin-dashboard/admin-dashboard');
+  assert.ok(notification.data.thing1.value.length <= 20);
+  assert.strictEqual(notificationService.isSubscriptionEnabled({ envConfig: testEnv }), true);
+  assert.strictEqual(notificationService.isSubscriptionEnabled(), false);
+});
+
+runCheck('release checklist reports publish blockers and warnings', () => {
+  const releaseChecklist = releaseCheckService.createReleaseChecklist({
+    resume: resumeService.getResume(),
+    appConfig,
+    projectConfig,
+    envConfig
+  });
+
+  assert.strictEqual(releaseChecklist.isReleaseBlocked, false);
+  assert.strictEqual(releaseChecklist.summary.fail, 0);
+  assert.ok(releaseChecklist.checks.some((check) => check.id === 'project:cloudRoot' && check.status === 'pass'));
+  assert.ok(releaseChecklist.checks.some((check) => check.id === 'cloud:enabled' && check.status === 'warn'));
+  assert.ok(releaseChecklist.checks.some((check) => check.id === 'resume:email' && check.status === 'warn'));
+});
+
+runCheck('M5 cloud, auth, notification and release files are wired', () => {
+  const appJs = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
+  const homeWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.wxml'), 'utf8');
+  const homeJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.js'), 'utf8');
+  const projectCardWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'project-card', 'project-card.wxml'),
+    'utf8'
+  );
+  const projectDetailJs = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'project-detail', 'project-detail.js'),
+    'utf8'
+  );
+  const projectDetailWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'project-detail', 'project-detail.wxml'),
+    'utf8'
+  );
+  const dashboardJs = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'admin-dashboard', 'admin-dashboard.js'),
+    'utf8'
+  );
+  const dashboardWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'pages', 'admin-dashboard', 'admin-dashboard.wxml'),
+    'utf8'
+  );
+  const cloudFunctionJs = fs.readFileSync(
+    path.join(__dirname, '..', 'cloudfunctions', 'resumeData', 'index.js'),
+    'utf8'
+  );
+  const cloudSamples = fs.readFileSync(
+    path.join(__dirname, '..', 'docs', 'cloud-api-samples.md'),
+    'utf8'
+  );
+
+  assert.strictEqual(projectConfig.cloudfunctionRoot, 'cloudfunctions/');
+  assert.ok(appJs.includes('wxApi.cloud.init'));
+  assert.ok(homeJs.includes('authService.grantAdminAccess'));
+  assert.ok(homeWxml.includes('精选 {{featuredProjectCount}} 项'));
+  assert.ok(projectCardWxml.includes('lazy-load="{{true}}"'));
+  assert.ok(projectDetailWxml.includes('lazy-load="{{true}}"'));
+  assert.ok(projectDetailJs.includes('sendProjectBrowseNotification'));
+  assert.ok(dashboardJs.includes('authService.getAdminGuardState'));
+  assert.ok(dashboardWxml.includes('看板已保护'));
+  assert.ok(cloudFunctionJs.includes("action === 'recordAnalytics'"));
+  assert.ok(cloudFunctionJs.includes("action === 'sendNotification'"));
+  assert.ok(cloudSamples.includes("action: 'checkAdmin'"));
 });
 
 runCheck('missing required fields report a clear validation error', () => {
