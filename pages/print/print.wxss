@@ -15,10 +15,38 @@
 
 .print-header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 112rpx minmax(0, 1fr);
+  align-items: start;
   gap: 20rpx;
   padding-bottom: 24rpx;
   border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.print-avatar,
+.print-avatar-image,
+.print-avatar-fallback {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 56rpx;
+}
+
+.print-avatar {
+  overflow: hidden;
+}
+
+.print-avatar-image {
+  display: block;
+  background: var(--resume-track, #e5e7eb);
+}
+
+.print-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--resume-avatar, #1f2937);
+  color: var(--resume-inverse, #ffffff);
+  font-size: 40rpx;
+  font-weight: 800;
 }
 
 .print-kicker,
@@ -65,6 +93,7 @@
 }
 
 .contact-block {
+  grid-column: 1 / -1;
   display: grid;
   gap: 8rpx;
   padding: 18rpx;

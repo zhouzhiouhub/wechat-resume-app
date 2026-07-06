@@ -1,0 +1,121 @@
+.asset-settings {
+  display: grid;
+  gap: 16rpx;
+}
+
+.asset-row {
+  display: grid;
+  grid-template-columns: 96rpx minmax(0, 1fr) 132rpx;
+  align-items: center;
+  gap: 16rpx;
+  min-height: 128rpx;
+  padding: 18rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+  box-sizing: border-box;
+}
+
+.asset-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96rpx;
+  height: 96rpx;
+  overflow: hidden;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+}
+
+.asset-image {
+  width: 96rpx;
+  height: 96rpx;
+}
+
+.asset-placeholder {
+  padding: 0 8rpx;
+  font-size: 20rpx;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.asset-copy {
+  min-width: 0;
+}
+
+.asset-title,
+.asset-description,
+.asset-status {
+  display: block;
+}
+
+.asset-title {
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.asset-description {
+  margin-top: 4rpx;
+  color: var(--resume-muted, #4b5563);
+  font-size: 22rpx;
+  line-height: 1.45;
+}
+
+.asset-status {
+  margin-top: 6rpx;
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.asset-status.is-ready {
+  color: var(--resume-success, #047857);
+}
+
+.asset-actions {
+  display: grid;
+  gap: 8rpx;
+}
+
+.asset-button {
+  min-height: 54rpx;
+  padding: 0 8rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  line-height: 54rpx;
+}
+
+.asset-button::after {
+  border: 0;
+}
+
+.primary-asset-button {
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
+}
+
+.plain-asset-button {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+}
+
+@media (max-width: 420px) {
+  .asset-row {
+    grid-template-columns: 84rpx minmax(0, 1fr);
+  }
+
+  .asset-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .asset-preview,
+  .asset-image {
+    width: 84rpx;
+    height: 84rpx;
+  }
+}

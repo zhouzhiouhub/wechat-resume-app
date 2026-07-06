@@ -1,6 +1,7 @@
 const contactService = require('../../services/contactService');
 const printResumeService = require('../../services/printResumeService');
 const resumeService = require('../../services/resumeService');
+const profileAssetService = require('../../services/profileAssetService');
 const themeService = require('../../services/themeService');
 
 Page({
@@ -30,7 +31,10 @@ Page({
 
   loadPrintResume() {
     try {
-      const resume = resumeService.getResume();
+      const resume = profileAssetService.applyAssetsToResume(
+        resumeService.getResume(),
+        profileAssetService.readProfileAssets(wx)
+      );
 
       this.setData({
         printResume: printResumeService.createPrintResumeModel(resume),

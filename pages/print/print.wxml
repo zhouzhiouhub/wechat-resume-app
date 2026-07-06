@@ -4,6 +4,16 @@
   <block wx:elif="{{printResume}}">
     <view class="print-sheet">
       <view class="print-header">
+        <view class="print-avatar">
+          <image
+            wx:if="{{printResume.profile.avatar}}"
+            class="print-avatar-image"
+            src="{{printResume.profile.avatar}}"
+            mode="aspectFill"
+          ></image>
+          <text wx:else class="print-avatar-fallback">{{printResume.profile.initials}}</text>
+        </view>
+
         <view class="profile-main">
           <text class="print-kicker">{{printResume.printMeta.title}}</text>
           <text class="profile-name">{{printResume.profile.name}}</text>

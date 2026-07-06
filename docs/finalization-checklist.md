@@ -19,8 +19,8 @@
 
 ## 仍需人工补充
 
-- 头像图片：当前 `profile.avatar` 为空。
-- 微信二维码：当前 `profile.contact.wechatQr` 为空。
+- 头像图片：数据默认仍为空，可在首页“设置 > 素材”从手机相册选择并本机保存。
+- 微信二维码：数据默认仍为空，可在首页“设置 > 素材”从手机相册选择并用于联系区和海报。
 - 云开发环境 ID：当前 `config/env.js` 中 `cloud.envId` 为空。
 - 订阅消息模板 ID：当前 `subscription.projectBrowseTemplateId` 为空。
 - 管理员 openid 白名单：当前 `admin.allowedOpenIds` 为空。

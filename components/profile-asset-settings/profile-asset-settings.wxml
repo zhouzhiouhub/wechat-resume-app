@@ -1,0 +1,37 @@
+<view class="asset-settings">
+  <view
+    wx:for="{{assetState.items}}"
+    wx:key="field"
+    class="asset-row"
+  >
+    <view class="asset-preview">
+      <image
+        wx:if="{{item.hasAsset}}"
+        class="asset-image"
+        src="{{item.assetPath}}"
+        mode="aspectFill"
+      ></image>
+      <text wx:else class="asset-placeholder">{{item.title}}</text>
+    </view>
+
+    <view class="asset-copy">
+      <text class="asset-title">{{item.title}}</text>
+      <text class="asset-description">{{item.description}}</text>
+      <text class="{{item.hasAsset ? 'asset-status is-ready' : 'asset-status'}}">{{item.statusText}}</text>
+    </view>
+
+    <view class="asset-actions">
+      <button
+        class="asset-button primary-asset-button"
+        data-field="{{item.field}}"
+        bindtap="handleSelectAsset"
+      >{{item.hasAsset ? '更换' : '选择'}}</button>
+      <button
+        wx:if="{{item.hasAsset}}"
+        class="asset-button plain-asset-button"
+        data-field="{{item.field}}"
+        bindtap="handleClearAsset"
+      >清除</button>
+    </view>
+  </view>
+</view>

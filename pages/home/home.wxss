@@ -253,6 +253,10 @@
   border-radius: 8rpx;
 }
 
+.settings-panel + .settings-panel {
+  margin-top: 20rpx;
+}
+
 @media (max-width: 420px) {
   .home-page {
     padding: 24rpx;

@@ -114,6 +114,18 @@
         <view wx:if="{{showSettings}}" class="content-section settings-section">
           <view class="settings-panel">
             <view class="section-header">
+              <text class="section-heading">素材</text>
+              <text class="section-meta">本机保存</text>
+            </view>
+            <profile-asset-settings
+              asset-state="{{profileAssetState}}"
+              bind:selectasset="onSelectProfileAsset"
+              bind:clearasset="onClearProfileAsset"
+            ></profile-asset-settings>
+          </view>
+
+          <view class="settings-panel">
+            <view class="section-header">
               <text class="section-heading">主题</text>
             </view>
             <theme-switcher

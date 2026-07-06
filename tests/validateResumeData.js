@@ -10,6 +10,7 @@ const resumeService = require('../services/resumeService');
 const contactService = require('../services/contactService');
 const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
+const profileAssetService = require('../services/profileAssetService');
 const posterService = require('../services/posterService');
 const printResumeService = require('../services/printResumeService');
 const analyticsService = require('../services/analyticsService');
@@ -205,6 +206,52 @@ runCheck('theme switcher uses a tappable custom dropdown', () => {
   assert.ok(switcherWxml.includes('bindtap="onToggleDropdown"'));
   assert.ok(switcherWxml.includes('catchtap="onSelectTheme"'));
   assert.ok(switcherWxml.includes('data-theme-id="{{item.id}}"'));
+});
+
+runCheck('profile asset service stores local images and applies them to resume views', () => {
+  const mockWx = createMockWxStorage();
+  const profile = resumeService.getProfile();
+  const avatarPath = 'wxfile://avatar.png';
+  const wechatQrPath = 'wxfile://wechat-qr.png';
+
+  let assets = profileAssetService.saveProfileAsset(
+    mockWx,
+    profileAssetService.ASSET_FIELDS.AVATAR,
+    ` ${avatarPath} `
+  );
+
+  assets = profileAssetService.saveProfileAsset(
+    mockWx,
+    profileAssetService.ASSET_FIELDS.WECHAT_QR,
+    wechatQrPath
+  );
+
+  const appliedProfile = profileAssetService.applyAssetsToProfile(profile, assets);
+  const appliedResume = profileAssetService.applyAssetsToResume(resumeService.getResume(), assets);
+  const state = profileAssetService.createProfileAssetState(profile, assets);
+  const clearedAssets = profileAssetService.clearProfileAsset(
+    mockWx,
+    profileAssetService.ASSET_FIELDS.AVATAR
+  );
+
+  assert.strictEqual(assets.avatar, avatarPath);
+  assert.strictEqual(assets.wechatQr, wechatQrPath);
+  assert.strictEqual(appliedProfile.avatar, avatarPath);
+  assert.strictEqual(appliedProfile.contact.wechatQr, wechatQrPath);
+  assert.strictEqual(appliedResume.profile.avatar, avatarPath);
+  assert.strictEqual(appliedResume.profile.contact.wechatQr, wechatQrPath);
+  assert.deepStrictEqual(
+    state.items.map((item) => item.field),
+    [
+      profileAssetService.ASSET_FIELDS.AVATAR,
+      profileAssetService.ASSET_FIELDS.WECHAT_QR
+    ]
+  );
+  assert.strictEqual(state.avatar.hasAsset, true);
+  assert.strictEqual(state.wechatQr.hasAsset, true);
+  assert.strictEqual(clearedAssets.avatar, '');
+  assert.strictEqual(clearedAssets.wechatQr, wechatQrPath);
+  assert.throws(() => profileAssetService.saveProfileAsset(mockWx, 'bad', avatarPath), /unknown/);
 });
 
 runCheck('poster model is created from unified resume data', () => {
@@ -567,6 +614,43 @@ runCheck('finish-up print page is registered and wired from contact panel', () =
   assert.ok(contactPanelWxml.includes('bindtap="handleOpenPrint"'));
   assert.ok(printJs.includes('printResumeService.createPrintResumeModel'));
   assert.ok(printWxml.includes('打印版简历'));
+});
+
+runCheck('profile asset selection is wired through settings, poster and print views', () => {
+  const homeJson = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.json'), 'utf8');
+  const homeWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.wxml'), 'utf8');
+  const homeJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.js'), 'utf8');
+  const assetSettingsWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'profile-asset-settings', 'profile-asset-settings.wxml'),
+    'utf8'
+  );
+  const assetSettingsJs = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'profile-asset-settings', 'profile-asset-settings.js'),
+    'utf8'
+  );
+  const profileAssetJs = fs.readFileSync(
+    path.join(__dirname, '..', 'services', 'profileAssetService.js'),
+    'utf8'
+  );
+  const posterJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'poster', 'poster.js'), 'utf8');
+  const printJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'print', 'print.js'), 'utf8');
+  const printWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'print', 'print.wxml'), 'utf8');
+
+  assert.ok(homeJson.includes('profile-asset-settings'));
+  assert.ok(homeWxml.includes('asset-state="{{profileAssetState}}"'));
+  assert.ok(homeWxml.includes('bind:selectasset="onSelectProfileAsset"'));
+  assert.ok(homeWxml.includes('bind:clearasset="onClearProfileAsset"'));
+  assert.ok(homeJs.includes('chooseAndSaveProfileAsset'));
+  assert.ok(assetSettingsWxml.includes('wx:for="{{assetState.items}}"'));
+  assert.ok(assetSettingsWxml.includes('bindtap="handleSelectAsset"'));
+  assert.ok(assetSettingsJs.includes('this.triggerEvent'));
+  assert.ok(profileAssetJs.includes('chooseMedia'));
+  assert.ok(profileAssetJs.includes('chooseImage'));
+  assert.ok(profileAssetJs.includes('saveFile'));
+  assert.ok(posterJs.includes('profileAssetService.applyAssetsToResume'));
+  assert.ok(posterJs.includes('posterService.createPosterModel'));
+  assert.ok(printJs.includes('profileAssetService.applyAssetsToResume'));
+  assert.ok(printWxml.includes('printResume.profile.avatar'));
 });
 
 runCheck('missing required fields report a clear validation error', () => {

@@ -4,6 +4,7 @@ const resumeSectionService = require('../../services/resumeSectionService');
 const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
 const authService = require('../../services/authService');
+const profileAssetService = require('../../services/profileAssetService');
 const tapCounter = require('../../utils/tapCounter');
 
 Page({
@@ -11,6 +12,7 @@ Page({
     themeClass: '',
     themeOptions: [],
     activeTheme: '',
+    profileAssetState: profileAssetService.createProfileAssetState(null),
     profile: null,
     contact: null,
     skillHighlights: [],
@@ -62,11 +64,14 @@ Page({
   loadResume() {
     try {
       const homeResume = resumeService.getHomeResume();
+      const profileAssets = profileAssetService.readProfileAssets(wx);
+      const profile = profileAssetService.applyAssetsToProfile(homeResume.profile, profileAssets);
       const sectionState = resumeSectionService.createHomeSectionState();
 
       this.setData({
-        profile: homeResume.profile,
-        contact: homeResume.contact,
+        profile,
+        contact: profile.contact,
+        profileAssetState: profileAssetService.createProfileAssetState(homeResume.profile, profileAssets),
         skillHighlights: homeResume.skillHighlights,
         skillGroups: homeResume.skillGroups,
         featuredProjects: homeResume.featuredProjects,
@@ -82,6 +87,17 @@ Page({
         loadError: error.message || '简历数据加载失败'
       });
     }
+  },
+
+  refreshProfileAssets(profileAssets) {
+    const homeResume = resumeService.getHomeResume();
+    const profile = profileAssetService.applyAssetsToProfile(homeResume.profile, profileAssets);
+
+    this.setData({
+      profile,
+      contact: profile.contact,
+      profileAssetState: profileAssetService.createProfileAssetState(homeResume.profile, profileAssets)
+    });
   },
 
   startAnalyticsSession(page) {
@@ -144,6 +160,44 @@ Page({
 
     themeService.applyNavigationBar(wx, themeState.activeTheme);
     this.setData(themeState);
+  },
+
+  onSelectProfileAsset(event) {
+    const field = event.detail && event.detail.field;
+
+    profileAssetService.chooseAndSaveProfileAsset(wx, field)
+      .then((result) => {
+        this.refreshProfileAssets(result.assets);
+        wx.showToast({
+          title: '已选择',
+          icon: 'success'
+        });
+      })
+      .catch(() => {
+        wx.showToast({
+          title: '未选择图片',
+          icon: 'none'
+        });
+      });
+  },
+
+  onClearProfileAsset(event) {
+    const field = event.detail && event.detail.field;
+
+    try {
+      const profileAssets = profileAssetService.clearProfileAsset(wx, field);
+
+      this.refreshProfileAssets(profileAssets);
+      wx.showToast({
+        title: '已清除',
+        icon: 'success'
+      });
+    } catch (error) {
+      wx.showToast({
+        title: '清除失败',
+        icon: 'none'
+      });
+    }
   },
 
   onOpenProject(event) {
