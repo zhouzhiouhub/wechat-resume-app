@@ -3,6 +3,7 @@ const resumeData = require('../modules/resume/resumeData');
 const resumeMapper = require('../modules/resume/resumeMapper');
 const resumeService = require('../services/resumeService');
 const contactService = require('../services/contactService');
+const resumeSectionService = require('../services/resumeSectionService');
 const validator = require('../utils/validator');
 
 function runCheck(name, check) {
@@ -88,6 +89,28 @@ runCheck('contact service validates and prepares interaction payloads', () => {
   assert.strictEqual(clipboardPayload.data, contact.email);
   assert.throws(() => contactService.createClipboardPayload('bad-email'), /valid email/);
   assert.throws(() => contactService.createPreviewPayload(''), /wechatQr/);
+});
+
+runCheck('home section service keeps all content as the quick scan entry', () => {
+  const sections = resumeSectionService.getHomeSections();
+  const defaultState = resumeSectionService.createHomeSectionState();
+  const projectState = resumeSectionService.createHomeSectionState('projects');
+
+  assert.deepStrictEqual(
+    sections.map((section) => section.id),
+    ['profile', 'skills', 'projects', 'contact', 'all']
+  );
+  assert.strictEqual(sections[sections.length - 1].id, 'all');
+  assert.strictEqual(defaultState.activeSection, 'all');
+  assert.strictEqual(defaultState.sections[4].isActive, true);
+  assert.strictEqual(defaultState.showProfile, true);
+  assert.strictEqual(defaultState.showSkills, true);
+  assert.strictEqual(defaultState.showProjects, true);
+  assert.strictEqual(defaultState.showContact, true);
+  assert.strictEqual(projectState.showProfile, false);
+  assert.strictEqual(projectState.showProjects, true);
+  assert.strictEqual(projectState.sections[2].isActive, true);
+  assert.strictEqual(resumeSectionService.normalizeSectionId('missing'), 'all');
 });
 
 runCheck('missing required fields report a clear validation error', () => {

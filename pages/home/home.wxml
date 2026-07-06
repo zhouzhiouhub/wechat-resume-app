@@ -4,30 +4,102 @@
   </block>
 
   <block wx:elif="{{profile}}">
-    <profile-card profile="{{profile}}"></profile-card>
+    <view class="resume-shell">
+      <view class="resume-topbar">
+        <view
+          class="menu-toggle"
+          aria-role="button"
+          bindtap="onToggleMenu"
+        >
+          <view class="menu-toggle-icon">
+            <view></view>
+            <view></view>
+            <view></view>
+          </view>
+        </view>
 
-    <skill-overview
-      highlights="{{skillHighlights}}"
-      groups="{{skillGroups}}"
-    ></skill-overview>
-
-    <view class="section">
-      <view class="section-header">
-        <text class="section-heading">重点项目</text>
-        <text class="section-meta">点击查看详情</text>
+        <view class="content-heading">
+          <text class="content-title">{{activeSectionTitle}}</text>
+          <text class="content-meta">{{activeSectionMeta}}</text>
+        </view>
       </view>
-      <project-card
-        wx:for="{{featuredProjects}}"
-        wx:key="id"
-        project="{{item}}"
-        bind:open="onOpenProject"
-      ></project-card>
-    </view>
 
-    <contact-panel
-      contact="{{contact}}"
-      bind:copyemail="onCopyEmail"
-      bind:showwechatqr="onShowWechatQr"
-    ></contact-panel>
+      <view wx:if="{{isMenuVisible}}" class="menu-backdrop" bindtap="onHideMenu"></view>
+
+      <view class="{{isMenuVisible ? 'menu-drawer is-open' : 'menu-drawer'}}">
+        <view class="menu-drawer-header">
+          <view class="menu-drawer-icon" aria-label="菜单">
+            <view></view>
+            <view></view>
+            <view></view>
+          </view>
+          <view
+            class="menu-close"
+            aria-role="button"
+            bindtap="onHideMenu"
+          >
+            <view></view>
+            <view></view>
+          </view>
+        </view>
+
+        <scroll-view
+          class="resume-menu"
+          scroll-y
+          enhanced
+          show-scrollbar="{{false}}"
+        >
+          <view
+            wx:for="{{sections}}"
+            wx:key="id"
+            class="{{item.isActive ? 'menu-item is-active' : 'menu-item'}}"
+            aria-role="button"
+            data-section-id="{{item.id}}"
+            bindtap="onSelectSection"
+          >
+            <text class="menu-label">{{item.label}}</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <scroll-view
+        class="resume-content"
+        scroll-y
+        enhanced
+        show-scrollbar="{{false}}"
+      >
+        <view wx:if="{{showProfile}}" class="content-section">
+          <profile-card profile="{{profile}}"></profile-card>
+        </view>
+
+        <view wx:if="{{showSkills}}" class="content-section">
+          <skill-overview
+            highlights="{{skillHighlights}}"
+            groups="{{skillGroups}}"
+          ></skill-overview>
+        </view>
+
+        <view wx:if="{{showProjects}}" class="content-section section">
+          <view class="section-header">
+            <text class="section-heading">重点项目</text>
+            <text class="section-meta">精选 3 项</text>
+          </view>
+          <project-card
+            wx:for="{{featuredProjects}}"
+            wx:key="id"
+            project="{{item}}"
+            bind:open="onOpenProject"
+          ></project-card>
+        </view>
+
+        <view wx:if="{{showContact}}" class="content-section">
+          <contact-panel
+            contact="{{contact}}"
+            bind:copyemail="onCopyEmail"
+            bind:showwechatqr="onShowWechatQr"
+          ></contact-panel>
+        </view>
+      </scroll-view>
+    </view>
   </block>
 </view>

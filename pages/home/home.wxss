@@ -3,6 +3,214 @@
   padding: 32rpx;
 }
 
+.resume-shell {
+  position: relative;
+  height: calc(100vh - 64rpx);
+  min-height: 880rpx;
+}
+
+.resume-topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88rpx;
+  margin-bottom: 20rpx;
+  padding: 0 148rpx 16rpx;
+  border-bottom: 1rpx solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+.menu-toggle {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  bottom: 16rpx;
+  left: 0;
+  width: 64rpx;
+  height: 64rpx;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+}
+
+.menu-toggle-icon {
+  position: absolute;
+  top: 50%;
+  left: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  width: 32rpx;
+  transform: translateY(-50%);
+}
+
+.menu-toggle-icon view {
+  width: 32rpx;
+  height: 3rpx;
+  background: #0f172a;
+  border-radius: 2rpx;
+}
+
+.menu-backdrop {
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.menu-drawer {
+  position: absolute;
+  z-index: 40;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300rpx;
+  padding: 24rpx 18rpx;
+  background: #f8fafc;
+  border: 0;
+  box-sizing: border-box;
+  box-shadow: 12rpx 0 32rpx rgba(15, 23, 42, 0.14);
+  transform: translateX(-340rpx);
+  transition: transform 180ms ease;
+}
+
+.menu-drawer.is-open {
+  transform: translateX(0);
+}
+
+.menu-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.menu-drawer-icon {
+  display: flex;
+  flex: 0 0 56rpx;
+  flex-direction: column;
+  gap: 7rpx;
+  justify-content: center;
+  width: 56rpx;
+  height: 56rpx;
+}
+
+.menu-drawer-icon view {
+  width: 34rpx;
+  height: 4rpx;
+  background: #0f172a;
+  border-radius: 2rpx;
+}
+
+.menu-close {
+  position: relative;
+  flex: 0 0 56rpx;
+  width: 56rpx;
+  height: 56rpx;
+  background: transparent;
+  border: 0;
+}
+
+.menu-close view {
+  position: absolute;
+  top: 26rpx;
+  left: 15rpx;
+  width: 26rpx;
+  height: 3rpx;
+  background: #0f172a;
+  border-radius: 2rpx;
+}
+
+.menu-close view:first-child {
+  transform: rotate(45deg);
+}
+
+.menu-close view:last-child {
+  transform: rotate(-45deg);
+}
+
+.resume-menu {
+  width: 100%;
+  height: calc(100% - 96rpx);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 76rpx;
+  margin: 0 0 8rpx;
+  padding: 0 18rpx 0 20rpx;
+  color: #4b5563;
+  background: transparent;
+  border: 0;
+  border-radius: 8rpx;
+  line-height: 1.2;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.menu-item.is-active {
+  color: #0f172a;
+  background: #e0f2fe;
+  box-shadow: inset 4rpx 0 0 #0284c7;
+}
+
+.menu-label {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  font-size: 28rpx;
+  font-weight: 700;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resume-content {
+  height: calc(100% - 108rpx);
+  box-sizing: border-box;
+}
+
+.content-heading {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.content-title {
+  color: #111827;
+  font-size: 38rpx;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.content-meta {
+  display: block;
+  margin-top: 8rpx;
+  color: #4b5563;
+  font-size: 24rpx;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.content-section {
+  margin-bottom: 28rpx;
+}
+
 .section {
   margin-top: 28rpx;
 }
@@ -34,4 +242,49 @@
   border: 1rpx solid #fecaca;
   border-radius: 8rpx;
   font-size: 28rpx;
+}
+
+@media (max-width: 420px) {
+  .home-page {
+    padding: 24rpx;
+  }
+
+  .resume-shell {
+    height: calc(100vh - 48rpx);
+  }
+
+  .resume-topbar {
+    min-height: 84rpx;
+    padding: 0 120rpx 14rpx;
+  }
+
+  .menu-toggle {
+    width: 60rpx;
+    height: 60rpx;
+  }
+
+  .menu-toggle-icon {
+    left: 14rpx;
+  }
+
+  .menu-drawer {
+    width: 280rpx;
+    padding: 22rpx 16rpx;
+  }
+
+  .menu-item {
+    min-height: 72rpx;
+  }
+
+  .menu-label {
+    font-size: 24rpx;
+  }
+
+  .content-title {
+    font-size: 34rpx;
+  }
+
+  .content-meta {
+    font-size: 22rpx;
+  }
 }

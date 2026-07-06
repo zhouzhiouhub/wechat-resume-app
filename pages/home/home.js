@@ -1,5 +1,6 @@
 const resumeService = require('../../services/resumeService');
 const contactService = require('../../services/contactService');
+const resumeSectionService = require('../../services/resumeSectionService');
 
 Page({
   data: {
@@ -8,6 +9,16 @@ Page({
     skillHighlights: [],
     skillGroups: [],
     featuredProjects: [],
+    sections: [],
+    activeSection: resumeSectionService.DEFAULT_HOME_SECTION_ID,
+    activeSectionTitle: '',
+    activeSectionMeta: '',
+    isAllContent: true,
+    isMenuVisible: false,
+    showProfile: true,
+    showSkills: true,
+    showProjects: true,
+    showContact: true,
     loadError: ''
   },
 
@@ -18,6 +29,7 @@ Page({
   loadResume() {
     try {
       const homeResume = resumeService.getHomeResume();
+      const sectionState = resumeSectionService.createHomeSectionState();
 
       this.setData({
         profile: homeResume.profile,
@@ -25,6 +37,7 @@ Page({
         skillHighlights: homeResume.skillHighlights,
         skillGroups: homeResume.skillGroups,
         featuredProjects: homeResume.featuredProjects,
+        ...sectionState,
         loadError: ''
       });
     } catch (error) {
@@ -34,6 +47,28 @@ Page({
         loadError: error.message || '简历数据加载失败'
       });
     }
+  },
+
+  onSelectSection(event) {
+    const sectionId = event.currentTarget.dataset.sectionId;
+    const sectionState = resumeSectionService.createHomeSectionState(sectionId);
+
+    this.setData({
+      ...sectionState,
+      isMenuVisible: false
+    });
+  },
+
+  onToggleMenu() {
+    this.setData({
+      isMenuVisible: !this.data.isMenuVisible
+    });
+  },
+
+  onHideMenu() {
+    this.setData({
+      isMenuVisible: false
+    });
   },
 
   onOpenProject(event) {
