@@ -1,0 +1,103 @@
+.timeline {
+  margin-top: 28rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.section-heading {
+  color: var(--resume-text, #111827);
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.section-meta {
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+}
+
+.timeline-list {
+  padding: 24rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: 20rpx;
+}
+
+.timeline-item + .timeline-item {
+  margin-top: 28rpx;
+}
+
+.timeline-item + .timeline-item::before {
+  position: absolute;
+  top: -22rpx;
+  bottom: 100%;
+  left: 36rpx;
+  width: 2rpx;
+  background: var(--resume-border, #e5e7eb);
+  content: "";
+}
+
+.timeline-marker {
+  flex: 0 0 72rpx;
+  height: 72rpx;
+  border-radius: 36rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent, #2563eb);
+  text-align: center;
+}
+
+.timeline-type {
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 72rpx;
+}
+
+.timeline-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline-period {
+  display: block;
+  color: var(--resume-accent, #2563eb);
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.timeline-title {
+  display: block;
+  margin-top: 6rpx;
+  color: var(--resume-text, #111827);
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.timeline-organization,
+.timeline-description {
+  display: block;
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.timeline-organization {
+  margin-top: 4rpx;
+  font-weight: 600;
+}
+
+.timeline-description {
+  margin-top: 8rpx;
+}

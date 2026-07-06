@@ -1,4 +1,4 @@
-<view class="detail-page">
+<view class="detail-page {{themeClass}}">
   <view wx:if="{{loadError}}" class="error-panel">
     <text>{{loadError}}</text>
     <button class="back-button" bindtap="backHome">返回首页</button>

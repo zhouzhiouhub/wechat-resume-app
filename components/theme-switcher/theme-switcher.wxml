@@ -1,0 +1,13 @@
+<view class="theme-switcher">
+  <view
+    wx:for="{{options}}"
+    wx:key="id"
+    class="{{item.isActive ? 'theme-dot is-active' : 'theme-dot'}}"
+    style="--theme-dot-color: {{item.swatchColor}};"
+    aria-role="button"
+    data-theme-id="{{item.id}}"
+    bindtap="handleChange"
+  >
+    <view class="theme-swatch"></view>
+  </view>
+</view>

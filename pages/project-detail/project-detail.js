@@ -1,4 +1,5 @@
 const resumeService = require('../../services/resumeService');
+const themeService = require('../../services/themeService');
 
 function safeDecode(value) {
   try {
@@ -10,12 +11,27 @@ function safeDecode(value) {
 
 Page({
   data: {
+    themeClass: '',
     project: null,
     loadError: ''
   },
 
   onLoad(options) {
+    this.loadTheme();
     this.loadProject(options && options.id);
+  },
+
+  onShow() {
+    this.loadTheme();
+  },
+
+  loadTheme() {
+    const themeState = themeService.createThemeState(themeService.loadThemeId(wx));
+
+    themeService.applyNavigationBar(wx, themeState.activeTheme);
+    this.setData({
+      themeClass: themeState.themeClass
+    });
   },
 
   loadProject(projectId) {

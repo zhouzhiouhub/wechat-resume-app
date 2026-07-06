@@ -11,13 +11,13 @@
 }
 
 .section-heading {
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 32rpx;
   font-weight: 700;
 }
 
 .section-meta {
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 24rpx;
 }
 
@@ -33,8 +33,8 @@
   gap: 8rpx;
   padding: 8rpx 14rpx;
   border-radius: 8rpx;
-  background: #eef2ff;
-  color: #3730a3;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
   font-size: 24rpx;
   line-height: 1.4;
 }
@@ -44,19 +44,19 @@
 }
 
 .highlight-level {
-  color: #4f46e5;
+  color: var(--resume-accent, #4f46e5);
 }
 
 .skill-group {
   margin-top: 16rpx;
   padding: 24rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
 }
 
 .skill-group-title {
-  color: #1f2937;
+  color: var(--resume-text, #1f2937);
   font-size: 28rpx;
   font-weight: 600;
 }
@@ -83,7 +83,7 @@
 
 .skill-name {
   display: block;
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 26rpx;
   font-weight: 600;
   line-height: 1.4;
@@ -92,7 +92,7 @@
 .skill-tags {
   display: block;
   margin-top: 4rpx;
-  color: #6b7280;
+  color: var(--resume-subtle, #6b7280);
   font-size: 22rpx;
   line-height: 1.4;
 }
@@ -109,18 +109,18 @@
   height: 10rpx;
   overflow: hidden;
   border-radius: 999rpx;
-  background: #e5e7eb;
+  background: var(--resume-track, #e5e7eb);
 }
 
 .skill-progress {
   height: 100%;
   border-radius: 999rpx;
-  background: #2563eb;
+  background: var(--resume-accent, #2563eb);
 }
 
 .skill-level {
   flex: 0 0 54rpx;
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 22rpx;
   line-height: 1.4;
   text-align: right;

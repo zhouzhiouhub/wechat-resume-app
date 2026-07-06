@@ -21,6 +21,10 @@ Component({
       this.triggerEvent('showwechatqr', {
         wechatQr: contact.wechatQr
       });
+    },
+
+    handleOpenPoster() {
+      this.triggerEvent('openposter');
     }
   }
 });

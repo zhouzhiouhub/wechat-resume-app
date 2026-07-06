@@ -1,6 +1,8 @@
 .detail-page {
   min-height: 100vh;
   padding: 32rpx;
+  background: var(--resume-bg, #f6f7fb);
+  color: var(--resume-text, #111827);
 }
 
 .project-gallery {
@@ -8,7 +10,7 @@
   height: 390rpx;
   overflow: hidden;
   border-radius: 8rpx;
-  background: #e5e7eb;
+  background: var(--resume-track, #e5e7eb);
 }
 
 .gallery-image {
@@ -21,8 +23,8 @@
 .error-panel {
   margin-top: 20rpx;
   padding: 24rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
 }
 
@@ -32,7 +34,7 @@
 
 .project-name {
   display: block;
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 40rpx;
   font-weight: 700;
   line-height: 1.25;
@@ -41,7 +43,7 @@
 .project-role,
 .project-summary {
   display: block;
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 28rpx;
   line-height: 1.5;
 }
@@ -58,7 +60,7 @@
 .section-heading {
   display: block;
   margin-bottom: 18rpx;
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 32rpx;
   font-weight: 700;
 }
@@ -72,8 +74,8 @@
 .tag {
   padding: 8rpx 14rpx;
   border-radius: 8rpx;
-  background: #eef2ff;
-  color: #3730a3;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
   font-size: 24rpx;
   line-height: 1.4;
 }
@@ -94,8 +96,8 @@
   flex: 0 0 40rpx;
   height: 40rpx;
   border-radius: 20rpx;
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--resume-success-soft, #ecfdf5);
+  color: var(--resume-success, #047857);
   font-size: 22rpx;
   font-weight: 700;
   line-height: 40rpx;
@@ -107,7 +109,7 @@
 .challenge-text {
   flex: 1;
   min-width: 0;
-  color: #374151;
+  color: var(--resume-muted, #374151);
   font-size: 26rpx;
   line-height: 1.55;
 }
@@ -115,7 +117,7 @@
 .challenge-card {
   padding: 20rpx;
   border-radius: 8rpx;
-  background: #f9fafb;
+  background: var(--resume-surface-hover, #f9fafb);
 }
 
 .challenge-card + .challenge-card {
@@ -125,7 +127,7 @@
 .challenge-label {
   display: block;
   margin: 14rpx 0 6rpx;
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 24rpx;
   font-weight: 700;
 }
@@ -144,15 +146,15 @@
   height: 12rpx;
   margin-top: 14rpx;
   border-radius: 6rpx;
-  background: #2563eb;
+  background: var(--resume-accent, #2563eb);
 }
 
 .back-button {
   margin-top: 24rpx;
   min-height: 76rpx;
   border-radius: 8rpx;
-  background: #f3f4f6;
-  color: #111827;
+  background: var(--resume-accent-soft, #f3f4f6);
+  color: var(--resume-text, #111827);
   font-size: 28rpx;
   line-height: 76rpx;
 }
@@ -162,13 +164,13 @@
 }
 
 .primary-back {
-  background: #111827;
-  color: #ffffff;
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
 }
 
 .error-panel {
-  color: #b91c1c;
-  background: #fef2f2;
-  border-color: #fecaca;
+  color: var(--resume-danger, #b91c1c);
+  background: var(--resume-danger-soft, #fef2f2);
+  border-color: var(--resume-danger-border, #fecaca);
   font-size: 28rpx;
 }

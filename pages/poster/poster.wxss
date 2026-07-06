@@ -1,0 +1,211 @@
+.poster-page {
+  min-height: 100vh;
+  padding: 32rpx;
+  background: var(--resume-bg, #f6f7fb);
+  color: var(--resume-text, #111827);
+}
+
+.poster-card {
+  overflow: hidden;
+  padding: 36rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+}
+
+.poster-header {
+  padding-bottom: 28rpx;
+  border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.poster-kicker {
+  display: inline-block;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  background: var(--resume-success-soft, #ecfdf5);
+  color: var(--resume-success, #047857);
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+.poster-name {
+  display: block;
+  margin-top: 18rpx;
+  color: var(--resume-text, #111827);
+  font-size: 52rpx;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.poster-title,
+.poster-summary {
+  display: block;
+  color: var(--resume-muted, #4b5563);
+  line-height: 1.5;
+}
+
+.poster-title {
+  margin-top: 10rpx;
+  color: var(--resume-text, #111827);
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.poster-summary {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+}
+
+.poster-section {
+  margin-top: 30rpx;
+}
+
+.poster-section-title {
+  display: block;
+  color: var(--resume-text, #111827);
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.poster-skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.poster-skill {
+  display: flex;
+  gap: 8rpx;
+  padding: 10rpx 16rpx;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.poster-project {
+  margin-top: 16rpx;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
+.poster-project-name,
+.poster-project-summary {
+  display: block;
+}
+
+.poster-project-name {
+  color: var(--resume-text, #111827);
+  font-size: 28rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.poster-project-summary {
+  margin-top: 8rpx;
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.poster-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+  margin-top: 34rpx;
+  padding-top: 28rpx;
+  border-top: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.poster-contact-label,
+.poster-contact-value {
+  display: block;
+}
+
+.poster-contact-label {
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+}
+
+.poster-contact-value {
+  margin-top: 6rpx;
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.poster-qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 128rpx;
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent, #2563eb);
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.poster-qr-image {
+  width: 112rpx;
+  height: 112rpx;
+}
+
+.poster-qr-text {
+  width: 96rpx;
+  font-size: 20rpx;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.poster-footer {
+  display: block;
+  margin-top: 24rpx;
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.poster-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.poster-button {
+  min-height: 76rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  line-height: 76rpx;
+}
+
+.poster-button::after {
+  border: 0;
+}
+
+.primary-button {
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
+}
+
+.secondary-button {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+}
+
+.error-panel {
+  padding: 24rpx;
+  color: var(--resume-danger, #b91c1c);
+  background: var(--resume-danger-soft, #fef2f2);
+  border: 1rpx solid var(--resume-danger-border, #fecaca);
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}

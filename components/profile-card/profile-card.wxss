@@ -2,8 +2,8 @@
   display: flex;
   gap: 24rpx;
   padding: 32rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
 }
 
@@ -17,15 +17,15 @@
 
 .avatar-image {
   display: block;
-  background: #e5e7eb;
+  background: var(--resume-track, #e5e7eb);
 }
 
 .avatar-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1f2937;
-  color: #ffffff;
+  background: var(--resume-avatar, #1f2937);
+  color: var(--resume-inverse, #ffffff);
   font-size: 40rpx;
   font-weight: 700;
 }
@@ -43,7 +43,7 @@
 }
 
 .profile-name {
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 44rpx;
   font-weight: 700;
   line-height: 1.2;
@@ -52,8 +52,8 @@
 .status-pill {
   padding: 6rpx 14rpx;
   border-radius: 999rpx;
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--resume-success-soft, #ecfdf5);
+  color: var(--resume-success, #047857);
   font-size: 22rpx;
   line-height: 1.4;
 }
@@ -63,12 +63,12 @@
 .profile-location {
   display: block;
   margin-top: 12rpx;
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 28rpx;
   line-height: 1.5;
 }
 
 .profile-title {
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-weight: 600;
 }

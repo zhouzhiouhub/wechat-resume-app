@@ -2,8 +2,10 @@
   "navigationBarTitleText": "个人简历",
   "usingComponents": {
     "profile-card": "/components/profile-card/profile-card",
+    "theme-switcher": "/components/theme-switcher/theme-switcher",
     "skill-overview": "/components/skill-overview/skill-overview",
     "project-card": "/components/project-card/project-card",
+    "timeline-view": "/components/timeline/timeline",
     "contact-panel": "/components/contact-panel/contact-panel"
   }
 }

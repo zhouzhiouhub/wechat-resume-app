@@ -1,0 +1,24 @@
+<view class="timeline">
+  <view class="section-header">
+    <text class="section-heading">履历时间轴</text>
+    <text class="section-meta">按时间倒序</text>
+  </view>
+
+  <view class="timeline-list">
+    <view
+      wx:for="{{items}}"
+      wx:key="title"
+      class="timeline-item"
+    >
+      <view class="timeline-marker">
+        <text class="timeline-type">{{item.typeLabel}}</text>
+      </view>
+      <view class="timeline-content">
+        <text class="timeline-period">{{item.period}}</text>
+        <text class="timeline-title">{{item.title}}</text>
+        <text class="timeline-organization">{{item.organization}}</text>
+        <text class="timeline-description">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
+</view>

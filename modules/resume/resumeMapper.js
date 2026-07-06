@@ -1,8 +1,10 @@
 const validator = require('../../utils/validator');
+const dateUtils = require('../../utils/date');
 const {
   PROFILE_REQUIRED_FIELDS,
   PROJECT_REQUIRED_FIELDS,
-  CHALLENGE_REQUIRED_FIELDS
+  CHALLENGE_REQUIRED_FIELDS,
+  TIMELINE_REQUIRED_FIELDS
 } = require('./resumeModel');
 
 function createError(path, message) {
@@ -179,6 +181,77 @@ function normalizeProjects(projects) {
   return normalizedProjects;
 }
 
+function getTimelineTypeLabel(type) {
+  const typeLabels = {
+    work: '工作',
+    education: '教育',
+    internship: '实习',
+    project: '项目'
+  };
+
+  return typeLabels[type] || '经历';
+}
+
+function normalizeTimelineItem(item, index) {
+  const path = `timeline[${index}]`;
+  assertPlainObject(item, path);
+
+  TIMELINE_REQUIRED_FIELDS.forEach((field) => {
+    assertNonEmptyString(item[field], `${path}.${field}`);
+  });
+
+  if (!validator.isValidYearMonth(item.startDate)) {
+    throw createError(`${path}.startDate`, 'must use YYYY-MM format');
+  }
+
+  const endDate = normalizeOptionalString(item.endDate);
+
+  if (endDate && !validator.isValidYearMonth(endDate)) {
+    throw createError(`${path}.endDate`, 'must use YYYY-MM format');
+  }
+
+  return {
+    type: item.type.trim(),
+    typeLabel: getTimelineTypeLabel(item.type.trim()),
+    title: item.title.trim(),
+    organization: item.organization.trim(),
+    startDate: item.startDate.trim(),
+    endDate,
+    period: dateUtils.formatYearMonthRange(item.startDate, endDate),
+    description: item.description.trim(),
+    originalIndex: index
+  };
+}
+
+function compareTimelineItems(left, right) {
+  const currentOrder = 999999;
+  const rightEndOrder = dateUtils.getYearMonthOrder(right.endDate, currentOrder);
+  const leftEndOrder = dateUtils.getYearMonthOrder(left.endDate, currentOrder);
+
+  if (rightEndOrder !== leftEndOrder) {
+    return rightEndOrder - leftEndOrder;
+  }
+
+  const startOrderDiff = dateUtils.compareYearMonthDesc(left.startDate, right.startDate);
+
+  if (startOrderDiff !== 0) {
+    return startOrderDiff;
+  }
+
+  return left.originalIndex - right.originalIndex;
+}
+
+function normalizeTimeline(timeline) {
+  if (!Array.isArray(timeline)) {
+    return [];
+  }
+
+  return timeline
+    .map(normalizeTimelineItem)
+    .sort(compareTimelineItems)
+    .map(({ originalIndex, ...item }) => item);
+}
+
 function getSkillHighlights(skillGroups, limit) {
   return skillGroups
     .reduce((skills, group) => skills.concat(group.skills), [])
@@ -209,7 +282,7 @@ function mapResumeData(data) {
     profile: normalizeProfile(data.profile),
     skillGroups: normalizeSkillGroups(data.skillGroups),
     projects: normalizeProjects(data.projects),
-    timeline: Array.isArray(data.timeline) ? data.timeline.slice() : []
+    timeline: normalizeTimeline(data.timeline)
   };
 }
 
@@ -218,6 +291,7 @@ module.exports = {
   normalizeProfile,
   normalizeSkillGroups,
   normalizeProjects,
+  normalizeTimeline,
   getSkillHighlights,
   getFeaturedProjects
 };

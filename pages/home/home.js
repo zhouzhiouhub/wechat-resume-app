@@ -1,14 +1,19 @@
 const resumeService = require('../../services/resumeService');
 const contactService = require('../../services/contactService');
 const resumeSectionService = require('../../services/resumeSectionService');
+const themeService = require('../../services/themeService');
 
 Page({
   data: {
+    themeClass: '',
+    themeOptions: [],
+    activeTheme: '',
     profile: null,
     contact: null,
     skillHighlights: [],
     skillGroups: [],
     featuredProjects: [],
+    timelineItems: [],
     sections: [],
     activeSection: resumeSectionService.DEFAULT_HOME_SECTION_ID,
     activeSectionTitle: '',
@@ -18,12 +23,25 @@ Page({
     showProfile: true,
     showSkills: true,
     showProjects: true,
+    showTimeline: true,
     showContact: true,
     loadError: ''
   },
 
   onLoad() {
+    this.loadTheme();
     this.loadResume();
+  },
+
+  onShow() {
+    this.loadTheme();
+  },
+
+  loadTheme() {
+    const themeState = themeService.createThemeState(themeService.loadThemeId(wx));
+
+    themeService.applyNavigationBar(wx, themeState.activeTheme);
+    this.setData(themeState);
   },
 
   loadResume() {
@@ -37,6 +55,7 @@ Page({
         skillHighlights: homeResume.skillHighlights,
         skillGroups: homeResume.skillGroups,
         featuredProjects: homeResume.featuredProjects,
+        timelineItems: homeResume.timeline,
         ...sectionState,
         loadError: ''
       });
@@ -69,6 +88,15 @@ Page({
     this.setData({
       isMenuVisible: false
     });
+  },
+
+  onChangeTheme(event) {
+    const themeId = event.detail && event.detail.themeId;
+    const savedThemeId = themeService.saveThemeId(wx, themeId);
+    const themeState = themeService.createThemeState(savedThemeId);
+
+    themeService.applyNavigationBar(wx, themeState.activeTheme);
+    this.setData(themeState);
   },
 
   onOpenProject(event) {
@@ -111,5 +139,11 @@ Page({
           icon: 'none'
         });
       });
+  },
+
+  onOpenPoster() {
+    wx.navigateTo({
+      url: '/pages/poster/poster'
+    });
   }
 });

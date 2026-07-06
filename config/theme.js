@@ -1,0 +1,99 @@
+const DEFAULT_THEME_ID = 'light';
+
+const THEMES = [
+  {
+    id: 'light',
+    label: '浅色',
+    className: 'theme-light',
+    swatchColor: '#2563eb',
+    navigationBar: {
+      backgroundColor: '#111827',
+      textStyle: 'white'
+    },
+    variables: {
+      '--resume-bg': '#f6f7fb',
+      '--resume-surface': '#ffffff',
+      '--resume-surface-hover': '#f9fafb',
+      '--resume-text': '#111827',
+      '--resume-muted': '#4b5563',
+      '--resume-subtle': '#6b7280',
+      '--resume-border': '#e5e7eb',
+      '--resume-track': '#e5e7eb',
+      '--resume-accent': '#2563eb',
+      '--resume-accent-soft': '#eef2ff',
+      '--resume-accent-text': '#3730a3',
+      '--resume-success': '#047857',
+      '--resume-success-soft': '#ecfdf5',
+      '--resume-inverse': '#ffffff',
+      '--resume-avatar': '#1f2937',
+      '--resume-danger': '#b91c1c',
+      '--resume-danger-soft': '#fef2f2',
+      '--resume-danger-border': '#fecaca'
+    }
+  },
+  {
+    id: 'dark',
+    label: '暗色',
+    className: 'theme-dark',
+    swatchColor: '#60a5fa',
+    navigationBar: {
+      backgroundColor: '#020617',
+      textStyle: 'white'
+    },
+    variables: {
+      '--resume-bg': '#0f172a',
+      '--resume-surface': '#111827',
+      '--resume-surface-hover': '#1f2937',
+      '--resume-text': '#f8fafc',
+      '--resume-muted': '#cbd5e1',
+      '--resume-subtle': '#94a3b8',
+      '--resume-border': '#334155',
+      '--resume-track': '#334155',
+      '--resume-accent': '#60a5fa',
+      '--resume-accent-soft': '#1e3a8a',
+      '--resume-accent-text': '#dbeafe',
+      '--resume-success': '#34d399',
+      '--resume-success-soft': '#064e3b',
+      '--resume-inverse': '#020617',
+      '--resume-avatar': '#1e293b',
+      '--resume-danger': '#fecaca',
+      '--resume-danger-soft': '#450a0a',
+      '--resume-danger-border': '#7f1d1d'
+    }
+  },
+  {
+    id: 'emerald',
+    label: '青绿',
+    className: 'theme-emerald',
+    swatchColor: '#059669',
+    navigationBar: {
+      backgroundColor: '#064e3b',
+      textStyle: 'white'
+    },
+    variables: {
+      '--resume-bg': '#f0fdf4',
+      '--resume-surface': '#ffffff',
+      '--resume-surface-hover': '#ecfdf5',
+      '--resume-text': '#102a23',
+      '--resume-muted': '#36534a',
+      '--resume-subtle': '#55756a',
+      '--resume-border': '#bbf7d0',
+      '--resume-track': '#d1fae5',
+      '--resume-accent': '#059669',
+      '--resume-accent-soft': '#d1fae5',
+      '--resume-accent-text': '#065f46',
+      '--resume-success': '#047857',
+      '--resume-success-soft': '#dcfce7',
+      '--resume-inverse': '#ffffff',
+      '--resume-avatar': '#065f46',
+      '--resume-danger': '#b91c1c',
+      '--resume-danger-soft': '#fef2f2',
+      '--resume-danger-border': '#fecaca'
+    }
+  }
+];
+
+module.exports = {
+  DEFAULT_THEME_ID,
+  THEMES
+};

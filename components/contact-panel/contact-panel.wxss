@@ -12,20 +12,20 @@
 }
 
 .section-heading {
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 32rpx;
   font-weight: 700;
 }
 
 .section-meta {
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 24rpx;
 }
 
 .contact-card {
   padding: 24rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
 }
 
@@ -37,14 +37,14 @@
 }
 
 .contact-label {
-  color: #6b7280;
+  color: var(--resume-subtle, #6b7280);
   font-size: 24rpx;
 }
 
 .contact-value {
   flex: 1;
   min-width: 0;
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 28rpx;
   font-weight: 600;
   line-height: 1.4;
@@ -54,7 +54,7 @@
 
 .contact-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12rpx;
   margin-top: 20rpx;
 }
@@ -72,21 +72,21 @@
 }
 
 .primary-button {
-  background: #111827;
-  color: #ffffff;
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
 }
 
 .secondary-button {
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--resume-success-soft, #ecfdf5);
+  color: var(--resume-success, #047857);
 }
 
 .muted-button {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: var(--resume-accent-soft, #f3f4f6);
+  color: var(--resume-subtle, #6b7280);
 }
 
 .plain-button {
-  background: #eef2ff;
-  color: #3730a3;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
 }

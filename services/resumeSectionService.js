@@ -2,6 +2,7 @@ const HOME_SECTION_IDS = {
   PROFILE: 'profile',
   SKILLS: 'skills',
   PROJECTS: 'projects',
+  TIMELINE: 'timeline',
   CONTACT: 'contact',
   ALL: 'all'
 };
@@ -26,6 +27,12 @@ const HOME_SECTIONS = [
     meta: '作品与业务成果'
   },
   {
+    id: HOME_SECTION_IDS.TIMELINE,
+    label: '履历',
+    title: '履历时间轴',
+    meta: '工作、学习与成长路径'
+  },
+  {
     id: HOME_SECTION_IDS.CONTACT,
     label: '联系',
     title: '联系方式',
@@ -35,7 +42,7 @@ const HOME_SECTIONS = [
     id: HOME_SECTION_IDS.ALL,
     label: '全部',
     title: '全部内容',
-    meta: '名片、技能、项目、联系'
+    meta: '名片、技能、项目、履历、联系'
   }
 ];
 
@@ -46,8 +53,7 @@ function cloneSection(section, index) {
 
   return {
     ...section,
-    order,
-    indexLabel: order < 10 ? `0${order}` : String(order)
+    order
   };
 }
 
@@ -103,6 +109,7 @@ function createHomeSectionState(activeSectionId = DEFAULT_HOME_SECTION_ID) {
     showProfile: isSectionVisible(activeSection.id, HOME_SECTION_IDS.PROFILE),
     showSkills: isSectionVisible(activeSection.id, HOME_SECTION_IDS.SKILLS),
     showProjects: isSectionVisible(activeSection.id, HOME_SECTION_IDS.PROJECTS),
+    showTimeline: isSectionVisible(activeSection.id, HOME_SECTION_IDS.TIMELINE),
     showContact: isSectionVisible(activeSection.id, HOME_SECTION_IDS.CONTACT)
   };
 }

@@ -22,6 +22,7 @@
         class="action-button secondary-button muted-button"
         bindtap="handleShowWechatQr"
       >二维码待补充</button>
+      <button class="action-button plain-button" bindtap="handleOpenPoster">分享海报</button>
       <button class="action-button plain-button" open-type="contact">客服预留</button>
     </view>
   </view>

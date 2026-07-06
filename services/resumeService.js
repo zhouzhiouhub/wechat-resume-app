@@ -17,6 +17,10 @@ function getProjects() {
   return getResume().projects;
 }
 
+function getTimeline() {
+  return getResume().timeline;
+}
+
 function getProjectById(projectId) {
   if (typeof projectId !== 'string' || projectId.trim().length === 0) {
     return null;
@@ -33,7 +37,8 @@ function getHomeResume() {
     contact: resume.profile.contact,
     skillGroups: resume.skillGroups,
     skillHighlights: resumeMapper.getSkillHighlights(resume.skillGroups, 5),
-    featuredProjects: resumeMapper.getFeaturedProjects(resume.projects, 3)
+    featuredProjects: resumeMapper.getFeaturedProjects(resume.projects, 3),
+    timeline: resume.timeline
   };
 }
 
@@ -42,6 +47,7 @@ module.exports = {
   getProfile,
   getSkillGroups,
   getProjects,
+  getTimeline,
   getProjectById,
   getHomeResume
 };

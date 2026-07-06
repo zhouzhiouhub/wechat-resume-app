@@ -67,11 +67,27 @@ const resumeData = {
   timeline: [
     {
       type: 'work',
+      title: '前端开发工程师',
+      organization: '个人项目与作品集',
+      startDate: '2025-10',
+      endDate: '',
+      description: '围绕微信小程序、React 和工程化能力沉淀可展示项目，完善组件化、主题和分享能力。'
+    },
+    {
+      type: 'work',
       title: '前端开发实习生',
       organization: '某科技公司',
       startDate: '2025-03',
       endDate: '2025-09',
       description: '负责小程序活动页和后台管理页面开发。'
+    },
+    {
+      type: 'education',
+      title: '前端工程化专项学习',
+      organization: '个人技术成长计划',
+      startDate: '2024-09',
+      endDate: '2025-02',
+      description: '系统学习 JavaScript、React、自动化测试和性能优化，并以项目实践验证。'
     }
   ]
 };

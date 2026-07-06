@@ -22,6 +22,10 @@ function isValidSkillLevel(value) {
   return Number.isFinite(value) && value >= 0 && value <= 100;
 }
 
+function isValidYearMonth(value) {
+  return typeof value === 'string' && /^\d{4}-(0[1-9]|1[0-2])$/.test(value.trim());
+}
+
 function isStringArray(value, options) {
   const allowEmpty = options && options.allowEmpty === true;
 
@@ -50,6 +54,7 @@ module.exports = {
   isOptionalString,
   isValidEmail,
   isValidSkillLevel,
+  isValidYearMonth,
   isStringArray,
   hasUniqueValues
 };

@@ -1,6 +1,8 @@
 .home-page {
   min-height: 100vh;
   padding: 32rpx;
+  background: var(--resume-bg, #f6f7fb);
+  color: var(--resume-text, #111827);
 }
 
 .resume-shell {
@@ -16,8 +18,8 @@
   justify-content: center;
   min-height: 88rpx;
   margin-bottom: 20rpx;
-  padding: 0 148rpx 16rpx;
-  border-bottom: 1rpx solid #e5e7eb;
+  padding: 0 176rpx 16rpx;
+  border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
   box-sizing: border-box;
 }
 
@@ -50,8 +52,15 @@
 .menu-toggle-icon view {
   width: 32rpx;
   height: 3rpx;
-  background: #0f172a;
+  background: var(--resume-text, #0f172a);
   border-radius: 2rpx;
+}
+
+.topbar-actions {
+  position: absolute;
+  top: 10rpx;
+  right: 0;
+  z-index: 20;
 }
 
 .menu-backdrop {
@@ -61,7 +70,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(15, 23, 42, 0.28);
+  background: rgba(15, 23, 42, 0.36);
 }
 
 .menu-drawer {
@@ -72,7 +81,7 @@
   left: 0;
   width: 300rpx;
   padding: 24rpx 18rpx;
-  background: #f8fafc;
+  background: var(--resume-surface, #f8fafc);
   border: 0;
   box-sizing: border-box;
   box-shadow: 12rpx 0 32rpx rgba(15, 23, 42, 0.14);
@@ -105,7 +114,7 @@
 .menu-drawer-icon view {
   width: 34rpx;
   height: 4rpx;
-  background: #0f172a;
+  background: var(--resume-text, #0f172a);
   border-radius: 2rpx;
 }
 
@@ -124,7 +133,7 @@
   left: 15rpx;
   width: 26rpx;
   height: 3rpx;
-  background: #0f172a;
+  background: var(--resume-text, #0f172a);
   border-radius: 2rpx;
 }
 
@@ -149,7 +158,7 @@
   min-height: 76rpx;
   margin: 0 0 8rpx;
   padding: 0 18rpx 0 20rpx;
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   background: transparent;
   border: 0;
   border-radius: 8rpx;
@@ -159,9 +168,9 @@
 }
 
 .menu-item.is-active {
-  color: #0f172a;
-  background: #e0f2fe;
-  box-shadow: inset 4rpx 0 0 #0284c7;
+  color: var(--resume-text, #0f172a);
+  background: var(--resume-accent-soft, #e0f2fe);
+  box-shadow: inset 4rpx 0 0 var(--resume-accent, #0284c7);
 }
 
 .menu-label {
@@ -191,7 +200,7 @@
 }
 
 .content-title {
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 38rpx;
   font-weight: 800;
   line-height: 1.2;
@@ -201,7 +210,7 @@
 .content-meta {
   display: block;
   margin-top: 8rpx;
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 24rpx;
   line-height: 1.4;
   text-align: center;
@@ -224,22 +233,22 @@
 }
 
 .section-heading {
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 32rpx;
   font-weight: 700;
 }
 
 .section-meta {
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 24rpx;
 }
 
 .error-panel {
   margin-top: 16rpx;
   padding: 24rpx;
-  color: #b91c1c;
-  background: #fef2f2;
-  border: 1rpx solid #fecaca;
+  color: var(--resume-danger, #b91c1c);
+  background: var(--resume-danger-soft, #fef2f2);
+  border: 1rpx solid var(--resume-danger-border, #fecaca);
   border-radius: 8rpx;
   font-size: 28rpx;
 }
@@ -255,12 +264,16 @@
 
   .resume-topbar {
     min-height: 84rpx;
-    padding: 0 120rpx 14rpx;
+    padding: 0 158rpx 14rpx;
   }
 
   .menu-toggle {
     width: 60rpx;
     height: 60rpx;
+  }
+
+  .topbar-actions {
+    top: 8rpx;
   }
 
   .menu-toggle-icon {

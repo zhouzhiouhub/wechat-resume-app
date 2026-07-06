@@ -1,0 +1,28 @@
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.theme-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 22rpx;
+  background: transparent;
+}
+
+.theme-dot.is-active {
+  background: var(--resume-accent-soft, #eef2ff);
+}
+
+.theme-swatch {
+  width: 22rpx;
+  height: 22rpx;
+  border: 2rpx solid var(--resume-surface, #ffffff);
+  border-radius: 11rpx;
+  background: var(--theme-dot-color, #2563eb);
+  box-shadow: 0 0 0 1rpx var(--resume-border, #e5e7eb);
+}

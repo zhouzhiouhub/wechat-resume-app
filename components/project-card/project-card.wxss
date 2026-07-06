@@ -1,20 +1,20 @@
 .project-card {
   overflow: hidden;
   margin-top: 16rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
 }
 
 .project-card-hover {
-  background: #f9fafb;
+  background: var(--resume-surface-hover, #f9fafb);
 }
 
 .project-cover {
   display: block;
   width: 100%;
   height: 248rpx;
-  background: #e5e7eb;
+  background: var(--resume-track, #e5e7eb);
 }
 
 .project-body {
@@ -35,7 +35,7 @@
 
 .project-name {
   display: block;
-  color: #111827;
+  color: var(--resume-text, #111827);
   font-size: 30rpx;
   font-weight: 700;
   line-height: 1.35;
@@ -44,7 +44,7 @@
 .project-role,
 .project-summary {
   display: block;
-  color: #4b5563;
+  color: var(--resume-muted, #4b5563);
   font-size: 26rpx;
   line-height: 1.5;
 }
@@ -57,8 +57,8 @@
   flex: 0 0 auto;
   padding: 6rpx 14rpx;
   border-radius: 8rpx;
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--resume-success-soft, #ecfdf5);
+  color: var(--resume-success, #047857);
   font-size: 24rpx;
   line-height: 1.4;
 }
@@ -76,8 +76,8 @@
 .project-tag {
   padding: 8rpx 14rpx;
   border-radius: 8rpx;
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--resume-accent-soft, #f3f4f6);
+  color: var(--resume-accent-text, #374151);
   font-size: 24rpx;
   line-height: 1.4;
 }

@@ -4,7 +4,11 @@ const resumeMapper = require('../modules/resume/resumeMapper');
 const resumeService = require('../services/resumeService');
 const contactService = require('../services/contactService');
 const resumeSectionService = require('../services/resumeSectionService');
+const themeService = require('../services/themeService');
+const posterService = require('../services/posterService');
 const validator = require('../utils/validator');
+const dateUtils = require('../utils/date');
+const themeUtils = require('../utils/theme');
 
 function runCheck(name, check) {
   try {
@@ -38,6 +42,7 @@ runCheck('home resume exposes reusable component inputs', () => {
   assert.ok(homeResume.skillHighlights.length > 0);
   assert.ok(homeResume.skillGroups.length > 0);
   assert.ok(homeResume.featuredProjects.length > 0);
+  assert.ok(homeResume.timeline.length > 0);
 
   homeResume.skillGroups.forEach((group) => {
     group.skills.forEach((skill) => {
@@ -50,6 +55,25 @@ runCheck('home resume exposes reusable component inputs', () => {
     assert.ok(project.cover);
     assert.ok(project.summary);
   });
+});
+
+runCheck('timeline items are normalized and sorted by recent date', () => {
+  const timeline = resumeService.getTimeline();
+
+  assert.ok(timeline.length >= 2);
+  timeline.forEach((item) => {
+    assert.ok(validator.isValidYearMonth(item.startDate));
+    assert.ok(item.endDate === '' || validator.isValidYearMonth(item.endDate));
+    assert.ok(item.period);
+    assert.ok(item.typeLabel);
+  });
+
+  for (let index = 1; index < timeline.length; index += 1) {
+    const previousOrder = dateUtils.getYearMonthOrder(timeline[index - 1].endDate, 999999);
+    const currentOrder = dateUtils.getYearMonthOrder(timeline[index].endDate, 999999);
+
+    assert.ok(previousOrder >= currentOrder);
+  }
 });
 
 runCheck('skill levels stay within 0-100', () => {
@@ -98,19 +122,55 @@ runCheck('home section service keeps all content as the quick scan entry', () =>
 
   assert.deepStrictEqual(
     sections.map((section) => section.id),
-    ['profile', 'skills', 'projects', 'contact', 'all']
+    ['profile', 'skills', 'projects', 'timeline', 'contact', 'all']
   );
   assert.strictEqual(sections[sections.length - 1].id, 'all');
   assert.strictEqual(defaultState.activeSection, 'all');
-  assert.strictEqual(defaultState.sections[4].isActive, true);
+  assert.strictEqual(defaultState.sections[5].isActive, true);
   assert.strictEqual(defaultState.showProfile, true);
   assert.strictEqual(defaultState.showSkills, true);
   assert.strictEqual(defaultState.showProjects, true);
+  assert.strictEqual(defaultState.showTimeline, true);
   assert.strictEqual(defaultState.showContact, true);
   assert.strictEqual(projectState.showProfile, false);
   assert.strictEqual(projectState.showProjects, true);
   assert.strictEqual(projectState.sections[2].isActive, true);
   assert.strictEqual(resumeSectionService.normalizeSectionId('missing'), 'all');
+});
+
+runCheck('theme service maps readable theme variables', () => {
+  const darkState = themeService.createThemeState('dark');
+
+  assert.strictEqual(darkState.activeTheme, 'dark');
+  assert.ok(darkState.themeClass);
+  assert.strictEqual(darkState.themeOptions.length >= 3, true);
+  assert.strictEqual(themeService.createThemeState('missing').activeTheme, 'light');
+
+  darkState.themeOptions.forEach((option) => {
+    const variables = themeUtils.getThemeVariables(option.id);
+
+    assert.ok(variables['--resume-bg']);
+    assert.ok(variables['--resume-text']);
+    assert.ok(themeUtils.hasReadableContrast(
+      variables['--resume-text'],
+      variables['--resume-surface']
+    ));
+  });
+});
+
+runCheck('poster model is created from unified resume data', () => {
+  const resume = resumeService.getResume();
+  const poster = posterService.createPosterModel(resume);
+  const renderPlan = posterService.createPosterRenderPlan(poster);
+
+  assert.strictEqual(poster.profile.name, resume.profile.name);
+  assert.strictEqual(poster.contact.email, resume.profile.contact.email);
+  assert.strictEqual(poster.skillTags.length, 3);
+  assert.strictEqual(poster.projects.length, Math.min(resume.projects.length, 2));
+  assert.deepStrictEqual(
+    renderPlan.sections.map((section) => section.id),
+    ['profile', 'skills', 'projects', 'contact']
+  );
 });
 
 runCheck('missing required fields report a clear validation error', () => {
