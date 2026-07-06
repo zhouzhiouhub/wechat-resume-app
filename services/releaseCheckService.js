@@ -5,6 +5,7 @@ const REQUIRED_PAGES = [
   'pages/home/home',
   'pages/project-detail/project-detail',
   'pages/poster/poster',
+  'pages/print/print',
   'pages/admin-dashboard/admin-dashboard',
   'pages/feedback/feedback'
 ];

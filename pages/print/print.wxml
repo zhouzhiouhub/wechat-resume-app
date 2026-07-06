@@ -1,0 +1,65 @@
+<view class="print-page {{themeClass}}">
+  <view wx:if="{{loadError}}" class="error-panel">{{loadError}}</view>
+
+  <block wx:elif="{{printResume}}">
+    <view class="print-sheet">
+      <view class="print-header">
+        <view class="profile-main">
+          <text class="print-kicker">{{printResume.printMeta.title}}</text>
+          <text class="profile-name">{{printResume.profile.name}}</text>
+          <text class="profile-title">{{printResume.profile.title}}</text>
+          <text class="profile-summary">{{printResume.profile.summary}}</text>
+        </view>
+        <view class="contact-block">
+          <text class="contact-line">{{printResume.profile.status}}</text>
+          <text class="contact-line">{{printResume.profile.location}}</text>
+          <text class="contact-line">{{printResume.contact.email}}</text>
+        </view>
+      </view>
+
+      <view class="print-section">
+        <text class="section-heading">核心能力</text>
+        <view class="skill-grid">
+          <view wx:for="{{printResume.topSkills}}" wx:key="name" class="skill-row">
+            <text class="skill-name">{{item.name}}</text>
+            <text class="skill-tags">{{item.tagText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="print-section">
+        <text class="section-heading">项目经历</text>
+        <view wx:for="{{printResume.projects}}" wx:key="id" class="project-block">
+          <view class="project-head">
+            <text class="project-name">{{item.name}}</text>
+            <text class="project-role">{{item.role}}</text>
+          </view>
+          <text class="project-stack">{{item.techStackText}}</text>
+          <view class="compact-list">
+            <text wx:for="{{item.highlights}}" wx:key="*this" class="list-line">• {{item}}</text>
+          </view>
+          <view class="metric-list">
+            <text wx:for="{{item.metrics}}" wx:key="*this" class="metric-line">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="print-section">
+        <text class="section-heading">履历</text>
+        <view wx:for="{{printResume.timeline}}" wx:key="title" class="timeline-row">
+          <view class="timeline-head">
+            <text class="timeline-title">{{item.title}}</text>
+            <text class="timeline-period">{{item.period}}</text>
+          </view>
+          <text class="timeline-org">{{item.organization}}</text>
+          <text class="timeline-desc">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="print-actions">
+      <button class="action-button secondary-button" bindtap="backHome">返回</button>
+      <button class="action-button primary-button" bindtap="onCopyEmail">复制邮箱</button>
+    </view>
+  </block>
+</view>

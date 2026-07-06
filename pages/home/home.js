@@ -215,6 +215,12 @@ Page({
     });
   },
 
+  onOpenPrint() {
+    wx.navigateTo({
+      url: '/pages/print/print'
+    });
+  },
+
   onOpenFeedback() {
     this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.FEEDBACK_OPEN, {
       page: 'home'

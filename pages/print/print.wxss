@@ -1,0 +1,216 @@
+.print-page {
+  min-height: 100vh;
+  padding: 24rpx;
+  background: var(--resume-bg, #f6f7fb);
+  color: var(--resume-text, #111827);
+  box-sizing: border-box;
+}
+
+.print-sheet {
+  padding: 28rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+}
+
+.print-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.print-kicker,
+.profile-name,
+.profile-title,
+.profile-summary,
+.contact-line {
+  display: block;
+}
+
+.print-kicker {
+  color: var(--resume-accent, #2563eb);
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.profile-name {
+  margin-top: 10rpx;
+  color: var(--resume-text, #111827);
+  font-size: 44rpx;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.profile-title {
+  margin-top: 10rpx;
+  color: var(--resume-text, #111827);
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.profile-summary,
+.timeline-desc,
+.project-stack,
+.skill-tags {
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.profile-summary {
+  margin-top: 12rpx;
+}
+
+.contact-block {
+  display: grid;
+  gap: 8rpx;
+  padding: 18rpx;
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
+.contact-line {
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  line-height: 1.45;
+  word-break: break-all;
+}
+
+.print-section {
+  margin-top: 28rpx;
+}
+
+.section-heading {
+  display: block;
+  color: var(--resume-text, #111827);
+  font-size: 30rpx;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.skill-grid,
+.compact-list,
+.metric-list {
+  display: grid;
+  gap: 10rpx;
+  margin-top: 16rpx;
+}
+
+.skill-row,
+.project-block,
+.timeline-row {
+  padding: 18rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
+.skill-row + .skill-row,
+.project-block + .project-block,
+.timeline-row + .timeline-row {
+  margin-top: 12rpx;
+}
+
+.skill-name,
+.project-name,
+.timeline-title {
+  display: block;
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.skill-tags {
+  display: block;
+  margin-top: 4rpx;
+}
+
+.project-head,
+.timeline-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14rpx;
+}
+
+.project-role,
+.timeline-period {
+  flex: 0 0 180rpx;
+  color: var(--resume-accent-text, #3730a3);
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.project-stack {
+  display: block;
+  margin-top: 8rpx;
+}
+
+.list-line,
+.metric-line,
+.timeline-org {
+  display: block;
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.metric-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.metric-line {
+  padding: 10rpx 12rpx;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-weight: 700;
+}
+
+.timeline-org,
+.timeline-desc {
+  margin-top: 6rpx;
+}
+
+.print-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.action-button {
+  min-height: 76rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  line-height: 76rpx;
+}
+
+.action-button::after {
+  border: 0;
+}
+
+.primary-button {
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
+}
+
+.secondary-button {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+}
+
+.error-panel {
+  padding: 24rpx;
+  color: var(--resume-danger, #b91c1c);
+  background: var(--resume-danger-soft, #fef2f2);
+  border: 1rpx solid var(--resume-danger-border, #fecaca);
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}

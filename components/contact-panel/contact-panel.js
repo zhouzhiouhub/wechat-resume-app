@@ -27,6 +27,10 @@ Component({
       this.triggerEvent('openposter');
     },
 
+    handleOpenPrint() {
+      this.triggerEvent('openprint');
+    },
+
     handleOpenFeedback() {
       this.triggerEvent('openfeedback');
     }

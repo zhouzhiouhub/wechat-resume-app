@@ -106,6 +106,7 @@
             bind:copyemail="onCopyEmail"
             bind:showwechatqr="onShowWechatQr"
             bind:openposter="onOpenPoster"
+            bind:openprint="onOpenPrint"
             bind:openfeedback="onOpenFeedback"
           ></contact-panel>
         </view>

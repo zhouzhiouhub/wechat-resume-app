@@ -23,6 +23,7 @@
         bindtap="handleShowWechatQr"
       >二维码待补充</button>
       <button class="action-button plain-button" bindtap="handleOpenPoster">分享海报</button>
+      <button class="action-button plain-button" bindtap="handleOpenPrint">打印版</button>
       <button class="action-button plain-button" bindtap="handleOpenFeedback">留言反馈</button>
       <button class="action-button plain-button" open-type="contact">客服预留</button>
     </view>

@@ -11,6 +11,7 @@ const contactService = require('../services/contactService');
 const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
 const posterService = require('../services/posterService');
+const printResumeService = require('../services/printResumeService');
 const analyticsService = require('../services/analyticsService');
 const authService = require('../services/authService');
 const cloudDataService = require('../services/cloudDataService');
@@ -63,6 +64,8 @@ runCheck('profile includes a valid contact email', () => {
   const profile = resumeService.getProfile();
 
   assert.ok(validator.isValidEmail(profile.contact.email));
+  assert.notStrictEqual(profile.contact.email, 'name@example.com');
+  assert.strictEqual(profile.contact.email, '2922188469@qq.com');
 });
 
 runCheck('home resume exposes reusable component inputs', () => {
@@ -122,6 +125,7 @@ runCheck('project ids are unique and detail lookup works', () => {
   const projectIds = projects.map((project) => project.id);
   const firstProject = resumeService.getProjectById(projectIds[0]);
 
+  assert.ok(projects.length >= 5);
   assert.ok(validator.hasUniqueValues(projectIds));
   assert.strictEqual(firstProject.id, projectIds[0]);
   assert.ok(firstProject.gallery.length > 0);
@@ -241,6 +245,19 @@ runCheck('poster page exposes canvas save interaction', () => {
   assert.ok(posterJs.includes('wx.createCanvasContext'));
   assert.ok(posterJs.includes('wx.canvasToTempFilePath'));
   assert.ok(posterJs.includes('wx.saveImageToPhotosAlbum'));
+});
+
+runCheck('print resume model exposes compact interview-ready sections', () => {
+  const resume = resumeService.getResume();
+  const printResume = printResumeService.createPrintResumeModel(resume);
+
+  assert.strictEqual(printResume.profile.name, resume.profile.name);
+  assert.strictEqual(printResume.contact.email, resume.profile.contact.email);
+  assert.ok(printResume.topSkills.length > 0);
+  assert.ok(printResume.topSkills.length <= 8);
+  assert.strictEqual(printResume.projects.length, resume.projects.length);
+  assert.ok(printResume.projects[0].techStackText.includes('/'));
+  assert.strictEqual(printResume.timeline.length, resume.timeline.length);
 });
 
 runCheck('analytics service builds events and dashboard metrics', () => {
@@ -482,9 +499,10 @@ runCheck('release checklist reports publish blockers and warnings', () => {
 
   assert.strictEqual(releaseChecklist.isReleaseBlocked, false);
   assert.strictEqual(releaseChecklist.summary.fail, 0);
+  assert.ok(releaseChecklist.checks.some((check) => check.id === 'page:pages/print/print' && check.status === 'pass'));
   assert.ok(releaseChecklist.checks.some((check) => check.id === 'project:cloudRoot' && check.status === 'pass'));
   assert.ok(releaseChecklist.checks.some((check) => check.id === 'cloud:enabled' && check.status === 'warn'));
-  assert.ok(releaseChecklist.checks.some((check) => check.id === 'resume:email' && check.status === 'warn'));
+  assert.ok(releaseChecklist.checks.some((check) => check.id === 'resume:email' && check.status === 'pass'));
 });
 
 runCheck('M5 cloud, auth, notification and release files are wired', () => {
@@ -523,7 +541,9 @@ runCheck('M5 cloud, auth, notification and release files are wired', () => {
   assert.strictEqual(projectConfig.cloudfunctionRoot, 'cloudfunctions/');
   assert.ok(appJs.includes('wxApi.cloud.init'));
   assert.ok(homeJs.includes('authService.grantAdminAccess'));
+  assert.ok(homeJs.includes('/pages/print/print'));
   assert.ok(homeWxml.includes('精选 {{featuredProjectCount}} 项'));
+  assert.ok(homeWxml.includes('bind:openprint="onOpenPrint"'));
   assert.ok(projectCardWxml.includes('lazy-load="{{true}}"'));
   assert.ok(projectDetailWxml.includes('lazy-load="{{true}}"'));
   assert.ok(projectDetailJs.includes('sendProjectBrowseNotification'));
@@ -532,6 +552,21 @@ runCheck('M5 cloud, auth, notification and release files are wired', () => {
   assert.ok(cloudFunctionJs.includes("action === 'recordAnalytics'"));
   assert.ok(cloudFunctionJs.includes("action === 'sendNotification'"));
   assert.ok(cloudSamples.includes("action: 'checkAdmin'"));
+});
+
+runCheck('finish-up print page is registered and wired from contact panel', () => {
+  const appJson = fs.readFileSync(path.join(__dirname, '..', 'app.json'), 'utf8');
+  const contactPanelWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
+    'utf8'
+  );
+  const printJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'print', 'print.js'), 'utf8');
+  const printWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'print', 'print.wxml'), 'utf8');
+
+  assert.ok(appJson.includes('pages/print/print'));
+  assert.ok(contactPanelWxml.includes('bindtap="handleOpenPrint"'));
+  assert.ok(printJs.includes('printResumeService.createPrintResumeModel'));
+  assert.ok(printWxml.includes('打印版简历'));
 });
 
 runCheck('missing required fields report a clear validation error', () => {

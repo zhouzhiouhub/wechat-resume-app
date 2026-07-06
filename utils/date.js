@@ -39,7 +39,7 @@ function formatYearMonth(value) {
 
 function formatYearMonthRange(startDate, endDate) {
   const startLabel = formatYearMonth(startDate);
-  const endLabel = endDate ? formatYearMonth(endDate) : '至今';
+  const endLabel = endDate ? formatYearMonth(endDate) : '2026.07';
 
   if (!startLabel) {
     return endLabel;

@@ -10,6 +10,10 @@
 
 M5 云函数与请求样例见 [docs/cloud-api-samples.md](./docs/cloud-api-samples.md)。
 
+## 收尾清单
+
+项目收尾与发布前待补项见 [docs/finalization-checklist.md](./docs/finalization-checklist.md)。
+
 ## 开发规范
 
 本项目的 AI Coding Agent 与工程开发规范见 [AGENTS.md](./AGENTS.md)。
