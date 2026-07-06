@@ -1,10 +1,11 @@
-const resumeService = require('../../services/resumeService');
 const contactService = require('../../services/contactService');
 const resumeSectionService = require('../../services/resumeSectionService');
 const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
 const authService = require('../../services/authService');
 const profileAssetService = require('../../services/profileAssetService');
+const resumePreferenceService = require('../../services/resumePreferenceService');
+const resumeCustomizationService = require('../../services/resumeCustomizationService');
 const tapCounter = require('../../utils/tapCounter');
 
 Page({
@@ -13,6 +14,8 @@ Page({
     themeOptions: [],
     activeTheme: '',
     profileAssetState: profileAssetService.createProfileAssetState(null),
+    preferenceState: resumePreferenceService.createPreferenceStateFromDraft({}, {}),
+    displayPreferences: resumePreferenceService.DISPLAY_DEFAULTS,
     profile: null,
     contact: null,
     skillHighlights: [],
@@ -61,17 +64,25 @@ Page({
     this.setData(themeState);
   },
 
-  loadResume() {
+  loadResume(activeSectionId) {
     try {
-      const homeResume = resumeService.getHomeResume();
-      const profileAssets = profileAssetService.readProfileAssets(wx);
-      const profile = profileAssetService.applyAssetsToProfile(homeResume.profile, profileAssets);
-      const sectionState = resumeSectionService.createHomeSectionState();
+      const homeResume = resumeCustomizationService.getHomeResume(wx);
+      const sectionState = resumeSectionService.createHomeSectionState(
+        activeSectionId || homeResume.displayPreferences.initialSection
+      );
 
       this.setData({
-        profile,
-        contact: profile.contact,
-        profileAssetState: profileAssetService.createProfileAssetState(homeResume.profile, profileAssets),
+        profile: homeResume.profile,
+        contact: homeResume.contact,
+        displayPreferences: homeResume.displayPreferences,
+        preferenceState: resumePreferenceService.createPreferenceState(
+          homeResume.baseResume,
+          homeResume.preferences
+        ),
+        profileAssetState: profileAssetService.createProfileAssetState(
+          homeResume.resume.profile,
+          homeResume.profileAssets
+        ),
         skillHighlights: homeResume.skillHighlights,
         skillGroups: homeResume.skillGroups,
         featuredProjects: homeResume.featuredProjects,
@@ -89,15 +100,8 @@ Page({
     }
   },
 
-  refreshProfileAssets(profileAssets) {
-    const homeResume = resumeService.getHomeResume();
-    const profile = profileAssetService.applyAssetsToProfile(homeResume.profile, profileAssets);
-
-    this.setData({
-      profile,
-      contact: profile.contact,
-      profileAssetState: profileAssetService.createProfileAssetState(homeResume.profile, profileAssets)
-    });
+  refreshResumeCustomization() {
+    this.loadResume(this.data.activeSection);
   },
 
   startAnalyticsSession(page) {
@@ -162,12 +166,74 @@ Page({
     this.setData(themeState);
   },
 
+  onPreferenceProfileInput(event) {
+    const field = event.detail && event.detail.field;
+    const value = event.detail && event.detail.value;
+    const preferenceState = this.data.preferenceState || {};
+    const profileDraft = {
+      ...(preferenceState.profileDraft || {}),
+      [field]: value
+    };
+
+    this.setData({
+      preferenceState: resumePreferenceService.createPreferenceStateFromDraft(
+        profileDraft,
+        preferenceState.displayDraft
+      )
+    });
+  },
+
+  onPreferenceDisplayChange(event) {
+    const field = event.detail && event.detail.field;
+    const value = event.detail && event.detail.value;
+    const preferenceState = this.data.preferenceState || {};
+    const displayDraft = {
+      ...(preferenceState.displayDraft || {}),
+      [field]: value
+    };
+
+    this.setData({
+      preferenceState: resumePreferenceService.createPreferenceStateFromDraft(
+        preferenceState.profileDraft,
+        displayDraft
+      )
+    });
+  },
+
+  onSaveResumePreferences() {
+    try {
+      resumePreferenceService.saveResumePreferences(
+        wx,
+        resumePreferenceService.createPreferencesFromState(this.data.preferenceState)
+      );
+      this.refreshResumeCustomization();
+      wx.showToast({
+        title: '已保存',
+        icon: 'success'
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error.message || '保存失败',
+        icon: 'none'
+      });
+    }
+  },
+
+  onResetResumePreferences() {
+    resumePreferenceService.clearResumePreferences(wx);
+    this.refreshResumeCustomization();
+    wx.showToast({
+      title: '已恢复',
+      icon: 'success'
+    });
+  },
+
   onSelectProfileAsset(event) {
     const field = event.detail && event.detail.field;
 
     profileAssetService.chooseAndSaveProfileAsset(wx, field)
-      .then((result) => {
-        this.refreshProfileAssets(result.assets);
+      .then(() => {
+        this.refreshResumeCustomization();
         wx.showToast({
           title: '已选择',
           icon: 'success'
@@ -185,9 +251,9 @@ Page({
     const field = event.detail && event.detail.field;
 
     try {
-      const profileAssets = profileAssetService.clearProfileAsset(wx, field);
+      profileAssetService.clearProfileAsset(wx, field);
 
-      this.refreshProfileAssets(profileAssets);
+      this.refreshResumeCustomization();
       wx.showToast({
         title: '已清除',
         icon: 'success'

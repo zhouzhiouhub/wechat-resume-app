@@ -11,6 +11,8 @@ const contactService = require('../services/contactService');
 const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
 const profileAssetService = require('../services/profileAssetService');
+const resumePreferenceService = require('../services/resumePreferenceService');
+const resumeCustomizationService = require('../services/resumeCustomizationService');
 const posterService = require('../services/posterService');
 const printResumeService = require('../services/printResumeService');
 const analyticsService = require('../services/analyticsService');
@@ -252,6 +254,115 @@ runCheck('profile asset service stores local images and applies them to resume v
   assert.strictEqual(clearedAssets.avatar, '');
   assert.strictEqual(clearedAssets.wechatQr, wechatQrPath);
   assert.throws(() => profileAssetService.saveProfileAsset(mockWx, 'bad', avatarPath), /unknown/);
+});
+
+runCheck('resume preference service stores profile and display overrides', () => {
+  const mockWx = createMockWxStorage();
+  const preferences = resumePreferenceService.saveResumePreferences(mockWx, {
+    profile: {
+      name: '李明',
+      title: '前端工程师',
+      status: '开放远程机会',
+      summary: '专注小程序、React 和工程化交付。',
+      location: '广州',
+      email: 'liming@example.com'
+    },
+    display: {
+      initialSection: 'projects',
+      featuredProjectCount: 2,
+      showPoster: false,
+      showPrint: true,
+      showFeedback: false,
+      showCustomerService: true
+    }
+  });
+  const resume = resumePreferenceService.applyPreferencesToResume(
+    resumeService.getResume(),
+    preferences
+  );
+  const state = resumePreferenceService.createPreferenceState(
+    resumeService.getResume(),
+    preferences
+  );
+
+  assert.strictEqual(resume.profile.name, '李明');
+  assert.strictEqual(resume.profile.initials, '李');
+  assert.strictEqual(resume.profile.title, '前端工程师');
+  assert.strictEqual(resume.profile.contact.email, 'liming@example.com');
+  assert.strictEqual(preferences.display.initialSection, 'projects');
+  assert.strictEqual(preferences.display.featuredProjectCount, 2);
+  assert.strictEqual(preferences.display.showPoster, false);
+  assert.strictEqual(state.profileDraft.email, 'liming@example.com');
+  assert.strictEqual(
+    state.sectionOptions.find((item) => item.id === 'projects').isActive,
+    true
+  );
+  assert.strictEqual(
+    state.displaySwitches.find((item) => item.field === 'showPoster').checked,
+    false
+  );
+  assert.throws(
+    () => resumePreferenceService.saveResumePreferences(mockWx, {
+      profile: {
+        ...state.profileDraft,
+        email: 'bad-email'
+      },
+      display: state.displayDraft
+    }),
+    /邮箱格式不正确/
+  );
+
+  resumePreferenceService.clearResumePreferences(mockWx);
+  assert.strictEqual(
+    resumePreferenceService.readResumePreferences(mockWx).display.featuredProjectCount,
+    3
+  );
+});
+
+runCheck('resume customization service combines preferences, assets and home display count', () => {
+  const mockWx = createMockWxStorage();
+
+  resumePreferenceService.saveResumePreferences(mockWx, {
+    profile: {
+      name: '王强',
+      title: '全栈工程师',
+      status: '优先深圳机会',
+      summary: '覆盖前端、后端和自动化工具交付。',
+      location: '深圳',
+      email: 'wangqiang@example.com'
+    },
+    display: {
+      initialSection: 'contact',
+      featuredProjectCount: 1,
+      showPoster: true,
+      showPrint: false,
+      showFeedback: true,
+      showCustomerService: false
+    }
+  });
+  profileAssetService.saveProfileAsset(
+    mockWx,
+    profileAssetService.ASSET_FIELDS.AVATAR,
+    'wxfile://custom-avatar.png'
+  );
+  profileAssetService.saveProfileAsset(
+    mockWx,
+    profileAssetService.ASSET_FIELDS.WECHAT_QR,
+    'wxfile://custom-qr.png'
+  );
+
+  const homeResume = resumeCustomizationService.getHomeResume(mockWx);
+  const resume = resumeCustomizationService.getResume(mockWx);
+
+  assert.strictEqual(homeResume.profile.name, '王强');
+  assert.strictEqual(homeResume.contact.email, 'wangqiang@example.com');
+  assert.strictEqual(homeResume.profile.avatar, 'wxfile://custom-avatar.png');
+  assert.strictEqual(homeResume.contact.wechatQr, 'wxfile://custom-qr.png');
+  assert.strictEqual(homeResume.featuredProjects.length, 1);
+  assert.strictEqual(homeResume.displayPreferences.initialSection, 'contact');
+  assert.strictEqual(homeResume.displayPreferences.showPrint, false);
+  assert.strictEqual(homeResume.displayPreferences.showCustomerService, false);
+  assert.strictEqual(resume.profile.contact.email, 'wangqiang@example.com');
 });
 
 runCheck('poster model is created from unified resume data', () => {
@@ -647,10 +758,42 @@ runCheck('profile asset selection is wired through settings, poster and print vi
   assert.ok(profileAssetJs.includes('chooseMedia'));
   assert.ok(profileAssetJs.includes('chooseImage'));
   assert.ok(profileAssetJs.includes('saveFile'));
-  assert.ok(posterJs.includes('profileAssetService.applyAssetsToResume'));
+  assert.ok(posterJs.includes('resumeCustomizationService.getResume'));
   assert.ok(posterJs.includes('posterService.createPosterModel'));
-  assert.ok(printJs.includes('profileAssetService.applyAssetsToResume'));
+  assert.ok(printJs.includes('resumeCustomizationService.getResume'));
   assert.ok(printWxml.includes('printResume.profile.avatar'));
+});
+
+runCheck('resume preference settings are wired through home and contact panel', () => {
+  const homeJson = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.json'), 'utf8');
+  const homeWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.wxml'), 'utf8');
+  const homeJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.js'), 'utf8');
+  const contactPanelWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
+    'utf8'
+  );
+  const preferenceWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'resume-preference-settings', 'resume-preference-settings.wxml'),
+    'utf8'
+  );
+  const preferenceJs = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'resume-preference-settings', 'resume-preference-settings.js'),
+    'utf8'
+  );
+
+  assert.ok(homeJson.includes('resume-preference-settings'));
+  assert.ok(homeWxml.includes('preference-state="{{preferenceState}}"'));
+  assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
+  assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
+  assert.ok(homeJs.includes('resumeCustomizationService.getHomeResume'));
+  assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
+  assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
+  assert.ok(contactPanelWxml.includes('display.showPoster'));
+  assert.ok(contactPanelWxml.includes('display.showCustomerService'));
+  assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
+  assert.ok(preferenceWxml.includes('bindchange="handleDisplaySwitchChange"'));
+  assert.ok(preferenceWxml.includes('handleFeaturedProjectCountStep'));
+  assert.ok(preferenceJs.includes("field: 'initialSection'"));
 });
 
 runCheck('missing required fields report a clear validation error', () => {

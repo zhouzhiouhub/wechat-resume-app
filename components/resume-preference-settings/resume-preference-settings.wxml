@@ -1,0 +1,136 @@
+<view class="resume-preference-settings">
+  <view class="preference-block">
+    <view class="preference-title-row">
+      <text class="preference-title">个人资料</text>
+      <text class="preference-meta">本机保存</text>
+    </view>
+
+    <view class="form-grid">
+      <view class="form-field">
+        <text class="field-label">姓名</text>
+        <input
+          class="text-input"
+          value="{{preferenceState.profileDraft.name}}"
+          data-field="name"
+          maxlength="24"
+          bindinput="handleProfileInput"
+        />
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">职位</text>
+        <input
+          class="text-input"
+          value="{{preferenceState.profileDraft.title}}"
+          data-field="title"
+          maxlength="60"
+          bindinput="handleProfileInput"
+        />
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">状态</text>
+        <input
+          class="text-input"
+          value="{{preferenceState.profileDraft.status}}"
+          data-field="status"
+          maxlength="36"
+          bindinput="handleProfileInput"
+        />
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">城市</text>
+        <input
+          class="text-input"
+          value="{{preferenceState.profileDraft.location}}"
+          data-field="location"
+          maxlength="36"
+          bindinput="handleProfileInput"
+        />
+      </view>
+
+      <view class="form-field form-field-wide">
+        <text class="field-label">邮箱</text>
+        <input
+          class="text-input"
+          value="{{preferenceState.profileDraft.email}}"
+          data-field="email"
+          type="text"
+          maxlength="80"
+          bindinput="handleProfileInput"
+        />
+      </view>
+
+      <view class="form-field form-field-wide">
+        <text class="field-label">简介</text>
+        <textarea
+          class="textarea-input"
+          value="{{preferenceState.profileDraft.summary}}"
+          data-field="summary"
+          maxlength="180"
+          auto-height
+          bindinput="handleProfileInput"
+        ></textarea>
+      </view>
+    </view>
+  </view>
+
+  <view class="preference-block">
+    <view class="preference-title-row">
+      <text class="preference-title">展示偏好</text>
+      <text class="preference-meta">保存后生效</text>
+    </view>
+
+    <view class="preference-field">
+      <text class="field-label">默认栏目</text>
+      <view class="choice-grid">
+        <button
+          wx:for="{{preferenceState.sectionOptions}}"
+          wx:key="id"
+          class="{{item.isActive ? 'choice-button is-active' : 'choice-button'}}"
+          data-section-id="{{item.id}}"
+          bindtap="handleInitialSectionChange"
+        >{{item.label}}</button>
+      </view>
+    </view>
+
+    <view class="preference-field">
+      <text class="field-label">精选项目</text>
+      <view class="stepper">
+        <button
+          class="stepper-button"
+          data-delta="-1"
+          bindtap="handleFeaturedProjectCountStep"
+        >-</button>
+        <text class="stepper-value">{{preferenceState.displayDraft.featuredProjectCount}} 项</text>
+        <button
+          class="stepper-button"
+          data-delta="1"
+          bindtap="handleFeaturedProjectCountStep"
+        >+</button>
+      </view>
+    </view>
+
+    <view class="switch-list">
+      <view
+        wx:for="{{preferenceState.displaySwitches}}"
+        wx:key="field"
+        class="switch-row"
+      >
+        <text class="switch-label">{{item.label}}</text>
+        <switch
+          checked="{{item.checked}}"
+          color="#2563eb"
+          data-field="{{item.field}}"
+          bindchange="handleDisplaySwitchChange"
+        ></switch>
+      </view>
+    </view>
+  </view>
+
+  <view class="preference-actions">
+    <button class="preference-button primary-button" bindtap="handleSave">保存设置</button>
+    <button class="preference-button secondary-button" bindtap="handleReset">恢复默认</button>
+  </view>
+</view>

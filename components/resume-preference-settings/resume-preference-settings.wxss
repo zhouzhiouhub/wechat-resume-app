@@ -1,0 +1,192 @@
+.resume-preference-settings {
+  display: grid;
+  gap: 18rpx;
+}
+
+.preference-block {
+  display: grid;
+  gap: 16rpx;
+  padding: 18rpx;
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
+.preference-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.preference-title,
+.preference-meta,
+.field-label,
+.switch-label {
+  display: block;
+}
+
+.preference-title {
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.preference-meta {
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+  line-height: 1.35;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.form-field,
+.preference-field {
+  min-width: 0;
+}
+
+.form-field-wide {
+  grid-column: 1 / -1;
+}
+
+.field-label {
+  margin-bottom: 8rpx;
+  color: var(--resume-muted, #4b5563);
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.text-input,
+.textarea-input {
+  width: 100%;
+  min-height: 72rpx;
+  padding: 0 18rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  background: var(--resume-surface, #ffffff);
+  color: var(--resume-text, #111827);
+  font-size: 24rpx;
+  line-height: 72rpx;
+  box-sizing: border-box;
+}
+
+.textarea-input {
+  min-height: 132rpx;
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
+  line-height: 1.5;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10rpx;
+}
+
+.choice-button,
+.stepper-button,
+.preference-button {
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+.choice-button::after,
+.stepper-button::after,
+.preference-button::after {
+  border: 0;
+}
+
+.choice-button {
+  min-height: 60rpx;
+  padding: 0 8rpx;
+  background: var(--resume-surface, #ffffff);
+  color: var(--resume-muted, #4b5563);
+  line-height: 60rpx;
+}
+
+.choice-button.is-active {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-weight: 800;
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: 72rpx minmax(0, 1fr) 72rpx;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.stepper-button {
+  min-height: 60rpx;
+  padding: 0;
+  background: var(--resume-surface, #ffffff);
+  color: var(--resume-text, #111827);
+  font-weight: 900;
+  line-height: 60rpx;
+}
+
+.stepper-value {
+  display: block;
+  min-height: 60rpx;
+  border-radius: 8rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-size: 24rpx;
+  font-weight: 800;
+  line-height: 60rpx;
+  text-align: center;
+}
+
+.switch-list {
+  display: grid;
+  gap: 10rpx;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  min-height: 72rpx;
+  padding: 0 4rpx;
+}
+
+.switch-label {
+  color: var(--resume-text, #111827);
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.preference-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.preference-button {
+  min-height: 68rpx;
+  line-height: 68rpx;
+}
+
+.primary-button {
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
+}
+
+.secondary-button {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+}
+
+@media (max-width: 420px) {
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

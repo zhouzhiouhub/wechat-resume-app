@@ -1,7 +1,6 @@
 const posterService = require('../../services/posterService');
 const contactService = require('../../services/contactService');
-const resumeService = require('../../services/resumeService');
-const profileAssetService = require('../../services/profileAssetService');
+const resumeCustomizationService = require('../../services/resumeCustomizationService');
 const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
 
@@ -46,10 +45,7 @@ Page({
 
   loadPoster() {
     try {
-      const resume = profileAssetService.applyAssetsToResume(
-        resumeService.getResume(),
-        profileAssetService.readProfileAssets(wx)
-      );
+      const resume = resumeCustomizationService.getResume(wx);
       const poster = posterService.createPosterModel(resume);
 
       this.setData({

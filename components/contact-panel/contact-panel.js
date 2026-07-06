@@ -3,6 +3,15 @@ Component({
     contact: {
       type: Object,
       value: {}
+    },
+    display: {
+      type: Object,
+      value: {
+        showPoster: true,
+        showPrint: true,
+        showFeedback: true,
+        showCustomerService: true
+      }
     }
   },
 

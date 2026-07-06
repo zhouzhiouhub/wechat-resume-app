@@ -7,6 +7,7 @@
     "project-card": "/components/project-card/project-card",
     "timeline-view": "/components/timeline/timeline",
     "contact-panel": "/components/contact-panel/contact-panel",
-    "profile-asset-settings": "/components/profile-asset-settings/profile-asset-settings"
+    "profile-asset-settings": "/components/profile-asset-settings/profile-asset-settings",
+    "resume-preference-settings": "/components/resume-preference-settings/resume-preference-settings"
   }
 }

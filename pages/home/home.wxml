@@ -103,6 +103,7 @@
         <view wx:if="{{showContact}}" class="content-section">
           <contact-panel
             contact="{{contact}}"
+            display="{{displayPreferences}}"
             bind:copyemail="onCopyEmail"
             bind:showwechatqr="onShowWechatQr"
             bind:openposter="onOpenPoster"
@@ -112,6 +113,20 @@
         </view>
 
         <view wx:if="{{showSettings}}" class="content-section settings-section">
+          <view class="settings-panel">
+            <view class="section-header">
+              <text class="section-heading">资料与展示</text>
+              <text class="section-meta">本机保存</text>
+            </view>
+            <resume-preference-settings
+              preference-state="{{preferenceState}}"
+              bind:profileinput="onPreferenceProfileInput"
+              bind:displaychange="onPreferenceDisplayChange"
+              bind:savepreferences="onSaveResumePreferences"
+              bind:resetpreferences="onResetResumePreferences"
+            ></resume-preference-settings>
+          </view>
+
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">素材</text>
