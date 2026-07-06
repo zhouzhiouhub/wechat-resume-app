@@ -1,13 +1,32 @@
 <view class="theme-switcher">
   <view
-    wx:for="{{options}}"
-    wx:key="id"
-    class="{{item.isActive ? 'theme-dot is-active' : 'theme-dot'}}"
-    style="--theme-dot-color: {{item.swatchColor}};"
+    class="{{isOpen ? 'theme-select is-open' : 'theme-select'}}"
+    style="--theme-select-color: {{activeOption.swatchColor}};"
     aria-role="button"
-    data-theme-id="{{item.id}}"
-    bindtap="handleChange"
+    bindtap="onToggleDropdown"
   >
-    <view class="theme-swatch"></view>
+    <view class="theme-selected">
+      <view class="theme-swatch"></view>
+      <text class="theme-label">{{activeOption.label}}</text>
+    </view>
+    <view class="theme-arrow"></view>
+  </view>
+
+  <view wx:if="{{isOpen}}" class="theme-options">
+    <view
+      wx:for="{{options}}"
+      wx:key="id"
+      class="{{item.isActive ? 'theme-option is-active' : 'theme-option'}}"
+      data-theme-id="{{item.id}}"
+      style="--theme-option-color: {{item.swatchColor}};"
+      aria-role="button"
+      catchtap="onSelectTheme"
+    >
+      <view class="theme-option-main">
+        <view class="theme-option-swatch"></view>
+        <text class="theme-option-label">{{item.label}}</text>
+      </view>
+      <view wx:if="{{item.isActive}}" class="theme-option-check"></view>
+    </view>
   </view>
 </view>

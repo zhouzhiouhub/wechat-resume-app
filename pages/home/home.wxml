@@ -23,12 +23,6 @@
           <text class="content-meta">{{activeSectionMeta}}</text>
         </view>
 
-        <view class="topbar-actions">
-          <theme-switcher
-            options="{{themeOptions}}"
-            bind:change="onChangeTheme"
-          ></theme-switcher>
-        </view>
       </view>
 
       <view wx:if="{{isMenuVisible}}" class="menu-backdrop" bindtap="onHideMenu"></view>
@@ -110,6 +104,18 @@
             bind:showwechatqr="onShowWechatQr"
             bind:openposter="onOpenPoster"
           ></contact-panel>
+        </view>
+
+        <view wx:if="{{showSettings}}" class="content-section settings-section">
+          <view class="settings-panel">
+            <view class="section-header">
+              <text class="section-heading">主题</text>
+            </view>
+            <theme-switcher
+              options="{{themeOptions}}"
+              bind:change="onChangeTheme"
+            ></theme-switcher>
+          </view>
         </view>
       </scroll-view>
     </view>

@@ -1,4 +1,6 @@
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
 const resumeData = require('../modules/resume/resumeData');
 const resumeMapper = require('../modules/resume/resumeMapper');
 const resumeService = require('../services/resumeService');
@@ -122,19 +124,21 @@ runCheck('home section service keeps all content as the quick scan entry', () =>
 
   assert.deepStrictEqual(
     sections.map((section) => section.id),
-    ['profile', 'skills', 'projects', 'timeline', 'contact', 'all']
+    ['profile', 'skills', 'projects', 'timeline', 'contact', 'settings', 'all']
   );
   assert.strictEqual(sections[sections.length - 1].id, 'all');
   assert.strictEqual(defaultState.activeSection, 'all');
-  assert.strictEqual(defaultState.sections[5].isActive, true);
+  assert.strictEqual(defaultState.sections[6].isActive, true);
   assert.strictEqual(defaultState.showProfile, true);
   assert.strictEqual(defaultState.showSkills, true);
   assert.strictEqual(defaultState.showProjects, true);
   assert.strictEqual(defaultState.showTimeline, true);
   assert.strictEqual(defaultState.showContact, true);
+  assert.strictEqual(defaultState.showSettings, false);
   assert.strictEqual(projectState.showProfile, false);
   assert.strictEqual(projectState.showProjects, true);
   assert.strictEqual(projectState.sections[2].isActive, true);
+  assert.strictEqual(resumeSectionService.createHomeSectionState('settings').showSettings, true);
   assert.strictEqual(resumeSectionService.normalizeSectionId('missing'), 'all');
 });
 
@@ -156,6 +160,18 @@ runCheck('theme service maps readable theme variables', () => {
       variables['--resume-surface']
     ));
   });
+});
+
+runCheck('theme switcher uses a tappable custom dropdown', () => {
+  const switcherWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'theme-switcher', 'theme-switcher.wxml'),
+    'utf8'
+  );
+
+  assert.strictEqual(switcherWxml.includes('<picker'), false);
+  assert.ok(switcherWxml.includes('bindtap="onToggleDropdown"'));
+  assert.ok(switcherWxml.includes('catchtap="onSelectTheme"'));
+  assert.ok(switcherWxml.includes('data-theme-id="{{item.id}}"'));
 });
 
 runCheck('poster model is created from unified resume data', () => {

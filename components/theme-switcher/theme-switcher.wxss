@@ -1,28 +1,121 @@
 .theme-switcher {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
+  position: relative;
+  width: 100%;
 }
 
-.theme-dot {
+.theme-select {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 44rpx;
-  height: 44rpx;
-  border-radius: 22rpx;
-  background: transparent;
+  justify-content: space-between;
+  min-height: 76rpx;
+  padding: 0 20rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  background: var(--resume-surface-hover, #f9fafb);
 }
 
-.theme-dot.is-active {
-  background: var(--resume-accent-soft, #eef2ff);
+.theme-selected {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
 }
 
 .theme-swatch {
+  width: 24rpx;
+  height: 24rpx;
+  border: 2rpx solid var(--resume-surface, #ffffff);
+  border-radius: 12rpx;
+  background: var(--theme-select-color, #2563eb);
+  box-shadow: 0 0 0 1rpx var(--resume-border, #e5e7eb);
+}
+
+.theme-select.is-open {
+  border-color: var(--resume-accent, #2563eb);
+  box-shadow: 0 0 0 4rpx var(--resume-accent-soft, #eef2ff);
+}
+
+.theme-label {
+  color: var(--resume-text, #111827);
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.theme-arrow {
+  width: 14rpx;
+  height: 14rpx;
+  border-right: 3rpx solid var(--resume-muted, #4b5563);
+  border-bottom: 3rpx solid var(--resume-muted, #4b5563);
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.theme-select.is-open .theme-arrow {
+  transform: translateY(4rpx) rotate(225deg);
+}
+
+.theme-options {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 10rpx);
+  right: 0;
+  left: 0;
+  padding: 8rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  box-shadow: 0 18rpx 40rpx rgba(15, 23, 42, 0.14);
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72rpx;
+  padding: 0 16rpx;
+  border-radius: 8rpx;
+  color: var(--resume-muted, #4b5563);
+}
+
+.theme-option + .theme-option {
+  margin-top: 4rpx;
+}
+
+.theme-option.is-active {
+  color: var(--resume-text, #111827);
+  background: var(--resume-accent-soft, #eef2ff);
+}
+
+.theme-option-main {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-width: 0;
+}
+
+.theme-option-swatch {
   width: 22rpx;
   height: 22rpx;
   border: 2rpx solid var(--resume-surface, #ffffff);
   border-radius: 11rpx;
-  background: var(--theme-dot-color, #2563eb);
+  background: var(--theme-option-color, #2563eb);
   box-shadow: 0 0 0 1rpx var(--resume-border, #e5e7eb);
+}
+
+.theme-option-label {
+  min-width: 0;
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-option-check {
+  width: 18rpx;
+  height: 10rpx;
+  border-left: 4rpx solid var(--resume-accent, #2563eb);
+  border-bottom: 4rpx solid var(--resume-accent, #2563eb);
+  transform: rotate(-45deg);
 }

@@ -25,6 +25,7 @@ Page({
     showProjects: true,
     showTimeline: true,
     showContact: true,
+    showSettings: false,
     loadError: ''
   },
 

@@ -18,7 +18,7 @@
   justify-content: center;
   min-height: 88rpx;
   margin-bottom: 20rpx;
-  padding: 0 176rpx 16rpx;
+  padding: 0 96rpx 16rpx;
   border-bottom: 1rpx solid var(--resume-border, #e5e7eb);
   box-sizing: border-box;
 }
@@ -54,13 +54,6 @@
   height: 3rpx;
   background: var(--resume-text, #0f172a);
   border-radius: 2rpx;
-}
-
-.topbar-actions {
-  position: absolute;
-  top: 10rpx;
-  right: 0;
-  z-index: 20;
 }
 
 .menu-backdrop {
@@ -253,6 +246,13 @@
   font-size: 28rpx;
 }
 
+.settings-panel {
+  padding: 24rpx;
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+}
+
 @media (max-width: 420px) {
   .home-page {
     padding: 24rpx;
@@ -264,16 +264,12 @@
 
   .resume-topbar {
     min-height: 84rpx;
-    padding: 0 158rpx 14rpx;
+    padding: 0 80rpx 14rpx;
   }
 
   .menu-toggle {
     width: 60rpx;
     height: 60rpx;
-  }
-
-  .topbar-actions {
-    top: 8rpx;
   }
 
   .menu-toggle-icon {
