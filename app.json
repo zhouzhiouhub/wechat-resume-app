@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/home/home"
+  ],
+  "window": {
+    "navigationBarTitleText": "个人简历",
+    "navigationBarBackgroundColor": "#111827",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f6f7fb"
+  },
+  "style": "v2"
+}
