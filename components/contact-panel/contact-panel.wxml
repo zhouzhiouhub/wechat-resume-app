@@ -1,0 +1,28 @@
+<view class="contact-panel">
+  <view class="section-header">
+    <text class="section-heading">联系我</text>
+    <text class="section-meta">2 次点击内可达</text>
+  </view>
+
+  <view class="contact-card">
+    <view class="contact-info">
+      <text class="contact-label">邮箱</text>
+      <text class="contact-value">{{contact.email}}</text>
+    </view>
+
+    <view class="contact-actions">
+      <button class="action-button primary-button" bindtap="handleCopyEmail">复制邮箱</button>
+      <button
+        wx:if="{{contact.wechatQr}}"
+        class="action-button secondary-button"
+        bindtap="handleShowWechatQr"
+      >查看微信二维码</button>
+      <button
+        wx:else
+        class="action-button secondary-button muted-button"
+        bindtap="handleShowWechatQr"
+      >二维码待补充</button>
+      <button class="action-button plain-button" open-type="contact">客服预留</button>
+    </view>
+  </view>
+</view>

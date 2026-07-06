@@ -3,159 +3,35 @@
   padding: 32rpx;
 }
 
-.profile-panel {
-  display: flex;
-  gap: 24rpx;
-  padding: 32rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
-  border-radius: 8rpx;
-}
-
-.avatar {
-  flex: 0 0 112rpx;
-  width: 112rpx;
-  height: 112rpx;
-  border-radius: 56rpx;
-  background: #1f2937;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40rpx;
-  font-weight: 700;
-}
-
-.profile-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.profile-row {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  flex-wrap: wrap;
-}
-
-.profile-name {
-  color: #111827;
-  font-size: 44rpx;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.status-pill {
-  padding: 6rpx 14rpx;
-  border-radius: 999rpx;
-  background: #ecfdf5;
-  color: #047857;
-  font-size: 22rpx;
-  line-height: 1.4;
-}
-
-.profile-title,
-.profile-summary,
-.profile-location {
-  display: block;
-  margin-top: 12rpx;
-  color: #4b5563;
-  font-size: 28rpx;
-  line-height: 1.5;
-}
-
-.profile-title {
-  color: #111827;
-  font-weight: 600;
-}
-
 .section {
   margin-top: 28rpx;
 }
 
-.section-heading {
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
   margin-bottom: 16rpx;
+}
+
+.section-heading {
   color: #111827;
   font-size: 32rpx;
   font-weight: 700;
 }
 
-.highlight-list,
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-}
-
-.highlight-tag,
-.project-tag {
-  padding: 8rpx 14rpx;
-  border-radius: 8rpx;
-  background: #eef2ff;
-  color: #3730a3;
+.section-meta {
+  color: #4b5563;
   font-size: 24rpx;
-  line-height: 1.4;
 }
 
-.skill-group,
-.project-card,
 .error-panel {
   margin-top: 16rpx;
   padding: 24rpx;
-  background: #ffffff;
-  border: 1rpx solid #e5e7eb;
-  border-radius: 8rpx;
-}
-
-.skill-group-title {
-  color: #1f2937;
-  font-size: 28rpx;
-  font-weight: 600;
-}
-
-.skill-list {
-  margin-top: 12rpx;
-}
-
-.skill-row,
-.project-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
-}
-
-.skill-row + .skill-row {
-  margin-top: 10rpx;
-}
-
-.skill-name,
-.skill-level,
-.project-role,
-.project-summary {
-  color: #4b5563;
-  font-size: 26rpx;
-  line-height: 1.5;
-}
-
-.skill-name,
-.project-name {
-  color: #111827;
-  font-weight: 600;
-}
-
-.project-name {
-  font-size: 30rpx;
-}
-
-.project-summary {
-  display: block;
-  margin: 12rpx 0 16rpx;
-}
-
-.error-panel {
   color: #b91c1c;
   background: #fef2f2;
-  border-color: #fecaca;
+  border: 1rpx solid #fecaca;
+  border-radius: 8rpx;
   font-size: 28rpx;
 }

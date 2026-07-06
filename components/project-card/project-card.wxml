@@ -1,0 +1,29 @@
+<view class="project-card" hover-class="project-card-hover" bindtap="handleOpen">
+  <image
+    wx:if="{{project.cover}}"
+    class="project-cover"
+    src="{{project.cover}}"
+    mode="aspectFill"
+  ></image>
+
+  <view class="project-body">
+    <view class="project-main">
+      <view class="project-title-group">
+        <text class="project-name">{{project.name}}</text>
+        <text class="project-role">{{project.role}}</text>
+      </view>
+      <text class="open-link">详情</text>
+    </view>
+
+    <text class="project-summary">{{project.summary}}</text>
+
+    <view class="project-tags">
+      <text
+        wx:for="{{project.techStack}}"
+        wx:key="*this"
+        wx:for-item="tech"
+        class="project-tag"
+      >{{tech}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,19 @@
+<view class="profile-card">
+  <image
+    wx:if="{{profile.avatar}}"
+    class="avatar-image"
+    src="{{profile.avatar}}"
+    mode="aspectFill"
+  ></image>
+  <view wx:else class="avatar-fallback">{{profile.initials}}</view>
+
+  <view class="profile-copy">
+    <view class="profile-row">
+      <text class="profile-name">{{profile.name}}</text>
+      <text class="status-pill">{{profile.status}}</text>
+    </view>
+    <text class="profile-title">{{profile.title}}</text>
+    <text class="profile-summary">{{profile.summary}}</text>
+    <text wx:if="{{profile.location}}" class="profile-location">{{profile.location}}</text>
+  </view>
+</view>

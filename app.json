@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/home/home"
+    "pages/home/home",
+    "pages/project-detail/project-detail"
   ],
   "window": {
     "navigationBarTitleText": "个人简历",

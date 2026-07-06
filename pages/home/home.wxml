@@ -4,70 +4,30 @@
   </block>
 
   <block wx:elif="{{profile}}">
-    <view class="profile-panel">
-      <view class="avatar" aria-label="头像">{{profile.initials}}</view>
-      <view class="profile-copy">
-        <view class="profile-row">
-          <text class="profile-name">{{profile.name}}</text>
-          <text class="status-pill">{{profile.status}}</text>
-        </view>
-        <text class="profile-title">{{profile.title}}</text>
-        <text class="profile-summary">{{profile.summary}}</text>
-        <text class="profile-location">{{profile.location}}</text>
-      </view>
-    </view>
+    <profile-card profile="{{profile}}"></profile-card>
+
+    <skill-overview
+      highlights="{{skillHighlights}}"
+      groups="{{skillGroups}}"
+    ></skill-overview>
 
     <view class="section">
-      <view class="section-heading">核心技能</view>
-      <view class="highlight-list">
-        <text
-          wx:for="{{skillHighlights}}"
-          wx:key="name"
-          class="highlight-tag"
-        >{{item.name}}</text>
+      <view class="section-header">
+        <text class="section-heading">重点项目</text>
+        <text class="section-meta">点击查看详情</text>
       </view>
-
-      <view
-        wx:for="{{skillGroups}}"
-        wx:key="groupName"
-        class="skill-group"
-      >
-        <view class="skill-group-title">{{item.groupName}}</view>
-        <view class="skill-list">
-          <view
-            wx:for="{{item.skills}}"
-            wx:key="name"
-            wx:for-item="skill"
-            class="skill-row"
-          >
-            <text class="skill-name">{{skill.name}}</text>
-            <text class="skill-level">{{skill.level}}%</text>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <view class="section">
-      <view class="section-heading">重点项目</view>
-      <view
+      <project-card
         wx:for="{{featuredProjects}}"
         wx:key="id"
-        class="project-card"
-      >
-        <view class="project-main">
-          <text class="project-name">{{item.name}}</text>
-          <text class="project-role">{{item.role}}</text>
-        </view>
-        <text class="project-summary">{{item.summary}}</text>
-        <view class="project-tags">
-          <text
-            wx:for="{{item.techStack}}"
-            wx:key="*this"
-            wx:for-item="tech"
-            class="project-tag"
-          >{{tech}}</text>
-        </view>
-      </view>
+        project="{{item}}"
+        bind:open="onOpenProject"
+      ></project-card>
     </view>
+
+    <contact-panel
+      contact="{{contact}}"
+      bind:copyemail="onCopyEmail"
+      bind:showwechatqr="onShowWechatQr"
+    ></contact-panel>
   </block>
 </view>

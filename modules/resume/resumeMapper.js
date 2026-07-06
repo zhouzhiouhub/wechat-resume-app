@@ -84,10 +84,13 @@ function normalizeSkill(skill, groupPath, index) {
     throw createError(`${path}.level`, 'must be a number between 0 and 100');
   }
 
+  const tags = normalizeStringArray(skill.tags || [], `${path}.tags`, { allowEmpty: true });
+
   return {
     name: skill.name.trim(),
     level: skill.level,
-    tags: normalizeStringArray(skill.tags || [], `${path}.tags`, { allowEmpty: true })
+    tags,
+    tagText: tags.join(' / ')
   };
 }
 
@@ -139,6 +142,8 @@ function normalizeProject(project, index) {
     throw createError(`${path}.challenges`, 'must contain at least one challenge');
   }
 
+  const cover = normalizeOptionalString(project.cover);
+  const screenshots = normalizeStringArray(project.screenshots || [], `${path}.screenshots`, { allowEmpty: true });
   const highlights = normalizeStringArray(project.highlights, `${path}.highlights`);
   const metrics = normalizeStringArray(project.metrics, `${path}.metrics`);
 
@@ -146,8 +151,9 @@ function normalizeProject(project, index) {
     id: project.id.trim(),
     name: project.name.trim(),
     role: project.role.trim(),
-    cover: normalizeOptionalString(project.cover),
-    screenshots: normalizeStringArray(project.screenshots || [], `${path}.screenshots`, { allowEmpty: true }),
+    cover,
+    screenshots,
+    gallery: screenshots.length > 0 ? screenshots : [cover].filter(Boolean),
     techStack: normalizeStringArray(project.techStack, `${path}.techStack`),
     highlights,
     summary: metrics[0] || highlights[0],
@@ -191,6 +197,7 @@ function getFeaturedProjects(projects, limit) {
     role: project.role,
     cover: project.cover,
     techStack: project.techStack,
+    highlights: project.highlights,
     summary: project.summary
   }));
 }

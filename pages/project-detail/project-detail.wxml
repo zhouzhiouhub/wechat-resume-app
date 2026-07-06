@@ -1,0 +1,79 @@
+<view class="detail-page">
+  <view wx:if="{{loadError}}" class="error-panel">
+    <text>{{loadError}}</text>
+    <button class="back-button" bindtap="backHome">返回首页</button>
+  </view>
+
+  <block wx:elif="{{project}}">
+    <swiper
+      class="project-gallery"
+      indicator-dots="{{project.gallery.length > 1}}"
+      autoplay="{{project.gallery.length > 1}}"
+      interval="4200"
+      circular="{{project.gallery.length > 1}}"
+    >
+      <swiper-item wx:for="{{project.gallery}}" wx:key="*this">
+        <image class="gallery-image" src="{{item}}" mode="aspectFill"></image>
+      </swiper-item>
+    </swiper>
+
+    <view class="detail-section project-hero">
+      <text class="project-name">{{project.name}}</text>
+      <text class="project-role">{{project.role}}</text>
+      <text class="project-summary">{{project.summary}}</text>
+    </view>
+
+    <view class="detail-section">
+      <text class="section-heading">技术栈</text>
+      <view class="tag-list">
+        <text
+          wx:for="{{project.techStack}}"
+          wx:key="*this"
+          class="tag"
+        >{{item}}</text>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <text class="section-heading">核心亮点</text>
+      <view
+        wx:for="{{project.highlights}}"
+        wx:key="*this"
+        class="list-row"
+      >
+        <text class="list-index">{{index + 1}}</text>
+        <text class="list-text">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <text class="section-heading">难点与方案</text>
+      <view
+        wx:for="{{project.challenges}}"
+        wx:key="problem"
+        class="challenge-card"
+      >
+        <text class="challenge-label">问题</text>
+        <text class="challenge-text">{{item.problem}}</text>
+        <text class="challenge-label">方案</text>
+        <text class="challenge-text">{{item.solution}}</text>
+        <text class="challenge-label">结果</text>
+        <text class="challenge-text">{{item.result}}</text>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <text class="section-heading">量化成果</text>
+      <view
+        wx:for="{{project.metrics}}"
+        wx:key="*this"
+        class="metric-row"
+      >
+        <text class="metric-dot"></text>
+        <text class="metric-text">{{item}}</text>
+      </view>
+    </view>
+
+    <button class="back-button primary-back" bindtap="backHome">返回联系</button>
+  </block>
+</view>

@@ -1,0 +1,44 @@
+<view class="skill-overview">
+  <view class="section-header">
+    <text class="section-heading">核心技能</text>
+    <text class="section-meta">按能力场景归类</text>
+  </view>
+
+  <view class="highlight-list">
+    <view
+      wx:for="{{highlights}}"
+      wx:key="name"
+      class="highlight-tag"
+    >
+      <text class="highlight-name">{{item.name}}</text>
+      <text class="highlight-level">{{item.level}}%</text>
+    </view>
+  </view>
+
+  <view
+    wx:for="{{groups}}"
+    wx:key="groupName"
+    class="skill-group"
+  >
+    <view class="skill-group-title">{{item.groupName}}</view>
+    <view class="skill-list">
+      <view
+        wx:for="{{item.skills}}"
+        wx:key="name"
+        wx:for-item="skill"
+        class="skill-row"
+      >
+        <view class="skill-main">
+          <text class="skill-name">{{skill.name}}</text>
+          <text class="skill-tags">{{skill.tagText}}</text>
+        </view>
+        <view class="skill-meter">
+          <view class="skill-track">
+            <view class="skill-progress" style="width: {{skill.level}}%;"></view>
+          </view>
+          <text class="skill-level">{{skill.level}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

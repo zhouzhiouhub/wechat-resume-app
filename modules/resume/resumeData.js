@@ -33,8 +33,8 @@ const resumeData = {
       id: 'wechat-resume-app',
       name: '微信简历小程序',
       role: '独立开发',
-      cover: '',
-      screenshots: [],
+      cover: '/assets/projects/resume-cover.png',
+      screenshots: ['/assets/projects/resume-cover.png'],
       techStack: ['微信小程序', 'JavaScript', '组件化'],
       highlights: ['30 秒首屏信息架构', '统一简历数据源', '可验证的数据模型'],
       challenges: [
@@ -50,8 +50,8 @@ const resumeData = {
       id: 'mini-program-activity',
       name: '小程序活动页组件库',
       role: '前端开发',
-      cover: '',
-      screenshots: [],
+      cover: '/assets/projects/activity-cover.png',
+      screenshots: ['/assets/projects/activity-cover.png'],
       techStack: ['微信小程序', 'WXML', 'WXSS'],
       highlights: ['抽象活动配置模型', '复用 banner 与任务组件'],
       challenges: [

@@ -30,6 +30,7 @@ function getHomeResume() {
 
   return {
     profile: resume.profile,
+    contact: resume.profile.contact,
     skillGroups: resume.skillGroups,
     skillHighlights: resumeMapper.getSkillHighlights(resume.skillGroups, 5),
     featuredProjects: resumeMapper.getFeaturedProjects(resume.projects, 3)
