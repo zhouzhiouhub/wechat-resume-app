@@ -1201,6 +1201,10 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(preferenceWxss.includes('@import "../../styles/settings-buttons.wxss";'));
   assert.ok(preferenceWxss.includes('.is-readonly .text-input'));
   assert.ok(assetSettingsWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(assetSettingsWxss.includes('grid-template-columns: 84rpx minmax(0, 1fr) 112rpx'));
+  assert.ok(assetSettingsWxss.includes('grid-column: auto'));
+  assert.ok(assetSettingsWxss.includes('align-items: flex-end'));
+  assert.ok(!assetSettingsWxss.includes('grid-column: 1 / -1'));
   assert.ok(assetSettingsWxml.includes('disabled="{{!isEditing}}"'));
   assert.ok(assetSettingsWxml.includes('<view wx:if="{{isEditing}}" class="asset-actions settings-button-row">'));
   assert.ok(assetSettingsJs.includes('if (!this.data.isEditing)'));

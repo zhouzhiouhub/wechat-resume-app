@@ -84,17 +84,32 @@
 }
 
 .asset-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   justify-content: flex-end;
+  gap: 10rpx;
+  width: 100%;
+}
+
+.asset-button {
+  flex: 0 0 54rpx;
+  width: 112rpx;
+  max-width: 112rpx;
+  height: 54rpx;
+  padding: 0 16rpx;
 }
 
 @media (max-width: 420px) {
   .asset-row {
-    grid-template-columns: 84rpx minmax(0, 1fr);
+    grid-template-columns: 84rpx minmax(0, 1fr) 112rpx;
+    gap: 12rpx;
+    padding: 16rpx;
   }
 
   .asset-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
+    grid-column: auto;
+    justify-content: center;
   }
 
   .asset-preview,
