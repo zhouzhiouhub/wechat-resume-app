@@ -156,15 +156,10 @@
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">素材</text>
-              <settings-edit-button
-                section-id="assets"
-                is-editing="{{settingsEditState.assets}}"
-                bind:toggle="onToggleSettingsEdit"
-              ></settings-edit-button>
             </view>
             <profile-asset-settings
               asset-state="{{profileAssetState}}"
-              is-editing="{{settingsEditState.assets}}"
+              is-editing="{{true}}"
               bind:selectasset="onSelectProfileAsset"
               bind:clearasset="onClearProfileAsset"
             ></profile-asset-settings>
@@ -173,15 +168,10 @@
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">主题</text>
-              <settings-edit-button
-                section-id="theme"
-                is-editing="{{settingsEditState.theme}}"
-                bind:toggle="onToggleSettingsEdit"
-              ></settings-edit-button>
             </view>
             <theme-switcher
               options="{{themeOptions}}"
-              is-editing="{{settingsEditState.theme}}"
+              is-editing="{{true}}"
               bind:change="onChangeTheme"
             ></theme-switcher>
           </view>

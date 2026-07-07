@@ -17,9 +17,7 @@ Page({
     activeTheme: '',
     settingsEditState: {
       profile: false,
-      content: false,
-      assets: false,
-      theme: false
+      content: false
     },
     profileAssetState: profileAssetService.createProfileAssetState(null),
     preferenceState: resumePreferenceService.createPreferenceStateFromDraft({}, {}),
@@ -199,26 +197,12 @@ Page({
   },
 
   onChangeTheme(event) {
-    if (!this.canEditSetting('theme')) {
-      wx.showToast({
-        title: '请先点击编辑',
-        icon: 'none'
-      });
-      return;
-    }
-
     const themeId = event.detail && event.detail.themeId;
     const savedThemeId = themeService.saveThemeId(wx, themeId);
     const themeState = themeService.createThemeState(savedThemeId);
 
     themeService.applyNavigationBar(wx, themeState.activeTheme);
-    this.setData({
-      ...themeState,
-      settingsEditState: {
-        ...(this.data.settingsEditState || {}),
-        theme: false
-      }
-    });
+    this.setData(themeState);
   },
 
   onPreferenceProfileInput(event) {
@@ -384,20 +368,11 @@ Page({
   },
 
   onSelectProfileAsset(event) {
-    if (!this.canEditSetting('assets')) {
-      wx.showToast({
-        title: '请先点击编辑',
-        icon: 'none'
-      });
-      return;
-    }
-
     const field = event.detail && event.detail.field;
 
     profileAssetService.chooseAndSaveProfileAsset(wx, field)
       .then(() => {
         this.refreshResumeCustomization();
-        this.closeSettingEditor('assets');
         wx.showToast({
           title: '已选择',
           icon: 'success'
@@ -412,21 +387,12 @@ Page({
   },
 
   onClearProfileAsset(event) {
-    if (!this.canEditSetting('assets')) {
-      wx.showToast({
-        title: '请先点击编辑',
-        icon: 'none'
-      });
-      return;
-    }
-
     const field = event.detail && event.detail.field;
 
     try {
       profileAssetService.clearProfileAsset(wx, field);
 
       this.refreshResumeCustomization();
-      this.closeSettingEditor('assets');
       wx.showToast({
         title: '已清除',
         icon: 'success'

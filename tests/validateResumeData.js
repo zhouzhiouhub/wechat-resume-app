@@ -1134,10 +1134,13 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeWxml.includes('is-editing="{{settingsEditState.profile}}"'));
   assert.ok(homeWxml.includes('section-id="content"'));
   assert.ok(homeWxml.includes('is-editing="{{settingsEditState.content}}"'));
-  assert.ok(homeWxml.includes('section-id="assets"'));
-  assert.ok(homeWxml.includes('is-editing="{{settingsEditState.assets}}"'));
-  assert.ok(homeWxml.includes('section-id="theme"'));
-  assert.ok(homeWxml.includes('is-editing="{{settingsEditState.theme}}"'));
+  assert.ok(!homeWxml.includes('section-id="assets"'));
+  assert.ok(!homeWxml.includes('is-editing="{{settingsEditState.assets}}"'));
+  assert.ok(!homeWxml.includes('section-id="theme"'));
+  assert.ok(!homeWxml.includes('is-editing="{{settingsEditState.theme}}"'));
+  assert.ok(homeWxml.includes('asset-state="{{profileAssetState}}"'));
+  assert.ok(homeWxml.includes('options="{{themeOptions}}"'));
+  assert.ok(homeWxml.includes('is-editing="{{true}}"'));
   assert.ok(!homeWxml.includes('本机保存'));
   assert.ok(homeWxml.includes('bind:copyphone="onCopyPhone"'));
   assert.ok(!homeWxml.includes('bind:callphone="onCallPhone"'));
@@ -1157,6 +1160,8 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeJs.includes('canEditSetting'));
   assert.ok(homeJs.includes('onToggleSettingsEdit'));
   assert.ok(homeJs.includes("title: '请先点击编辑'"));
+  assert.ok(!homeJs.includes("canEditSetting('assets')"));
+  assert.ok(!homeJs.includes("canEditSetting('theme')"));
   assert.ok(homeJs.includes('contactService.copyText'));
   assert.ok(homeJs.includes('onCopyPhone'));
   assert.ok(!homeJs.includes('onPreferenceDisplayChange'));
