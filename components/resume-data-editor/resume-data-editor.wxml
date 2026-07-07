@@ -1,6 +1,6 @@
 <view class="{{isEditing ? 'resume-data-editor' : 'resume-data-editor is-readonly'}}">
   <view class="editor-top">
-    <view class="tab-list settings-button-row is-between">
+    <view wx:if="{{isEditing}}" class="tab-list settings-button-row is-between">
       <button
         wx:for="{{tabs}}"
         wx:key="id"
@@ -100,7 +100,7 @@
         </view>
 
         <button
-          wx:if="{{group.skills.length > 1}}"
+          wx:if="{{isEditing && group.skills.length > 1}}"
           class="settings-button settings-button-inline settings-button-danger nested-delete-button"
           data-section="skill"
           data-group-index="{{groupIndex}}"
@@ -111,6 +111,7 @@
       </view>
 
       <button
+        wx:if="{{isEditing}}"
         class="settings-button settings-button-inline settings-button-secondary inline-add-button"
         data-section="skill"
         data-group-index="{{groupIndex}}"
@@ -284,7 +285,7 @@
         </view>
 
         <button
-          wx:if="{{project.challenges.length > 1}}"
+          wx:if="{{isEditing && project.challenges.length > 1}}"
           class="settings-button settings-button-inline settings-button-danger nested-delete-button"
           data-section="challenge"
           data-project-index="{{projectIndex}}"
@@ -295,6 +296,7 @@
       </view>
 
       <button
+        wx:if="{{isEditing}}"
         class="settings-button settings-button-inline settings-button-secondary inline-add-button"
         data-section="challenge"
         data-project-index="{{projectIndex}}"
@@ -335,7 +337,7 @@
         <text class="card-title">经历 {{timelineIndex + 1}}</text>
       </view>
 
-      <view class="type-list settings-button-row">
+      <view wx:if="{{isEditing}}" class="type-list settings-button-row">
         <button
           wx:for="{{timelineTypes}}"
           wx:for-item="type"
@@ -446,7 +448,7 @@
         <text class="card-title">资料 {{linkIndex + 1}}</text>
       </view>
 
-      <view class="type-list settings-button-row">
+      <view wx:if="{{isEditing}}" class="type-list settings-button-row">
         <button
           wx:for="{{contactLinkTypes}}"
           wx:for-item="type"
@@ -474,7 +476,7 @@
         />
       </view>
 
-      <view class="type-list settings-button-row">
+      <view wx:if="{{isEditing}}" class="type-list settings-button-row">
         <button
           wx:for="{{contactLinkValueTypes}}"
           wx:for-item="valueType"
@@ -506,7 +508,7 @@
 
   </view>
 
-  <view class="editor-actions settings-button-row is-between">
+  <view wx:if="{{isEditing}}" class="editor-actions settings-button-row is-between">
     <button
       wx:if="{{activeTab === 'skills'}}"
       class="settings-button settings-button-action settings-button-neutral editor-button action-button"

@@ -90,7 +90,7 @@
     </view>
   </view>
 
-  <view class="preference-actions settings-button-row is-between">
+  <view wx:if="{{isEditing}}" class="preference-actions settings-button-row is-between">
     <button class="settings-button settings-button-action settings-button-primary preference-button primary-button" disabled="{{!isEditing}}" bindtap="handleSave">保存设置</button>
     <button class="settings-button settings-button-action settings-button-secondary preference-button secondary-button" disabled="{{!isEditing}}" bindtap="handleReset">恢复默认</button>
   </view>

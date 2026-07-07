@@ -1175,6 +1175,7 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(toolPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
   assert.ok(preferenceWxml.includes('disabled="{{!isEditing}}"'));
+  assert.ok(preferenceWxml.includes('<view wx:if="{{isEditing}}" class="preference-actions settings-button-row is-between">'));
   assert.ok(preferenceWxml.includes('data-field="phone"'));
   assert.ok(!preferenceWxml.includes('preference-title-row'));
   assert.ok(!preferenceWxml.includes('preference-meta'));
@@ -1189,9 +1190,14 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(preferenceWxss.includes('.is-readonly .text-input'));
   assert.ok(assetSettingsWxss.includes('@import "../../styles/settings-buttons.wxss";'));
   assert.ok(assetSettingsWxml.includes('disabled="{{!isEditing}}"'));
+  assert.ok(assetSettingsWxml.includes('<view wx:if="{{isEditing}}" class="asset-actions settings-button-row">'));
   assert.ok(assetSettingsJs.includes('if (!this.data.isEditing)'));
   assert.ok(dataEditorWxss.includes('@import "../../styles/settings-buttons.wxss";'));
   assert.ok(dataEditorWxml.includes('disabled="{{!isEditing}}"'));
+  assert.ok(dataEditorWxml.includes('<view wx:if="{{isEditing}}" class="tab-list settings-button-row is-between">'));
+  assert.ok(dataEditorWxml.includes('<view wx:if="{{isEditing}}" class="editor-actions settings-button-row is-between">'));
+  assert.ok(dataEditorWxml.includes('wx:if="{{isEditing && group.skills.length > 1}}"'));
+  assert.ok(dataEditorWxml.includes('wx:if="{{isEditing && project.challenges.length > 1}}"'));
   assert.ok(dataEditorJs.includes('if (!this.data.isEditing)'));
   assert.ok(themeSwitcherWxml.includes('theme-switcher is-readonly'));
   assert.ok(themeSwitcherJs.includes('if (!this.data.isEditing)'));
