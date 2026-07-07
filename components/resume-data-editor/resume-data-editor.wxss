@@ -15,7 +15,10 @@
 }
 
 .editor-top {
-  align-items: flex-start;
+  display: grid;
+  gap: 12rpx;
+  align-items: start;
+  justify-content: stretch;
 }
 
 .type-button {
@@ -23,10 +26,10 @@
 }
 
 .editor-status {
-  flex-shrink: 0;
+  display: block;
   color: var(--resume-subtle, #6b7280);
   font-size: 22rpx;
-  line-height: 60rpx;
+  line-height: 1.35;
 }
 
 .editor-section,

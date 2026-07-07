@@ -1,10 +1,10 @@
 <view class="resume-data-editor">
   <view class="editor-top">
-    <view class="tab-list settings-button-row is-segmented">
+    <view class="tab-list settings-button-row is-between">
       <button
         wx:for="{{tabs}}"
         wx:key="id"
-        class="{{activeTab === item.id ? 'settings-button settings-button-segment tab-button is-active' : 'settings-button settings-button-segment tab-button'}}"
+        class="{{activeTab === item.id ? 'settings-button settings-button-action tab-button is-active' : 'settings-button settings-button-action settings-button-neutral tab-button'}}"
         data-tab="{{item.id}}"
         bindtap="handleTabChange"
       >{{item.label}}</button>

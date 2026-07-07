@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12rpx;
+  gap: 16rpx;
   max-width: 100%;
   width: 100%;
   box-sizing: border-box;
@@ -13,19 +13,7 @@
 }
 
 .settings-button-row.is-between {
-  justify-content: space-between;
-}
-
-.settings-button-row.is-segmented {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6rpx;
-  max-width: 420rpx;
-  margin: 0 auto;
-  padding: 6rpx;
-  border: 1rpx solid var(--resume-border, #e5e7eb);
-  border-radius: 8rpx;
-  background: var(--resume-surface-hover, #f9fafb);
+  justify-content: center;
 }
 
 .settings-button {
@@ -58,16 +46,6 @@
   flex: 0 1 116rpx;
   height: 52rpx;
   padding: 0 20rpx;
-  font-size: 22rpx;
-}
-
-.settings-button-segment {
-  width: 100%;
-  height: 52rpx;
-  padding: 0 12rpx;
-  border-color: transparent;
-  background: transparent;
-  color: var(--resume-muted, #4b5563);
   font-size: 22rpx;
 }
 
