@@ -1065,6 +1065,10 @@ runCheck('resume preference settings are wired through home contact and tool pan
     path.join(__dirname, '..', 'components', 'settings-edit-button', 'settings-edit-button.js'),
     'utf8'
   );
+  const settingsEditButtonWxss = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'settings-edit-button', 'settings-edit-button.wxss'),
+    'utf8'
+  );
   const toolPanelWxml = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'tool-panel', 'tool-panel.wxml'),
     'utf8'
@@ -1158,6 +1162,9 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(!homeJs.includes('onPreferenceDisplayChange'));
   assert.ok(settingsEditButtonWxml.includes('edit-icon'));
   assert.ok(settingsEditButtonJs.includes("this.triggerEvent('toggle'"));
+  assert.ok(settingsEditButtonWxss.includes('background: transparent'));
+  assert.ok(settingsEditButtonWxss.includes('border: 0'));
+  assert.ok(settingsEditButtonWxss.includes('width: 48rpx'));
   assert.ok(contactPanelWxml.includes('{{contact.phone}}'));
   assert.ok(contactPanelWxml.includes('bindtap="handleCopyPhone"'));
   assert.ok(!contactPanelWxml.includes('handleCallPhone'));
