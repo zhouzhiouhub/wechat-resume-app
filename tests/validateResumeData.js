@@ -724,7 +724,11 @@ runCheck('finish-up print page is registered and wired from contact panel', () =
   assert.ok(appJson.includes('pages/print/print'));
   assert.ok(contactPanelWxml.includes('bindtap="handleOpenPrint"'));
   assert.ok(printJs.includes('printResumeService.createPrintResumeModel'));
-  assert.ok(printWxml.includes('打印版简历'));
+  assert.ok(printWxml.includes('{{printResume.printMeta.title}}'));
+  assert.strictEqual(
+    printResumeService.createPrintResumeModel(resumeService.getResume()).printMeta.title,
+    '打印版简历'
+  );
 });
 
 runCheck('profile asset selection is wired through settings, poster and print views', () => {
