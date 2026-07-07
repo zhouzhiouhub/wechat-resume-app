@@ -5,6 +5,7 @@ const analyticsService = require('../../services/analyticsService');
 const authService = require('../../services/authService');
 const profileAssetService = require('../../services/profileAssetService');
 const localResumeDataService = require('../../services/localResumeDataService');
+const resumeDataEditorService = require('../../services/resumeDataEditorService');
 const resumePreferenceService = require('../../services/resumePreferenceService');
 const resumeCustomizationService = require('../../services/resumeCustomizationService');
 const tapCounter = require('../../utils/tapCounter');
@@ -16,7 +17,7 @@ Page({
     activeTheme: '',
     profileAssetState: profileAssetService.createProfileAssetState(null),
     preferenceState: resumePreferenceService.createPreferenceStateFromDraft({}, {}),
-    resumeDataState: localResumeDataService.createResumeDataState(null),
+    resumeDataState: resumeDataEditorService.createEditorState(),
     displayPreferences: resumePreferenceService.DISPLAY_DEFAULTS,
     profile: null,
     contact: null,
@@ -81,7 +82,7 @@ Page({
           homeResume.baseResume,
           homeResume.preferences
         ),
-        resumeDataState: homeResume.resumeDataState,
+        resumeDataState: resumeDataEditorService.createEditorState(homeResume.resumeDataState),
         profileAssetState: profileAssetService.createProfileAssetState(
           homeResume.resume.profile,
           homeResume.profileAssets
@@ -237,17 +238,6 @@ Page({
     });
   },
 
-  onResumeDataInput(event) {
-    const resumeDataState = this.data.resumeDataState || {};
-
-    this.setData({
-      resumeDataState: {
-        ...resumeDataState,
-        jsonText: event.detail.value
-      }
-    });
-  },
-
   syncProfilePreferencesFromResumeData(resumeData) {
     const preferences = resumePreferenceService.readResumePreferences(wx);
     const profile = resumeData.profile || {};
@@ -266,11 +256,20 @@ Page({
     });
   },
 
+  onEditResumeData(event) {
+    this.setData({
+      resumeDataState: resumeDataEditorService.applyEdit(
+        this.data.resumeDataState,
+        event.detail
+      )
+    });
+  },
+
   onSaveResumeData() {
     try {
-      const payload = localResumeDataService.saveResumeDataJson(
+      const payload = localResumeDataService.saveResumeData(
         wx,
-        this.data.resumeDataState && this.data.resumeDataState.jsonText
+        this.data.resumeDataState && this.data.resumeDataState.draft
       );
 
       this.syncProfilePreferencesFromResumeData(payload.resumeData);

@@ -129,25 +129,6 @@
     </view>
   </view>
 
-  <view class="preference-block">
-    <view class="preference-title-row">
-      <text class="preference-title">完整数据</text>
-      <text class="preference-meta">{{resumeDataState.statusText}}</text>
-    </view>
-
-    <textarea
-      class="json-input"
-      value="{{resumeDataState.jsonText}}"
-      maxlength="20000"
-      bindinput="handleResumeDataInput"
-    ></textarea>
-
-    <view class="data-actions">
-      <button class="preference-button primary-button" bindtap="handleSaveResumeData">保存数据</button>
-      <button class="preference-button secondary-button" bindtap="handleResetResumeData">恢复模板</button>
-    </view>
-  </view>
-
   <view class="preference-actions">
     <button class="preference-button primary-button" bindtap="handleSave">保存设置</button>
     <button class="preference-button secondary-button" bindtap="handleReset">恢复默认</button>

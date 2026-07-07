@@ -12,6 +12,7 @@ const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
 const profileAssetService = require('../services/profileAssetService');
 const localResumeDataService = require('../services/localResumeDataService');
+const resumeDataEditorService = require('../services/resumeDataEditorService');
 const resumePreferenceService = require('../services/resumePreferenceService');
 const resumeCustomizationService = require('../services/resumeCustomizationService');
 const posterService = require('../services/posterService');
@@ -168,16 +169,70 @@ runCheck('local resume data service stores per-user full resume data', () => {
   assert.strictEqual(payload.updatedAt, 7000);
   assert.strictEqual(storedData.profile.name, '赵一');
   assert.strictEqual(storedState.hasLocalData, true);
-  assert.ok(storedState.jsonText.includes('本机保存项目'));
+  assert.strictEqual(storedState.resumeData.projects[0].name, '本机保存项目');
   assert.strictEqual(resume.profile.contact.email, 'zhaoyi@example.com');
   assert.strictEqual(project.name, '本机保存项目');
   assert.throws(
-    () => localResumeDataService.saveResumeDataJson(mockWx, '{"profile":{}}'),
+    () => localResumeDataService.saveResumeData(mockWx, { profile: {} }),
     /skillGroups|profile/
   );
 
   localResumeDataService.clearResumeData(mockWx);
   assert.strictEqual(localResumeDataService.readResumeDataState(mockWx).hasLocalData, false);
+});
+
+runCheck('resume data editor service supports visual CRUD operations', () => {
+  const baseState = localResumeDataService.createResumeDataState(resumeData);
+  let editorState = resumeDataEditorService.createEditorState(baseState);
+
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'skillGroup',
+    groupIndex: 0,
+    field: 'groupName',
+    value: '小程序能力'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'skill',
+    groupIndex: 0,
+    skillIndex: 0,
+    field: 'tagsText',
+    value: '微信小程序、组件化、云开发'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'add',
+    section: 'project'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'project',
+    projectIndex: editorState.draft.projects.length - 1,
+    field: 'name',
+    value: '可视化简历编辑器'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'add',
+    section: 'challenge',
+    projectIndex: 0
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'remove',
+    section: 'timeline',
+    timelineIndex: 0
+  });
+
+  const normalizedResume = resumeMapper.mapResumeData(editorState.draft);
+
+  assert.strictEqual(editorState.draft.skillGroups[0].groupName, '小程序能力');
+  assert.deepStrictEqual(
+    editorState.draft.skillGroups[0].skills[0].tags,
+    ['微信小程序', '组件化', '云开发']
+  );
+  assert.ok(editorState.draft.projects.some((project) => project.name === '可视化简历编辑器'));
+  assert.strictEqual(editorState.draft.projects[0].challenges.length, 2);
+  assert.strictEqual(editorState.draft.timeline.length, resumeData.timeline.length - 1);
+  assert.ok(normalizedResume.projects.length >= 2);
 });
 
 runCheck('contact service validates and prepares interaction payloads', () => {
@@ -822,25 +877,38 @@ runCheck('resume preference settings are wired through home and contact panel', 
     path.join(__dirname, '..', 'components', 'resume-preference-settings', 'resume-preference-settings.js'),
     'utf8'
   );
+  const dataEditorWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.wxml'),
+    'utf8'
+  );
+  const dataEditorJs = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.js'),
+    'utf8'
+  );
 
   assert.ok(homeJson.includes('resume-preference-settings'));
+  assert.ok(homeJson.includes('resume-data-editor'));
   assert.ok(homeWxml.includes('preference-state="{{preferenceState}}"'));
-  assert.ok(homeWxml.includes('resume-data-state="{{resumeDataState}}"'));
+  assert.ok(homeWxml.includes('editor-state="{{resumeDataState}}"'));
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
   assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
   assert.ok(homeWxml.includes('bind:saveresumedata="onSaveResumeData"'));
   assert.ok(homeJs.includes('resumeCustomizationService.getHomeResume'));
-  assert.ok(homeJs.includes('localResumeDataService.saveResumeDataJson'));
+  assert.ok(homeJs.includes('resumeDataEditorService.applyEdit'));
+  assert.ok(homeJs.includes('localResumeDataService.saveResumeData'));
   assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
   assert.ok(contactPanelWxml.includes('display.showPoster'));
   assert.ok(contactPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
-  assert.ok(preferenceWxml.includes('bindinput="handleResumeDataInput"'));
+  assert.ok(!preferenceWxml.includes('json-input'));
   assert.ok(preferenceWxml.includes('bindchange="handleDisplaySwitchChange"'));
   assert.ok(preferenceWxml.includes('handleFeaturedProjectCountStep'));
   assert.ok(preferenceJs.includes("field: 'initialSection'"));
-  assert.ok(preferenceJs.includes('handleSaveResumeData'));
+  assert.ok(dataEditorWxml.includes('data-section="project"'));
+  assert.ok(dataEditorWxml.includes('data-section="skill"'));
+  assert.ok(dataEditorWxml.includes('data-section="timeline"'));
+  assert.ok(dataEditorJs.includes("this.triggerEvent('editresumedata'"));
 });
 
 runCheck('missing required fields report a clear validation error', () => {

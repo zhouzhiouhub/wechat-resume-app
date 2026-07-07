@@ -1,0 +1,422 @@
+<view class="resume-data-editor">
+  <view class="editor-top">
+    <view class="tab-list">
+      <button
+        wx:for="{{tabs}}"
+        wx:key="id"
+        class="{{activeTab === item.id ? 'tab-button is-active' : 'tab-button'}}"
+        data-tab="{{item.id}}"
+        bindtap="handleTabChange"
+      >{{item.label}}</button>
+    </view>
+    <text class="editor-status">{{editorState.statusText}}</text>
+  </view>
+
+  <view wx:if="{{activeTab === 'skills'}}" class="editor-section">
+    <view
+      wx:for="{{editorState.viewData.skillGroups}}"
+      wx:for-item="group"
+      wx:for-index="groupIndex"
+      wx:key="groupName"
+      class="editor-card"
+    >
+      <view class="card-header">
+        <text class="card-title">技能组 {{groupIndex + 1}}</text>
+        <button
+          wx:if="{{editorState.viewData.skillGroups.length > 1}}"
+          class="text-button danger-button"
+          data-section="skillGroup"
+          data-group-index="{{groupIndex}}"
+          bindtap="handleRemove"
+        >删除</button>
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">分组名称</text>
+        <input
+          class="text-input"
+          value="{{group.groupName}}"
+          data-section="skillGroup"
+          data-group-index="{{groupIndex}}"
+          data-field="groupName"
+          maxlength="30"
+          bindinput="handleInput"
+        />
+      </view>
+
+      <view
+        wx:for="{{group.skills}}"
+        wx:for-item="skill"
+        wx:for-index="skillIndex"
+        wx:key="name"
+        class="nested-card"
+      >
+        <view class="nested-header">
+          <text class="nested-title">技能 {{skillIndex + 1}}</text>
+          <button
+            wx:if="{{group.skills.length > 1}}"
+            class="text-button danger-button"
+            data-section="skill"
+            data-group-index="{{groupIndex}}"
+            data-skill-index="{{skillIndex}}"
+            bindtap="handleRemove"
+          >删除</button>
+        </view>
+
+        <view class="form-grid">
+          <view class="form-field">
+            <text class="field-label">名称</text>
+            <input
+              class="text-input"
+              value="{{skill.name}}"
+              data-section="skill"
+              data-group-index="{{groupIndex}}"
+              data-skill-index="{{skillIndex}}"
+              data-field="name"
+              maxlength="30"
+              bindinput="handleInput"
+            />
+          </view>
+
+          <view class="form-field">
+            <text class="field-label">熟练度</text>
+            <input
+              class="text-input"
+              value="{{skill.level}}"
+              type="number"
+              data-section="skill"
+              data-group-index="{{groupIndex}}"
+              data-skill-index="{{skillIndex}}"
+              data-field="level"
+              bindinput="handleInput"
+            />
+          </view>
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">标签</text>
+          <input
+            class="text-input"
+            value="{{skill.tagsText}}"
+            data-section="skill"
+            data-group-index="{{groupIndex}}"
+            data-skill-index="{{skillIndex}}"
+            data-field="tagsText"
+            maxlength="80"
+            bindinput="handleInput"
+          />
+        </view>
+      </view>
+
+      <button
+        class="inline-add-button"
+        data-section="skill"
+        data-group-index="{{groupIndex}}"
+        bindtap="handleAdd"
+      >新增技能</button>
+    </view>
+
+    <button class="block-add-button" data-section="skillGroup" bindtap="handleAdd">新增技能组</button>
+  </view>
+
+  <view wx:if="{{activeTab === 'projects'}}" class="editor-section">
+    <view
+      wx:for="{{editorState.viewData.projects}}"
+      wx:for-item="project"
+      wx:for-index="projectIndex"
+      wx:key="id"
+      class="editor-card"
+    >
+      <view class="card-header">
+        <text class="card-title">项目 {{projectIndex + 1}}</text>
+        <button
+          wx:if="{{editorState.viewData.projects.length > 1}}"
+          class="text-button danger-button"
+          data-section="project"
+          data-project-index="{{projectIndex}}"
+          bindtap="handleRemove"
+        >删除</button>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-field">
+          <text class="field-label">项目名称</text>
+          <input
+            class="text-input"
+            value="{{project.name}}"
+            data-section="project"
+            data-project-index="{{projectIndex}}"
+            data-field="name"
+            maxlength="40"
+            bindinput="handleInput"
+          />
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">项目 ID</text>
+          <input
+            class="text-input"
+            value="{{project.id}}"
+            data-section="project"
+            data-project-index="{{projectIndex}}"
+            data-field="id"
+            maxlength="50"
+            bindinput="handleInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">角色</text>
+        <input
+          class="text-input"
+          value="{{project.role}}"
+          data-section="project"
+          data-project-index="{{projectIndex}}"
+          data-field="role"
+          maxlength="50"
+          bindinput="handleInput"
+        />
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">封面路径</text>
+        <input
+          class="text-input"
+          value="{{project.cover}}"
+          data-section="project"
+          data-project-index="{{projectIndex}}"
+          data-field="cover"
+          maxlength="120"
+          bindinput="handleInput"
+        />
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">技术栈</text>
+        <textarea
+          class="textarea-input"
+          value="{{project.techStackText}}"
+          data-section="project"
+          data-project-index="{{projectIndex}}"
+          data-field="techStackText"
+          maxlength="200"
+          auto-height
+          bindinput="handleInput"
+        ></textarea>
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">核心亮点</text>
+        <textarea
+          class="textarea-input"
+          value="{{project.highlightsText}}"
+          data-section="project"
+          data-project-index="{{projectIndex}}"
+          data-field="highlightsText"
+          maxlength="300"
+          auto-height
+          bindinput="handleInput"
+        ></textarea>
+      </view>
+
+      <view
+        wx:for="{{project.challenges}}"
+        wx:for-item="challenge"
+        wx:for-index="challengeIndex"
+        wx:key="problem"
+        class="nested-card"
+      >
+        <view class="nested-header">
+          <text class="nested-title">难点 {{challengeIndex + 1}}</text>
+          <button
+            wx:if="{{project.challenges.length > 1}}"
+            class="text-button danger-button"
+            data-section="challenge"
+            data-project-index="{{projectIndex}}"
+            data-challenge-index="{{challengeIndex}}"
+            bindtap="handleRemove"
+          >删除</button>
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">问题</text>
+          <textarea
+            class="textarea-input"
+            value="{{challenge.problem}}"
+            data-section="challenge"
+            data-project-index="{{projectIndex}}"
+            data-challenge-index="{{challengeIndex}}"
+            data-field="problem"
+            maxlength="220"
+            auto-height
+            bindinput="handleInput"
+          ></textarea>
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">方案</text>
+          <textarea
+            class="textarea-input"
+            value="{{challenge.solution}}"
+            data-section="challenge"
+            data-project-index="{{projectIndex}}"
+            data-challenge-index="{{challengeIndex}}"
+            data-field="solution"
+            maxlength="260"
+            auto-height
+            bindinput="handleInput"
+          ></textarea>
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">结果</text>
+          <textarea
+            class="textarea-input"
+            value="{{challenge.result}}"
+            data-section="challenge"
+            data-project-index="{{projectIndex}}"
+            data-challenge-index="{{challengeIndex}}"
+            data-field="result"
+            maxlength="220"
+            auto-height
+            bindinput="handleInput"
+          ></textarea>
+        </view>
+      </view>
+
+      <button
+        class="inline-add-button"
+        data-section="challenge"
+        data-project-index="{{projectIndex}}"
+        bindtap="handleAdd"
+      >新增难点</button>
+
+      <view class="form-field">
+        <text class="field-label">量化成果</text>
+        <textarea
+          class="textarea-input"
+          value="{{project.metricsText}}"
+          data-section="project"
+          data-project-index="{{projectIndex}}"
+          data-field="metricsText"
+          maxlength="300"
+          auto-height
+          bindinput="handleInput"
+        ></textarea>
+      </view>
+    </view>
+
+    <button class="block-add-button" data-section="project" bindtap="handleAdd">新增项目</button>
+  </view>
+
+  <view wx:if="{{activeTab === 'timeline'}}" class="editor-section">
+    <view
+      wx:for="{{editorState.viewData.timeline}}"
+      wx:for-item="item"
+      wx:for-index="timelineIndex"
+      wx:key="title"
+      class="editor-card"
+    >
+      <view class="card-header">
+        <text class="card-title">经历 {{timelineIndex + 1}}</text>
+        <button
+          class="text-button danger-button"
+          data-section="timeline"
+          data-timeline-index="{{timelineIndex}}"
+          bindtap="handleRemove"
+        >删除</button>
+      </view>
+
+      <view class="type-list">
+        <button
+          wx:for="{{timelineTypes}}"
+          wx:for-item="type"
+          wx:for-index="typeIndex"
+          wx:key="id"
+          class="{{item.type === type.id ? 'type-button is-active' : 'type-button'}}"
+          data-timeline-index="{{timelineIndex}}"
+          data-value="{{type.id}}"
+          bindtap="handleTypeTap"
+        >{{type.label}}</button>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-field">
+          <text class="field-label">标题</text>
+          <input
+            class="text-input"
+            value="{{item.title}}"
+            data-section="timeline"
+            data-timeline-index="{{timelineIndex}}"
+            data-field="title"
+            maxlength="50"
+            bindinput="handleInput"
+          />
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">组织</text>
+          <input
+            class="text-input"
+            value="{{item.organization}}"
+            data-section="timeline"
+            data-timeline-index="{{timelineIndex}}"
+            data-field="organization"
+            maxlength="50"
+            bindinput="handleInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-field">
+          <text class="field-label">开始</text>
+          <input
+            class="text-input"
+            value="{{item.startDate}}"
+            data-section="timeline"
+            data-timeline-index="{{timelineIndex}}"
+            data-field="startDate"
+            maxlength="7"
+            bindinput="handleInput"
+          />
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">结束</text>
+          <input
+            class="text-input"
+            value="{{item.endDate}}"
+            data-section="timeline"
+            data-timeline-index="{{timelineIndex}}"
+            data-field="endDate"
+            maxlength="7"
+            bindinput="handleInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">描述</text>
+        <textarea
+          class="textarea-input"
+          value="{{item.description}}"
+          data-section="timeline"
+          data-timeline-index="{{timelineIndex}}"
+          data-field="description"
+          maxlength="220"
+          auto-height
+          bindinput="handleInput"
+        ></textarea>
+      </view>
+    </view>
+
+    <button class="block-add-button" data-section="timeline" bindtap="handleAdd">新增履历</button>
+  </view>
+
+  <view class="editor-actions">
+    <button class="editor-button primary-button" bindtap="handleSave">保存内容</button>
+    <button class="editor-button secondary-button" bindtap="handleReset">恢复模板</button>
+  </view>
+</view>

@@ -120,15 +120,24 @@
             </view>
             <resume-preference-settings
               preference-state="{{preferenceState}}"
-              resume-data-state="{{resumeDataState}}"
               bind:profileinput="onPreferenceProfileInput"
               bind:displaychange="onPreferenceDisplayChange"
               bind:savepreferences="onSaveResumePreferences"
               bind:resetpreferences="onResetResumePreferences"
-              bind:resumedatainput="onResumeDataInput"
+            ></resume-preference-settings>
+          </view>
+
+          <view class="settings-panel">
+            <view class="section-header">
+              <text class="section-heading">简历内容</text>
+              <text class="section-meta">本机保存</text>
+            </view>
+            <resume-data-editor
+              editor-state="{{resumeDataState}}"
+              bind:editresumedata="onEditResumeData"
               bind:saveresumedata="onSaveResumeData"
               bind:resetresumedata="onResetResumeData"
-            ></resume-preference-settings>
+            ></resume-data-editor>
           </view>
 
           <view class="settings-panel">

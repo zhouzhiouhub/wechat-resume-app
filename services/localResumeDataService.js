@@ -102,16 +102,12 @@ function formatUpdatedAt(timestamp) {
   return `${month}-${day} ${hour}:${minute}`;
 }
 
-function formatResumeDataJson(resumeData) {
-  return JSON.stringify(validateResumeData(resumeData), null, 2);
-}
-
 function createResumeDataState(resumeData, meta = {}) {
   const safeResumeData = resumeData ? validateResumeData(resumeData) : getDefaultResumeData();
   const updatedAt = meta.updatedAt || 0;
 
   return {
-    jsonText: formatResumeDataJson(safeResumeData),
+    resumeData: safeResumeData,
     hasLocalData: Boolean(meta.hasLocalData),
     updatedAt,
     statusText: meta.hasLocalData ? `已保存 ${formatUpdatedAt(updatedAt)}` : '使用模板'
@@ -126,22 +122,6 @@ function readResumeDataState(wxApi, options = {}) {
     hasLocalData: Boolean(payload),
     updatedAt: payload ? payload.updatedAt : 0
   });
-}
-
-function parseResumeDataJson(jsonText) {
-  if (typeof jsonText !== 'string' || !jsonText.trim()) {
-    throw new Error('完整简历数据不能为空');
-  }
-
-  try {
-    return validateResumeData(JSON.parse(jsonText));
-  } catch (error) {
-    if (error instanceof SyntaxError) {
-      throw new Error('完整简历数据不是有效 JSON');
-    }
-
-    throw error;
-  }
 }
 
 function createStoredPayload(resumeData, options = {}) {
@@ -160,10 +140,6 @@ function saveResumeData(wxApi, resumeData, options = {}) {
   }
 
   return payload;
-}
-
-function saveResumeDataJson(wxApi, jsonText, options = {}) {
-  return saveResumeData(wxApi, parseResumeDataJson(jsonText), options);
 }
 
 function clearResumeData(wxApi, options = {}) {
@@ -202,11 +178,8 @@ module.exports = {
   validateResumeData,
   readResumeData,
   readResumeDataState,
-  formatResumeDataJson,
   createResumeDataState,
-  parseResumeDataJson,
   saveResumeData,
-  saveResumeDataJson,
   clearResumeData,
   applyProfileDraftToResumeData
 };

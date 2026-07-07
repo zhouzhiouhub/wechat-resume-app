@@ -1,0 +1,214 @@
+.resume-data-editor {
+  display: grid;
+  gap: 18rpx;
+}
+
+.editor-top,
+.card-header,
+.nested-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.editor-top {
+  align-items: flex-start;
+}
+
+.tab-list,
+.type-list {
+  display: grid;
+  gap: 10rpx;
+}
+
+.tab-list {
+  flex: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.type-list {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tab-button,
+.type-button,
+.text-button,
+.inline-add-button,
+.block-add-button,
+.editor-button {
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+.tab-button::after,
+.type-button::after,
+.text-button::after,
+.inline-add-button::after,
+.block-add-button::after,
+.editor-button::after {
+  border: 0;
+}
+
+.tab-button,
+.type-button {
+  min-height: 60rpx;
+  padding: 0 8rpx;
+  background: var(--resume-surface, #ffffff);
+  color: var(--resume-muted, #4b5563);
+  line-height: 60rpx;
+}
+
+.tab-button.is-active,
+.type-button.is-active {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-weight: 800;
+}
+
+.editor-status {
+  flex-shrink: 0;
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+  line-height: 60rpx;
+}
+
+.editor-section,
+.editor-card,
+.nested-card {
+  display: grid;
+  gap: 16rpx;
+}
+
+.editor-card {
+  padding: 18rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  background: var(--resume-surface, #ffffff);
+}
+
+.nested-card {
+  padding: 16rpx;
+  border-radius: 8rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
+.card-title,
+.nested-title,
+.field-label {
+  display: block;
+}
+
+.card-title {
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.nested-title {
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.text-button {
+  min-width: 88rpx;
+  min-height: 52rpx;
+  padding: 0 12rpx;
+  background: transparent;
+  line-height: 52rpx;
+}
+
+.danger-button {
+  color: #dc2626;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.form-field {
+  min-width: 0;
+}
+
+.field-label {
+  margin-bottom: 8rpx;
+  color: var(--resume-muted, #4b5563);
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.text-input,
+.textarea-input {
+  width: 100%;
+  min-height: 72rpx;
+  padding: 0 18rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  background: var(--resume-surface, #ffffff);
+  color: var(--resume-text, #111827);
+  font-size: 24rpx;
+  line-height: 72rpx;
+  box-sizing: border-box;
+}
+
+.textarea-input {
+  min-height: 120rpx;
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
+  line-height: 1.5;
+}
+
+.inline-add-button,
+.block-add-button {
+  min-height: 64rpx;
+  line-height: 64rpx;
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+  font-weight: 800;
+}
+
+.block-add-button {
+  width: 100%;
+}
+
+.editor-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.editor-button {
+  min-height: 68rpx;
+  line-height: 68rpx;
+}
+
+.primary-button {
+  background: var(--resume-text, #111827);
+  color: var(--resume-inverse, #ffffff);
+}
+
+.secondary-button {
+  background: var(--resume-accent-soft, #eef2ff);
+  color: var(--resume-accent-text, #3730a3);
+}
+
+@media (max-width: 420px) {
+  .form-grid,
+  .editor-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .type-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .editor-top {
+    display: grid;
+  }
+}
