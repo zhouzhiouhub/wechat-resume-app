@@ -116,7 +116,6 @@
       >新增技能</button>
     </view>
 
-    <button class="block-add-button" data-section="skillGroup" bindtap="handleAdd">新增技能组</button>
   </view>
 
   <view wx:if="{{activeTab === 'projects'}}" class="editor-section">
@@ -307,7 +306,6 @@
       </view>
     </view>
 
-    <button class="block-add-button" data-section="project" bindtap="handleAdd">新增项目</button>
   </view>
 
   <view wx:if="{{activeTab === 'timeline'}}" class="editor-section">
@@ -412,11 +410,28 @@
       </view>
     </view>
 
-    <button class="block-add-button" data-section="timeline" bindtap="handleAdd">新增履历</button>
   </view>
 
   <view class="editor-actions">
-    <button class="editor-button primary-button" bindtap="handleSave">保存内容</button>
-    <button class="editor-button secondary-button" bindtap="handleReset">恢复模板</button>
+    <button
+      wx:if="{{activeTab === 'skills'}}"
+      class="editor-button action-button"
+      data-section="skillGroup"
+      bindtap="handleAdd"
+    >新增</button>
+    <button
+      wx:if="{{activeTab === 'projects'}}"
+      class="editor-button action-button"
+      data-section="project"
+      bindtap="handleAdd"
+    >新增</button>
+    <button
+      wx:if="{{activeTab === 'timeline'}}"
+      class="editor-button action-button"
+      data-section="timeline"
+      bindtap="handleAdd"
+    >新增</button>
+    <button class="editor-button primary-button" bindtap="handleSave">保存</button>
+    <button class="editor-button secondary-button" bindtap="handleReset">重置</button>
   </view>
 </view>

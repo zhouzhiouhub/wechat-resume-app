@@ -913,12 +913,24 @@ runCheck('resume preference settings are wired through home and contact panel', 
     path.join(__dirname, '..', 'components', 'resume-preference-settings', 'resume-preference-settings.js'),
     'utf8'
   );
+  const preferenceWxss = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'resume-preference-settings', 'resume-preference-settings.wxss'),
+    'utf8'
+  );
+  const assetSettingsWxss = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'profile-asset-settings', 'profile-asset-settings.wxss'),
+    'utf8'
+  );
   const dataEditorWxml = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.wxml'),
     'utf8'
   );
   const dataEditorJs = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.js'),
+    'utf8'
+  );
+  const dataEditorWxss = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.wxss'),
     'utf8'
   );
 
@@ -945,9 +957,30 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(!preferenceWxml.includes('handleFeaturedProjectCountStep'));
   assert.ok(!preferenceWxml.includes('handleDisplaySwitchChange'));
   assert.ok(!preferenceJs.includes("field: 'initialSection'"));
+  assert.ok(preferenceWxss.includes('justify-content: center'));
+  assert.ok(preferenceWxss.includes('text-align: center'));
+  assert.ok(assetSettingsWxss.includes('justify-content: center'));
+  assert.ok(assetSettingsWxss.includes('white-space: nowrap'));
   assert.ok(dataEditorWxml.includes('data-section="project"'));
   assert.ok(dataEditorWxml.includes('data-section="skill"'));
   assert.ok(dataEditorWxml.includes('data-section="timeline"'));
+  assert.ok(dataEditorWxml.includes('class="editor-actions"'));
+  assert.ok(!dataEditorWxml.includes('block-add-button'));
+  assert.ok(!dataEditorWxml.includes('新增技能组</button>'));
+  assert.ok(!dataEditorWxml.includes('新增项目</button>'));
+  assert.ok(!dataEditorWxml.includes('新增履历</button>'));
+  assert.ok(!dataEditorWxml.includes('保存内容'));
+  assert.ok(!dataEditorWxml.includes('恢复模板'));
+  assert.ok(dataEditorWxml.includes('>新增</button>'));
+  assert.ok(dataEditorWxml.includes('>保存</button>'));
+  assert.ok(dataEditorWxml.includes('>重置</button>'));
+  assert.ok(dataEditorWxss.includes('grid-template-columns: repeat(3, minmax(0, 1fr))'));
+  assert.ok(dataEditorWxss.includes('width: 100%'));
+  assert.ok(dataEditorWxss.includes('margin: 0'));
+  assert.ok(dataEditorWxss.includes('flex: 0 0 88rpx'));
+  assert.ok(dataEditorWxss.includes('width: 180rpx'));
+  assert.ok(dataEditorWxss.includes('height: 60rpx'));
+  assert.ok(dataEditorWxss.includes('text-align: center'));
   assert.ok(dataEditorJs.includes("this.triggerEvent('editresumedata'"));
 });
 

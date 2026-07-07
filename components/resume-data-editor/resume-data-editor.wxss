@@ -20,6 +20,7 @@
 .type-list {
   display: grid;
   gap: 10rpx;
+  width: 100%;
 }
 
 .tab-list {
@@ -35,28 +36,36 @@
 .type-button,
 .text-button,
 .inline-add-button,
-.block-add-button,
 .editor-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
   border-radius: 8rpx;
+  box-sizing: border-box;
   font-size: 24rpx;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .tab-button::after,
 .type-button::after,
 .text-button::after,
 .inline-add-button::after,
-.block-add-button::after,
 .editor-button::after {
   border: 0;
 }
 
 .tab-button,
 .type-button {
-  min-height: 60rpx;
+  width: 100%;
+  height: 60rpx;
   padding: 0 8rpx;
   background: var(--resume-surface, #ffffff);
   color: var(--resume-muted, #4b5563);
-  line-height: 60rpx;
 }
 
 .tab-button.is-active,
@@ -114,11 +123,12 @@
 }
 
 .text-button {
-  min-width: 88rpx;
-  min-height: 52rpx;
+  flex: 0 0 88rpx;
+  width: 88rpx;
+  height: 52rpx;
   padding: 0 12rpx;
   background: transparent;
-  line-height: 52rpx;
+  font-size: 22rpx;
 }
 
 .danger-button {
@@ -164,28 +174,35 @@
   line-height: 1.5;
 }
 
-.inline-add-button,
-.block-add-button {
-  min-height: 64rpx;
-  line-height: 64rpx;
+.inline-add-button {
+  justify-self: end;
+  width: 180rpx;
+  height: 56rpx;
   background: var(--resume-accent-soft, #eef2ff);
   color: var(--resume-accent-text, #3730a3);
+  font-size: 22rpx;
   font-weight: 800;
-}
-
-.block-add-button {
-  width: 100%;
 }
 
 .editor-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14rpx;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8rpx;
+  align-items: center;
+  width: 100%;
 }
 
 .editor-button {
-  min-height: 68rpx;
-  line-height: 68rpx;
+  width: 100%;
+  height: 60rpx;
+  font-size: 22rpx;
+  font-weight: 800;
+  text-align: center;
+}
+
+.action-button {
+  background: var(--resume-surface-hover, #f9fafb);
+  color: var(--resume-text, #111827);
 }
 
 .primary-button {
@@ -199,8 +216,7 @@
 }
 
 @media (max-width: 420px) {
-  .form-grid,
-  .editor-actions {
+  .form-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
