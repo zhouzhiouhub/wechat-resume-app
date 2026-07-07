@@ -3,15 +3,6 @@ Component({
     contact: {
       type: Object,
       value: {}
-    },
-    display: {
-      type: Object,
-      value: {
-        showPoster: true,
-        showPrint: true,
-        showFeedback: true,
-        showCustomerService: true
-      }
     }
   },
 
@@ -32,16 +23,12 @@ Component({
       });
     },
 
-    handleOpenPoster() {
-      this.triggerEvent('openposter');
-    },
+    handleCallPhone() {
+      const contact = this.data.contact || {};
 
-    handleOpenPrint() {
-      this.triggerEvent('openprint');
-    },
-
-    handleOpenFeedback() {
-      this.triggerEvent('openfeedback');
+      this.triggerEvent('callphone', {
+        phone: contact.phone
+      });
     }
   }
 });

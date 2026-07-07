@@ -24,6 +24,7 @@
           <text class="contact-line">{{printResume.profile.status}}</text>
           <text class="contact-line">{{printResume.profile.location}}</text>
           <text class="contact-line">{{printResume.contact.email}}</text>
+          <text wx:if="{{printResume.contact.phone}}" class="contact-line">{{printResume.contact.phone}}</text>
         </view>
       </view>
 

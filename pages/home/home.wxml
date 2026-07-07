@@ -103,13 +103,19 @@
         <view wx:if="{{showContact}}" class="content-section">
           <contact-panel
             contact="{{contact}}"
-            display="{{displayPreferences}}"
             bind:copyemail="onCopyEmail"
+            bind:callphone="onCallPhone"
             bind:showwechatqr="onShowWechatQr"
+          ></contact-panel>
+        </view>
+
+        <view wx:if="{{showTools}}" class="content-section">
+          <tool-panel
+            display="{{displayPreferences}}"
             bind:openposter="onOpenPoster"
             bind:openprint="onOpenPrint"
             bind:openfeedback="onOpenFeedback"
-          ></contact-panel>
+          ></tool-panel>
         </view>
 
         <view wx:if="{{showSettings}}" class="content-section settings-section">

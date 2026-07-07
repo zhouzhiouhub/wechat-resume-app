@@ -8,7 +8,8 @@ const PROFILE_FIELDS = {
   STATUS: 'status',
   SUMMARY: 'summary',
   LOCATION: 'location',
-  EMAIL: 'email'
+  EMAIL: 'email',
+  PHONE: 'phone'
 };
 
 const DISPLAY_FIELDS = {
@@ -35,7 +36,8 @@ const SECTION_OPTIONS = [
   { id: 'skills', label: '技能' },
   { id: 'projects', label: '项目' },
   { id: 'timeline', label: '履历' },
-  { id: 'contact', label: '联系' }
+  { id: 'contact', label: '联系' },
+  { id: 'tools', label: '工具' }
 ];
 
 const DISPLAY_SWITCH_DEFINITIONS = [
@@ -94,7 +96,8 @@ function normalizeProfilePreferences(profile = {}) {
     status: normalizeText(profile.status),
     summary: normalizeText(profile.summary),
     location: normalizeText(profile.location),
-    email: normalizeText(profile.email)
+    email: normalizeText(profile.email),
+    phone: normalizeText(profile.phone)
   };
 }
 
@@ -162,6 +165,10 @@ function validateResumePreferences(preferences) {
     errors.push('邮箱格式不正确');
   }
 
+  if (profile.phone.length > 30) {
+    errors.push('手机号过长');
+  }
+
   return {
     isValid: errors.length === 0,
     errors,
@@ -199,6 +206,7 @@ function applyPreferencesToProfile(profile, preferences) {
   const email = validator.isValidEmail(profilePreferences.email)
     ? profilePreferences.email
     : contact.email;
+  const phone = profilePreferences.phone || contact.phone || '';
 
   return {
     ...profile,
@@ -210,7 +218,8 @@ function applyPreferencesToProfile(profile, preferences) {
     location: profilePreferences.location || profile.location,
     contact: {
       ...contact,
-      email
+      email,
+      phone
     }
   };
 }
@@ -231,7 +240,8 @@ function createProfileDraft(profile) {
     status: profile.status,
     summary: profile.summary,
     location: profile.location,
-    email: contact.email
+    email: contact.email,
+    phone: contact.phone
   });
 }
 

@@ -4,6 +4,7 @@ const HOME_SECTION_IDS = {
   PROJECTS: 'projects',
   TIMELINE: 'timeline',
   CONTACT: 'contact',
+  TOOLS: 'tools',
   SETTINGS: 'settings',
   ALL: 'all'
 };
@@ -37,7 +38,13 @@ const HOME_SECTIONS = [
     id: HOME_SECTION_IDS.CONTACT,
     label: '联系',
     title: '联系方式',
-    meta: '邮箱与微信入口'
+    meta: '邮箱、手机号与微信入口'
+  },
+  {
+    id: HOME_SECTION_IDS.TOOLS,
+    label: '工具',
+    title: '工具',
+    meta: '分享、打印与反馈'
   },
   {
     id: HOME_SECTION_IDS.SETTINGS,
@@ -49,7 +56,7 @@ const HOME_SECTIONS = [
     id: HOME_SECTION_IDS.ALL,
     label: '全部',
     title: '全部内容',
-    meta: '名片、技能、项目、履历、联系'
+    meta: '名片、技能、项目、履历、联系、工具'
   }
 ];
 
@@ -122,6 +129,7 @@ function createHomeSectionState(activeSectionId = DEFAULT_HOME_SECTION_ID) {
     showProjects: isSectionVisible(activeSection.id, HOME_SECTION_IDS.PROJECTS),
     showTimeline: isSectionVisible(activeSection.id, HOME_SECTION_IDS.TIMELINE),
     showContact: isSectionVisible(activeSection.id, HOME_SECTION_IDS.CONTACT),
+    showTools: isSectionVisible(activeSection.id, HOME_SECTION_IDS.TOOLS),
     showSettings: isSettingsVisible(activeSection.id)
   };
 }

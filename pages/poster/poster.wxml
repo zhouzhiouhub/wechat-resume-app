@@ -47,6 +47,8 @@
         <view>
           <text class="poster-contact-label">联系邮箱</text>
           <text class="poster-contact-value">{{poster.contact.email}}</text>
+          <text wx:if="{{poster.contact.phone}}" class="poster-contact-label">手机号</text>
+          <text wx:if="{{poster.contact.phone}}" class="poster-contact-value">{{poster.contact.phone}}</text>
         </view>
         <view class="poster-qr">
           <image

@@ -52,6 +52,7 @@ function normalizeContact(contact) {
 
   return {
     email: contact.email.trim(),
+    phone: normalizeOptionalString(contact.phone),
     wechatQr: normalizeOptionalString(contact.wechatQr)
   };
 }

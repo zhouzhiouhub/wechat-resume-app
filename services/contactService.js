@@ -5,6 +5,7 @@ function normalizeContact(contact) {
 
   return {
     email: typeof source.email === 'string' ? source.email.trim() : '',
+    phone: typeof source.phone === 'string' ? source.phone.trim() : '',
     wechatQr: typeof source.wechatQr === 'string' ? source.wechatQr.trim() : ''
   };
 }
@@ -57,6 +58,39 @@ function copyEmail(wxApi, email) {
   });
 }
 
+function createPhoneCallPayload(phone) {
+  if (!validator.isNonEmptyString(phone)) {
+    throw new Error('contact.phone must be provided before call');
+  }
+
+  return {
+    phoneNumber: phone.trim()
+  };
+}
+
+function callPhone(wxApi, phone) {
+  let payload;
+
+  try {
+    payload = createPhoneCallPayload(phone);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  return new Promise((resolve, reject) => {
+    if (!wxApi || typeof wxApi.makePhoneCall !== 'function') {
+      reject(new Error('wx.makePhoneCall is not available'));
+      return;
+    }
+
+    wxApi.makePhoneCall({
+      phoneNumber: payload.phoneNumber,
+      success: resolve,
+      fail: reject
+    });
+  });
+}
+
 function createPreviewPayload(wechatQr) {
   if (!validator.isNonEmptyString(wechatQr)) {
     throw new Error('contact.wechatQr must be provided before preview');
@@ -99,6 +133,8 @@ module.exports = {
   validateContactInfo,
   createClipboardPayload,
   copyEmail,
+  createPhoneCallPayload,
+  callPhone,
   createPreviewPayload,
   previewWechatQr
 };

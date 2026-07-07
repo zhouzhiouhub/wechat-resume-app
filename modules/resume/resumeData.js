@@ -8,6 +8,7 @@ const resumeData = {
     location: '待填写城市',
     contact: {
       email: 'user@example.com',
+      phone: '13800000000',
       wechatQr: ''
     }
   },

@@ -164,7 +164,8 @@ function applyProfileDraftToResumeData(resumeData, profileDraft = {}) {
     location: profileDraft.location || profile.location,
     contact: {
       ...contact,
-      email: profileDraft.email || contact.email
+      email: profileDraft.email || contact.email,
+      phone: profileDraft.phone || contact.phone || ''
     }
   };
 

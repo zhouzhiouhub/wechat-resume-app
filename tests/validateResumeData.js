@@ -76,12 +76,13 @@ runCheck('default resume data keeps one template for repeatable sections', () =>
   assert.strictEqual(resumeData.timeline.length, 1);
 });
 
-runCheck('profile includes a valid contact email', () => {
+runCheck('profile includes valid contact methods', () => {
   const profile = resumeService.getProfile();
 
   assert.ok(validator.isValidEmail(profile.contact.email));
   assert.notStrictEqual(profile.contact.email, '2922188469@qq.com');
   assert.strictEqual(profile.contact.email, 'user@example.com');
+  assert.strictEqual(profile.contact.phone, '13800000000');
 });
 
 runCheck('home resume exposes reusable component inputs', () => {
@@ -89,6 +90,7 @@ runCheck('home resume exposes reusable component inputs', () => {
 
   assert.ok(homeResume.profile.name);
   assert.ok(homeResume.contact.email);
+  assert.ok(homeResume.contact.phone);
   assert.ok(homeResume.skillHighlights.length > 0);
   assert.ok(homeResume.skillGroups.length > 0);
   assert.ok(homeResume.featuredProjects.length > 0);
@@ -165,6 +167,7 @@ runCheck('local resume data service stores per-user full resume data', () => {
   localResumeData.profile.summary = '专注微信小程序与前端工程化。';
   localResumeData.profile.location = '杭州';
   localResumeData.profile.contact.email = 'zhaoyi@example.com';
+  localResumeData.profile.contact.phone = '13900000000';
   localResumeData.skillGroups[0].skills[0].name = '微信小程序';
   localResumeData.projects[0].id = 'local-miniapp-project';
   localResumeData.projects[0].name = '本机保存项目';
@@ -182,6 +185,7 @@ runCheck('local resume data service stores per-user full resume data', () => {
   assert.strictEqual(storedState.hasLocalData, true);
   assert.strictEqual(storedState.resumeData.projects[0].name, '本机保存项目');
   assert.strictEqual(resume.profile.contact.email, 'zhaoyi@example.com');
+  assert.strictEqual(resume.profile.contact.phone, '13900000000');
   assert.strictEqual(project.name, '本机保存项目');
   assert.throws(
     () => localResumeDataService.saveResumeData(mockWx, { profile: {} }),
@@ -272,10 +276,14 @@ runCheck('contact service validates and prepares interaction payloads', () => {
   const contact = resumeService.getProfile().contact;
   const validation = contactService.validateContactInfo(contact);
   const clipboardPayload = contactService.createClipboardPayload(contact.email);
+  const phonePayload = contactService.createPhoneCallPayload(contact.phone);
 
   assert.strictEqual(validation.isValid, true);
+  assert.strictEqual(validation.contact.phone, contact.phone);
   assert.strictEqual(clipboardPayload.data, contact.email);
+  assert.strictEqual(phonePayload.phoneNumber, contact.phone);
   assert.throws(() => contactService.createClipboardPayload('bad-email'), /valid email/);
+  assert.throws(() => contactService.createPhoneCallPayload(''), /phone/);
   assert.throws(() => contactService.createPreviewPayload(''), /wechatQr/);
 });
 
@@ -286,20 +294,22 @@ runCheck('home section service keeps all content as the quick scan entry', () =>
 
   assert.deepStrictEqual(
     sections.map((section) => section.id),
-    ['profile', 'skills', 'projects', 'timeline', 'contact', 'settings', 'all']
+    ['profile', 'skills', 'projects', 'timeline', 'contact', 'tools', 'settings', 'all']
   );
   assert.strictEqual(sections[sections.length - 1].id, 'all');
   assert.strictEqual(defaultState.activeSection, 'all');
-  assert.strictEqual(defaultState.sections[6].isActive, true);
+  assert.strictEqual(defaultState.sections[7].isActive, true);
   assert.strictEqual(defaultState.showProfile, true);
   assert.strictEqual(defaultState.showSkills, true);
   assert.strictEqual(defaultState.showProjects, true);
   assert.strictEqual(defaultState.showTimeline, true);
   assert.strictEqual(defaultState.showContact, true);
+  assert.strictEqual(defaultState.showTools, true);
   assert.strictEqual(defaultState.showSettings, false);
   assert.strictEqual(projectState.showProfile, false);
   assert.strictEqual(projectState.showProjects, true);
   assert.strictEqual(projectState.sections[2].isActive, true);
+  assert.strictEqual(resumeSectionService.createHomeSectionState('tools').showTools, true);
   assert.strictEqual(resumeSectionService.createHomeSectionState('settings').showSettings, true);
   assert.strictEqual(resumeSectionService.normalizeSectionId('missing'), 'all');
 });
@@ -391,7 +401,8 @@ runCheck('resume preference service stores profile and display overrides', () =>
       status: '开放远程机会',
       summary: '专注小程序、React 和工程化交付。',
       location: '广州',
-      email: 'liming@example.com'
+      email: 'liming@example.com',
+      phone: '13811112222'
     },
     display: {
       initialSection: 'projects',
@@ -415,10 +426,12 @@ runCheck('resume preference service stores profile and display overrides', () =>
   assert.strictEqual(resume.profile.initials, '李');
   assert.strictEqual(resume.profile.title, '前端工程师');
   assert.strictEqual(resume.profile.contact.email, 'liming@example.com');
+  assert.strictEqual(resume.profile.contact.phone, '13811112222');
   assert.strictEqual(preferences.display.initialSection, 'projects');
   assert.strictEqual(preferences.display.featuredProjectCount, 2);
   assert.strictEqual(preferences.display.showPoster, false);
   assert.strictEqual(state.profileDraft.email, 'liming@example.com');
+  assert.strictEqual(state.profileDraft.phone, '13811112222');
   assert.strictEqual(
     state.sectionOptions.find((item) => item.id === 'projects').isActive,
     true
@@ -455,7 +468,8 @@ runCheck('resume customization service combines preferences, assets and home dis
       status: '优先深圳机会',
       summary: '覆盖前端、后端和自动化工具交付。',
       location: '深圳',
-      email: 'wangqiang@example.com'
+      email: 'wangqiang@example.com',
+      phone: '13711112222'
     },
     display: {
       initialSection: 'contact',
@@ -482,6 +496,7 @@ runCheck('resume customization service combines preferences, assets and home dis
 
   assert.strictEqual(homeResume.profile.name, '王强');
   assert.strictEqual(homeResume.contact.email, 'wangqiang@example.com');
+  assert.strictEqual(homeResume.contact.phone, '13711112222');
   assert.strictEqual(homeResume.profile.avatar, 'wxfile://custom-avatar.png');
   assert.strictEqual(homeResume.contact.wechatQr, 'wxfile://custom-qr.png');
   assert.strictEqual(homeResume.featuredProjects.length, 1);
@@ -489,6 +504,7 @@ runCheck('resume customization service combines preferences, assets and home dis
   assert.strictEqual(homeResume.displayPreferences.showPrint, false);
   assert.strictEqual(homeResume.displayPreferences.showCustomerService, false);
   assert.strictEqual(resume.profile.contact.email, 'wangqiang@example.com');
+  assert.strictEqual(resume.profile.contact.phone, '13711112222');
 });
 
 runCheck('poster model is created from unified resume data', () => {
@@ -498,6 +514,7 @@ runCheck('poster model is created from unified resume data', () => {
 
   assert.strictEqual(poster.profile.name, resume.profile.name);
   assert.strictEqual(poster.contact.email, resume.profile.contact.email);
+  assert.strictEqual(poster.contact.phone, resume.profile.contact.phone);
   assert.strictEqual(
     poster.skillTags.length,
     Math.min(resume.skillGroups.reduce((total, group) => total + group.skills.length, 0), 3)
@@ -509,6 +526,7 @@ runCheck('poster model is created from unified resume data', () => {
   assert.strictEqual(renderPlan.palette.background, themeUtils.getThemeVariables('dark')['--resume-bg']);
   assert.ok(renderPlan.commands.length > 10);
   assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.name));
+  assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.contact.phone));
   assert.ok(renderPlan.commands.some((command) => command.type === 'roundRect'));
   assert.ok(renderPlan.commands.every((command) => ['roundRect', 'text', 'image'].includes(command.type)));
   assert.deepStrictEqual(
@@ -540,6 +558,7 @@ runCheck('print resume model exposes compact interview-ready sections', () => {
 
   assert.strictEqual(printResume.profile.name, resume.profile.name);
   assert.strictEqual(printResume.contact.email, resume.profile.contact.email);
+  assert.strictEqual(printResume.contact.phone, resume.profile.contact.phone);
   assert.ok(printResume.topSkills.length > 0);
   assert.ok(printResume.topSkills.length <= 8);
   assert.strictEqual(printResume.projects.length, resume.projects.length);
@@ -666,6 +685,10 @@ runCheck('M4 pages are registered and wired through isolated entries', () => {
     path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
     'utf8'
   );
+  const toolPanelWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'tool-panel', 'tool-panel.wxml'),
+    'utf8'
+  );
   const dashboardJs = fs.readFileSync(
     path.join(__dirname, '..', 'pages', 'admin-dashboard', 'admin-dashboard.js'),
     'utf8'
@@ -682,7 +705,8 @@ runCheck('M4 pages are registered and wired through isolated entries', () => {
   assert.ok(homeWxml.includes('bind:openfeedback="onOpenFeedback"'));
   assert.ok(homeJs.includes('tapCounter.recordTap'));
   assert.ok(homeJs.includes('/pages/admin-dashboard/admin-dashboard'));
-  assert.ok(contactPanelWxml.includes('bindtap="handleOpenFeedback"'));
+  assert.ok(contactPanelWxml.includes('bindtap="handleCallPhone"'));
+  assert.ok(toolPanelWxml.includes('bindtap="handleOpenFeedback"'));
   assert.ok(dashboardJs.includes('analyticsService.createDashboardState'));
   assert.ok(dashboardJs.includes('feedbackService.getFeedbackSummary'));
   assert.ok(feedbackJs.includes('feedbackService.submitFeedback'));
@@ -841,19 +865,20 @@ runCheck('M5 cloud, auth, notification and release files are wired', () => {
   assert.ok(cloudSamples.includes("action: 'checkAdmin'"));
 });
 
-runCheck('finish-up print page is registered and wired from contact panel', () => {
+runCheck('finish-up print page is registered and wired from tool panel', () => {
   const appJson = fs.readFileSync(path.join(__dirname, '..', 'app.json'), 'utf8');
-  const contactPanelWxml = fs.readFileSync(
-    path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
+  const toolPanelWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'tool-panel', 'tool-panel.wxml'),
     'utf8'
   );
   const printJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'print', 'print.js'), 'utf8');
   const printWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'print', 'print.wxml'), 'utf8');
 
   assert.ok(appJson.includes('pages/print/print'));
-  assert.ok(contactPanelWxml.includes('bindtap="handleOpenPrint"'));
+  assert.ok(toolPanelWxml.includes('bindtap="handleOpenPrint"'));
   assert.ok(printJs.includes('printResumeService.createPrintResumeModel'));
   assert.ok(printWxml.includes('{{printResume.printMeta.title}}'));
+  assert.ok(printWxml.includes('{{printResume.contact.phone}}'));
   assert.strictEqual(
     printResumeService.createPrintResumeModel(resumeService.getResume()).printMeta.title,
     '打印版简历'
@@ -897,12 +922,16 @@ runCheck('profile asset selection is wired through settings, poster and print vi
   assert.ok(printWxml.includes('printResume.profile.avatar'));
 });
 
-runCheck('resume preference settings are wired through home and contact panel', () => {
+runCheck('resume preference settings are wired through home contact and tool panels', () => {
   const homeJson = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.json'), 'utf8');
   const homeWxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.wxml'), 'utf8');
   const homeJs = fs.readFileSync(path.join(__dirname, '..', 'pages', 'home', 'home.js'), 'utf8');
   const contactPanelWxml = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
+    'utf8'
+  );
+  const toolPanelWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'tool-panel', 'tool-panel.wxml'),
     'utf8'
   );
   const assetSettingsWxml = fs.readFileSync(
@@ -944,9 +973,11 @@ runCheck('resume preference settings are wired through home and contact panel', 
 
   assert.ok(homeJson.includes('resume-preference-settings'));
   assert.ok(homeJson.includes('resume-data-editor'));
+  assert.ok(homeJson.includes('tool-panel'));
   assert.ok(homeWxml.includes('preference-state="{{preferenceState}}"'));
   assert.ok(homeWxml.includes('editor-state="{{resumeDataState}}"'));
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
+  assert.ok(homeWxml.includes('bind:callphone="onCallPhone"'));
   assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
   assert.ok(!homeWxml.includes('bind:displaychange="onPreferenceDisplayChange"'));
   assert.ok(homeWxml.includes('bind:saveresumedata="onSaveResumeData"'));
@@ -955,10 +986,20 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(homeJs.includes('localResumeDataService.saveResumeData'));
   assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
+  assert.ok(homeJs.includes('contactService.callPhone'));
   assert.ok(!homeJs.includes('onPreferenceDisplayChange'));
-  assert.ok(contactPanelWxml.includes('display.showPoster'));
-  assert.ok(contactPanelWxml.includes('display.showCustomerService'));
+  assert.ok(contactPanelWxml.includes('{{contact.phone}}'));
+  assert.ok(contactPanelWxml.includes('bindtap="handleCallPhone"'));
+  assert.ok(!contactPanelWxml.includes('display.showPoster'));
+  assert.ok(!contactPanelWxml.includes('display.showCustomerService'));
+  assert.ok(!contactPanelWxml.includes('handleOpenPrint'));
+  assert.ok(!contactPanelWxml.includes('handleOpenFeedback'));
+  assert.ok(toolPanelWxml.includes('display.showPoster'));
+  assert.ok(toolPanelWxml.includes('display.showPrint'));
+  assert.ok(toolPanelWxml.includes('display.showFeedback'));
+  assert.ok(toolPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
+  assert.ok(preferenceWxml.includes('data-field="phone"'));
   assert.ok(!preferenceWxml.includes('json-input'));
   assert.ok(!preferenceWxml.includes('展示偏好'));
   assert.ok(!preferenceWxml.includes('默认栏目'));
@@ -1007,6 +1048,19 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(settingsButtonsWxss.includes('border-radius: 8rpx'));
   assert.ok(settingsButtonsWxss.includes('text-align: center'));
   assert.ok(settingsButtonsWxss.includes('white-space: nowrap'));
+  assert.ok(settingsButtonsWxss.includes('background: var(--resume-surface, #ffffff)'));
+  assert.ok(settingsButtonsWxss.includes('border-color: var(--resume-border, #d1d5db)'));
+  assert.ok(settingsButtonsWxss.includes('color: var(--resume-text, #111827)'));
+  assert.ok(!settingsButtonsWxss.includes('background: var(--resume-text, #111827)'));
+  assert.ok(!settingsButtonsWxss.includes('background: var(--resume-accent-soft, #eef2ff)'));
+  assert.ok(!settingsButtonsWxss.includes('background: var(--resume-danger-soft, #fef2f2)'));
+  assert.ok(!settingsButtonsWxss.includes('background: transparent'));
+  assert.ok(!settingsButtonsWxss.includes('border-color: transparent'));
+  assert.ok(!settingsButtonsWxss.includes('border-color: var(--resume-accent'));
+  assert.ok(!settingsButtonsWxss.includes('border-color: var(--resume-danger'));
+  assert.ok(!settingsButtonsWxss.includes('border-color: var(--resume-text'));
+  assert.ok(!settingsButtonsWxss.includes('color: var(--resume-accent'));
+  assert.ok(!settingsButtonsWxss.includes('color: var(--resume-danger'));
   assert.ok(settingsButtonsWxss.includes('.settings-button-compact'));
   assert.ok(settingsButtonsWxss.includes('flex: 0 1 116rpx'));
   assert.ok(settingsButtonsWxss.includes('.settings-button-action'));
@@ -1019,7 +1073,6 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(settingsButtonsWxss.includes('.settings-button-secondary'));
   assert.ok(settingsButtonsWxss.includes('.settings-button-danger'));
   assert.ok(settingsButtonsWxss.includes('.settings-button.is-active'));
-  assert.ok(settingsButtonsWxss.includes('var(--resume-danger'));
   assert.ok(dataEditorJs.includes("this.triggerEvent('editresumedata'"));
 });
 

@@ -37,6 +37,7 @@ Page({
     showProjects: true,
     showTimeline: true,
     showContact: true,
+    showTools: true,
     showSettings: false,
     loadError: ''
   },
@@ -233,7 +234,8 @@ Page({
         status: profile.status,
         summary: profile.summary,
         location: profile.location,
-        email: contact.email
+        email: contact.email,
+        phone: contact.phone
       },
       display: preferences.display
     });
@@ -362,6 +364,26 @@ Page({
       .catch(() => {
         wx.showToast({
           title: '复制失败，请稍后再试',
+          icon: 'none'
+        });
+      });
+  },
+
+  onCallPhone(event) {
+    const phone = event.detail && event.detail.phone;
+
+    if (!phone) {
+      wx.showToast({
+        title: '手机号待补充',
+        icon: 'none'
+      });
+      return;
+    }
+
+    contactService.callPhone(wx, phone)
+      .catch(() => {
+        wx.showToast({
+          title: '拨打失败',
           icon: 'none'
         });
       });

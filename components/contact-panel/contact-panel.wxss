@@ -29,6 +29,11 @@
   border-radius: 8rpx;
 }
 
+.contact-list {
+  display: grid;
+  gap: 14rpx;
+}
+
 .contact-info {
   display: flex;
   align-items: center;
@@ -84,9 +89,4 @@
 .muted-button {
   background: var(--resume-accent-soft, #f3f4f6);
   color: var(--resume-subtle, #6b7280);
-}
-
-.plain-button {
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
 }

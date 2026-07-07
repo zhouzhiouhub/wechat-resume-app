@@ -1,0 +1,29 @@
+<view class="tool-panel">
+  <view class="section-header">
+    <text class="section-heading">工具</text>
+    <text class="section-meta">分享与辅助操作</text>
+  </view>
+
+  <view class="tool-grid">
+    <button
+      wx:if="{{display.showPoster}}"
+      class="tool-button"
+      bindtap="handleOpenPoster"
+    >分享海报</button>
+    <button
+      wx:if="{{display.showPrint}}"
+      class="tool-button"
+      bindtap="handleOpenPrint"
+    >打印版</button>
+    <button
+      wx:if="{{display.showFeedback}}"
+      class="tool-button"
+      bindtap="handleOpenFeedback"
+    >留言反馈</button>
+    <button
+      wx:if="{{display.showCustomerService}}"
+      class="tool-button"
+      open-type="contact"
+    >客服预留</button>
+  </view>
+</view>

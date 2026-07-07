@@ -24,6 +24,7 @@ function createPosterModel(resume) {
     projects,
     contact: {
       email: resume.profile.contact.email,
+      phone: resume.profile.contact.phone,
       wechatQr: resume.profile.contact.wechatQr,
       hasWechatQr
     },

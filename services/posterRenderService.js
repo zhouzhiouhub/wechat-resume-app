@@ -324,6 +324,18 @@ function createPosterRenderPlan(posterModel, themeId) {
     maxWidth: 420
   });
 
+  if (posterModel.contact.phone) {
+    addText(commands, {
+      text: posterModel.contact.phone,
+      x: contentX,
+      y: y + 76,
+      color: palette.muted,
+      fontSize: 24,
+      fontWeight: 'bold',
+      maxWidth: 420
+    });
+  }
+
   addRoundRect(commands, {
     x: 552,
     y: y - 6,

@@ -66,21 +66,21 @@
   width: 80rpx;
   height: 48rpx;
   padding: 0 12rpx;
-  border-color: transparent;
-  background: transparent;
+  border-color: var(--resume-border, #d1d5db);
+  background: var(--resume-surface, #ffffff);
   font-size: 22rpx;
 }
 
 .settings-button-primary {
-  background: var(--resume-text, #111827);
-  border-color: var(--resume-text, #111827);
-  color: var(--resume-inverse, #ffffff);
+  background: var(--resume-surface, #ffffff);
+  border-color: var(--resume-border, #d1d5db);
+  color: var(--resume-text, #111827);
 }
 
 .settings-button-secondary {
-  background: var(--resume-accent-soft, #eef2ff);
-  border-color: var(--resume-accent, #2563eb);
-  color: var(--resume-accent-text, #3730a3);
+  background: var(--resume-surface, #ffffff);
+  border-color: var(--resume-border, #d1d5db);
+  color: var(--resume-text, #111827);
 }
 
 .settings-button-neutral {
@@ -91,8 +91,8 @@
 
 .settings-button-danger,
 .settings-button.is-active {
-  background: var(--resume-danger-soft, #fef2f2);
-  border-color: var(--resume-danger, #b91c1c);
-  color: var(--resume-danger, #b91c1c);
-  box-shadow: inset 0 0 0 1rpx var(--resume-danger, #b91c1c);
+  background: var(--resume-surface, #ffffff);
+  border-color: var(--resume-border, #d1d5db);
+  color: var(--resume-text, #111827);
+  box-shadow: inset 0 0 0 1rpx var(--resume-border, #d1d5db);
 }
