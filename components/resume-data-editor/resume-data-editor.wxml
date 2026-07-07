@@ -18,17 +18,13 @@
       wx:for-item="group"
       wx:for-index="groupIndex"
       wx:key="groupName"
-      class="editor-card"
+      class="{{activeSkillGroupIndex === groupIndex ? 'editor-card is-active-card' : 'editor-card'}}"
+      data-select-section="skillGroup"
+      data-group-index="{{groupIndex}}"
+      bindtap="handleSelectCard"
     >
       <view class="card-header">
         <text class="card-title">技能组 {{groupIndex + 1}}</text>
-        <button
-          wx:if="{{editorState.viewData.skillGroups.length > 1}}"
-          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
-          data-section="skillGroup"
-          data-group-index="{{groupIndex}}"
-          bindtap="handleRemove"
-        >删除</button>
       </view>
 
       <view class="form-field">
@@ -53,14 +49,6 @@
       >
         <view class="nested-header">
           <text class="nested-title">技能 {{skillIndex + 1}}</text>
-          <button
-            wx:if="{{group.skills.length > 1}}"
-            class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
-            data-section="skill"
-            data-group-index="{{groupIndex}}"
-            data-skill-index="{{skillIndex}}"
-            bindtap="handleRemove"
-          >删除</button>
         </view>
 
         <view class="form-grid">
@@ -106,6 +94,15 @@
             bindinput="handleInput"
           />
         </view>
+
+        <button
+          wx:if="{{group.skills.length > 1}}"
+          class="settings-button settings-button-inline settings-button-danger nested-delete-button"
+          data-section="skill"
+          data-group-index="{{groupIndex}}"
+          data-skill-index="{{skillIndex}}"
+          bindtap="handleRemove"
+        >删除</button>
       </view>
 
       <button
@@ -124,17 +121,13 @@
       wx:for-item="project"
       wx:for-index="projectIndex"
       wx:key="id"
-      class="editor-card"
+      class="{{activeProjectIndex === projectIndex ? 'editor-card is-active-card' : 'editor-card'}}"
+      data-select-section="project"
+      data-project-index="{{projectIndex}}"
+      bindtap="handleSelectCard"
     >
       <view class="card-header">
         <text class="card-title">项目 {{projectIndex + 1}}</text>
-        <button
-          wx:if="{{editorState.viewData.projects.length > 1}}"
-          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
-          data-section="project"
-          data-project-index="{{projectIndex}}"
-          bindtap="handleRemove"
-        >删除</button>
       </view>
 
       <view class="form-grid">
@@ -228,14 +221,6 @@
       >
         <view class="nested-header">
           <text class="nested-title">难点 {{challengeIndex + 1}}</text>
-          <button
-            wx:if="{{project.challenges.length > 1}}"
-            class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
-            data-section="challenge"
-            data-project-index="{{projectIndex}}"
-            data-challenge-index="{{challengeIndex}}"
-            bindtap="handleRemove"
-          >删除</button>
         </view>
 
         <view class="form-field">
@@ -282,6 +267,15 @@
             bindinput="handleInput"
           ></textarea>
         </view>
+
+        <button
+          wx:if="{{project.challenges.length > 1}}"
+          class="settings-button settings-button-inline settings-button-danger nested-delete-button"
+          data-section="challenge"
+          data-project-index="{{projectIndex}}"
+          data-challenge-index="{{challengeIndex}}"
+          bindtap="handleRemove"
+        >删除</button>
       </view>
 
       <button
@@ -314,16 +308,13 @@
       wx:for-item="item"
       wx:for-index="timelineIndex"
       wx:key="title"
-      class="editor-card"
+      class="{{activeTimelineIndex === timelineIndex ? 'editor-card is-active-card' : 'editor-card'}}"
+      data-select-section="timeline"
+      data-timeline-index="{{timelineIndex}}"
+      bindtap="handleSelectCard"
     >
       <view class="card-header">
         <text class="card-title">经历 {{timelineIndex + 1}}</text>
-        <button
-          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
-          data-section="timeline"
-          data-timeline-index="{{timelineIndex}}"
-          bindtap="handleRemove"
-        >删除</button>
       </view>
 
       <view class="type-list settings-button-row">
@@ -422,16 +413,13 @@
       wx:for-item="link"
       wx:for-index="linkIndex"
       wx:key="name"
-      class="editor-card"
+      class="{{activeLinkIndex === linkIndex ? 'editor-card is-active-card' : 'editor-card'}}"
+      data-select-section="contactLink"
+      data-link-index="{{linkIndex}}"
+      bindtap="handleSelectCard"
     >
       <view class="card-header">
         <text class="card-title">资料 {{linkIndex + 1}}</text>
-        <button
-          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
-          data-section="contactLink"
-          data-link-index="{{linkIndex}}"
-          bindtap="handleRemove"
-        >删除</button>
       </view>
 
       <view class="type-list settings-button-row">
@@ -516,6 +504,6 @@
       bindtap="handleAdd"
     >新增</button>
     <button class="settings-button settings-button-action settings-button-primary editor-button primary-button" bindtap="handleSave">保存</button>
-    <button class="settings-button settings-button-action settings-button-secondary editor-button secondary-button" bindtap="handleReset">重置</button>
+    <button class="settings-button settings-button-action settings-button-danger editor-button danger-button" bindtap="handleRemoveActive">删除</button>
   </view>
 </view>

@@ -25,6 +25,10 @@
   max-width: 124rpx;
 }
 
+.type-list {
+  justify-content: flex-start;
+}
+
 .editor-status {
   display: block;
   color: var(--resume-subtle, #6b7280);
@@ -50,6 +54,10 @@
 .empty-card {
   justify-items: center;
   color: var(--resume-subtle, #6b7280);
+}
+
+.editor-card.is-active-card {
+  box-shadow: inset 0 0 0 1rpx var(--resume-border, #d1d5db);
 }
 
 .nested-card {
@@ -130,6 +138,14 @@
 
 .inline-add-button {
   justify-self: center;
+}
+
+.nested-delete-button {
+  justify-self: end;
+}
+
+.editor-actions {
+  justify-content: space-between;
 }
 
 @media (max-width: 420px) {

@@ -31,7 +31,11 @@ Component({
     contactLinkValueTypes: [
       { id: 'url', label: '链接' },
       { id: 'text', label: '文本' }
-    ]
+    ],
+    activeSkillGroupIndex: 0,
+    activeProjectIndex: 0,
+    activeTimelineIndex: 0,
+    activeLinkIndex: 0
   },
 
   methods: {
@@ -45,9 +49,48 @@ Component({
       this.triggerEvent('editresumedata', detail);
     },
 
+    getSafeIndex(value) {
+      const index = Number(value);
+
+      return Number.isInteger(index) && index >= 0 ? index : 0;
+    },
+
+    setActiveFromDataset(dataset) {
+      const section = dataset.selectSection || dataset.section;
+
+      if (section === 'skillGroup' || section === 'skill') {
+        this.setData({
+          activeSkillGroupIndex: this.getSafeIndex(dataset.groupIndex)
+        });
+      }
+
+      if (section === 'project' || section === 'challenge') {
+        this.setData({
+          activeProjectIndex: this.getSafeIndex(dataset.projectIndex)
+        });
+      }
+
+      if (section === 'timeline') {
+        this.setData({
+          activeTimelineIndex: this.getSafeIndex(dataset.timelineIndex)
+        });
+      }
+
+      if (section === 'contactLink') {
+        this.setData({
+          activeLinkIndex: this.getSafeIndex(dataset.linkIndex)
+        });
+      }
+    },
+
+    handleSelectCard(event) {
+      this.setActiveFromDataset(event.currentTarget.dataset);
+    },
+
     handleInput(event) {
       const dataset = event.currentTarget.dataset;
 
+      this.setActiveFromDataset(dataset);
       this.emitEdit({
         action: 'update',
         section: dataset.section,
@@ -65,6 +108,10 @@ Component({
     handleTypeTap(event) {
       const dataset = event.currentTarget.dataset;
 
+      this.setActiveFromDataset({
+        section: 'timeline',
+        timelineIndex: dataset.timelineIndex
+      });
       this.emitEdit({
         action: 'update',
         section: 'timeline',
@@ -77,6 +124,10 @@ Component({
     handleContactLinkTypeTap(event) {
       const dataset = event.currentTarget.dataset;
 
+      this.setActiveFromDataset({
+        section: 'contactLink',
+        linkIndex: dataset.linkIndex
+      });
       this.emitEdit({
         action: 'update',
         section: 'contactLink',
@@ -89,6 +140,10 @@ Component({
     handleContactLinkValueTypeTap(event) {
       const dataset = event.currentTarget.dataset;
 
+      this.setActiveFromDataset({
+        section: 'contactLink',
+        linkIndex: dataset.linkIndex
+      });
       this.emitEdit({
         action: 'update',
         section: 'contactLink',
@@ -100,6 +155,33 @@ Component({
 
     handleAdd(event) {
       const dataset = event.currentTarget.dataset;
+      const viewData = (this.data.editorState && this.data.editorState.viewData) || {};
+
+      this.setActiveFromDataset(dataset);
+
+      if (dataset.section === 'skillGroup') {
+        this.setData({
+          activeSkillGroupIndex: (viewData.skillGroups || []).length
+        });
+      }
+
+      if (dataset.section === 'project') {
+        this.setData({
+          activeProjectIndex: (viewData.projects || []).length
+        });
+      }
+
+      if (dataset.section === 'timeline') {
+        this.setData({
+          activeTimelineIndex: (viewData.timeline || []).length
+        });
+      }
+
+      if (dataset.section === 'contactLink') {
+        this.setData({
+          activeLinkIndex: (viewData.contactLinks || []).length
+        });
+      }
 
       this.emitEdit({
         action: 'add',
@@ -112,6 +194,7 @@ Component({
     handleRemove(event) {
       const dataset = event.currentTarget.dataset;
 
+      this.setActiveFromDataset(dataset);
       this.emitEdit({
         action: 'remove',
         section: dataset.section,
@@ -124,12 +207,56 @@ Component({
       });
     },
 
-    handleSave() {
-      this.triggerEvent('saveresumedata');
+    handleRemoveActive() {
+      const nextIndex = (value) => Math.max(this.getSafeIndex(value) - 1, 0);
+
+      if (this.data.activeTab === 'skills') {
+        this.emitEdit({
+          action: 'remove',
+          section: 'skillGroup',
+          groupIndex: this.data.activeSkillGroupIndex
+        });
+        this.setData({
+          activeSkillGroupIndex: nextIndex(this.data.activeSkillGroupIndex)
+        });
+      }
+
+      if (this.data.activeTab === 'projects') {
+        this.emitEdit({
+          action: 'remove',
+          section: 'project',
+          projectIndex: this.data.activeProjectIndex
+        });
+        this.setData({
+          activeProjectIndex: nextIndex(this.data.activeProjectIndex)
+        });
+      }
+
+      if (this.data.activeTab === 'timeline') {
+        this.emitEdit({
+          action: 'remove',
+          section: 'timeline',
+          timelineIndex: this.data.activeTimelineIndex
+        });
+        this.setData({
+          activeTimelineIndex: nextIndex(this.data.activeTimelineIndex)
+        });
+      }
+
+      if (this.data.activeTab === 'links') {
+        this.emitEdit({
+          action: 'remove',
+          section: 'contactLink',
+          linkIndex: this.data.activeLinkIndex
+        });
+        this.setData({
+          activeLinkIndex: nextIndex(this.data.activeLinkIndex)
+        });
+      }
     },
 
-    handleReset() {
-      this.triggerEvent('resetresumedata');
+    handleSave() {
+      this.triggerEvent('saveresumedata');
     }
   }
 });

@@ -142,7 +142,6 @@
               editor-state="{{resumeDataState}}"
               bind:editresumedata="onEditResumeData"
               bind:saveresumedata="onSaveResumeData"
-              bind:resetresumedata="onResetResumeData"
             ></resume-data-editor>
           </view>
 
