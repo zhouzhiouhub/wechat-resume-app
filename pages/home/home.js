@@ -4,6 +4,7 @@ const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
 const authService = require('../../services/authService');
 const profileAssetService = require('../../services/profileAssetService');
+const localResumeDataService = require('../../services/localResumeDataService');
 const resumePreferenceService = require('../../services/resumePreferenceService');
 const resumeCustomizationService = require('../../services/resumeCustomizationService');
 const tapCounter = require('../../utils/tapCounter');
@@ -15,6 +16,7 @@ Page({
     activeTheme: '',
     profileAssetState: profileAssetService.createProfileAssetState(null),
     preferenceState: resumePreferenceService.createPreferenceStateFromDraft({}, {}),
+    resumeDataState: localResumeDataService.createResumeDataState(null),
     displayPreferences: resumePreferenceService.DISPLAY_DEFAULTS,
     profile: null,
     contact: null,
@@ -79,6 +81,7 @@ Page({
           homeResume.baseResume,
           homeResume.preferences
         ),
+        resumeDataState: homeResume.resumeDataState,
         profileAssetState: profileAssetService.createProfileAssetState(
           homeResume.resume.profile,
           homeResume.profileAssets
@@ -202,10 +205,16 @@ Page({
 
   onSaveResumePreferences() {
     try {
-      resumePreferenceService.saveResumePreferences(
+      const preferences = resumePreferenceService.saveResumePreferences(
         wx,
         resumePreferenceService.createPreferencesFromState(this.data.preferenceState)
       );
+      const nextResumeData = localResumeDataService.applyProfileDraftToResumeData(
+        localResumeDataService.readResumeData(wx),
+        preferences.profile
+      );
+
+      localResumeDataService.saveResumeData(wx, nextResumeData);
       this.refreshResumeCustomization();
       wx.showToast({
         title: '已保存',
@@ -226,6 +235,74 @@ Page({
       title: '已恢复',
       icon: 'success'
     });
+  },
+
+  onResumeDataInput(event) {
+    const resumeDataState = this.data.resumeDataState || {};
+
+    this.setData({
+      resumeDataState: {
+        ...resumeDataState,
+        jsonText: event.detail.value
+      }
+    });
+  },
+
+  syncProfilePreferencesFromResumeData(resumeData) {
+    const preferences = resumePreferenceService.readResumePreferences(wx);
+    const profile = resumeData.profile || {};
+    const contact = profile.contact || {};
+
+    resumePreferenceService.saveResumePreferences(wx, {
+      profile: {
+        name: profile.name,
+        title: profile.title,
+        status: profile.status,
+        summary: profile.summary,
+        location: profile.location,
+        email: contact.email
+      },
+      display: preferences.display
+    });
+  },
+
+  onSaveResumeData() {
+    try {
+      const payload = localResumeDataService.saveResumeDataJson(
+        wx,
+        this.data.resumeDataState && this.data.resumeDataState.jsonText
+      );
+
+      this.syncProfilePreferencesFromResumeData(payload.resumeData);
+      this.refreshResumeCustomization();
+      wx.showToast({
+        title: '已保存',
+        icon: 'success'
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error.message || '保存失败',
+        icon: 'none'
+      });
+    }
+  },
+
+  onResetResumeData() {
+    try {
+      const resumeData = localResumeDataService.clearResumeData(wx);
+
+      this.syncProfilePreferencesFromResumeData(resumeData);
+      this.refreshResumeCustomization();
+      wx.showToast({
+        title: '已恢复模板',
+        icon: 'success'
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error.message || '恢复失败',
+        icon: 'none'
+      });
+    }
   },
 
   onSelectProfileAsset(event) {

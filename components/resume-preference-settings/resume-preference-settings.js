@@ -3,6 +3,10 @@ Component({
     preferenceState: {
       type: Object,
       value: {}
+    },
+    resumeDataState: {
+      type: Object,
+      value: {}
     }
   },
 
@@ -48,6 +52,20 @@ Component({
 
     handleReset() {
       this.triggerEvent('resetpreferences');
+    },
+
+    handleResumeDataInput(event) {
+      this.triggerEvent('resumedatainput', {
+        value: event.detail.value
+      });
+    },
+
+    handleSaveResumeData() {
+      this.triggerEvent('saveresumedata');
+    },
+
+    handleResetResumeData() {
+      this.triggerEvent('resetresumedata');
     }
   }
 });

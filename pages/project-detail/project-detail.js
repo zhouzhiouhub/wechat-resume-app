@@ -1,4 +1,4 @@
-const resumeService = require('../../services/resumeService');
+const resumeCustomizationService = require('../../services/resumeCustomizationService');
 const themeService = require('../../services/themeService');
 const analyticsService = require('../../services/analyticsService');
 const notificationService = require('../../services/notificationService');
@@ -49,7 +49,7 @@ Page({
     const normalizedProjectId = typeof projectId === 'string'
       ? safeDecode(projectId)
       : '';
-    const project = resumeService.getProjectById(normalizedProjectId);
+    const project = resumeCustomizationService.getProjectById(wx, normalizedProjectId);
 
     if (!project) {
       wx.setNavigationBarTitle({

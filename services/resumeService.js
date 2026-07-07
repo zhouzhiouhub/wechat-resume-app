@@ -1,36 +1,38 @@
-const resumeData = require('../modules/resume/resumeData');
+const localResumeDataService = require('./localResumeDataService');
 const resumeMapper = require('../modules/resume/resumeMapper');
 
-function getResume() {
+function getResume(wxApi) {
+  const resumeData = localResumeDataService.readResumeData(wxApi);
+
   return resumeMapper.mapResumeData(resumeData);
 }
 
-function getProfile() {
-  return getResume().profile;
+function getProfile(wxApi) {
+  return getResume(wxApi).profile;
 }
 
-function getSkillGroups() {
-  return getResume().skillGroups;
+function getSkillGroups(wxApi) {
+  return getResume(wxApi).skillGroups;
 }
 
-function getProjects() {
-  return getResume().projects;
+function getProjects(wxApi) {
+  return getResume(wxApi).projects;
 }
 
-function getTimeline() {
-  return getResume().timeline;
+function getTimeline(wxApi) {
+  return getResume(wxApi).timeline;
 }
 
-function getProjectById(projectId) {
+function getProjectById(projectId, wxApi) {
   if (typeof projectId !== 'string' || projectId.trim().length === 0) {
     return null;
   }
 
-  return getProjects().find((project) => project.id === projectId.trim()) || null;
+  return getProjects(wxApi).find((project) => project.id === projectId.trim()) || null;
 }
 
-function getHomeResume() {
-  const resume = getResume();
+function getHomeResume(wxApi) {
+  const resume = getResume(wxApi);
 
   return {
     profile: resume.profile,

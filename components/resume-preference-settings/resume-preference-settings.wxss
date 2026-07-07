@@ -82,6 +82,20 @@
   line-height: 1.5;
 }
 
+.json-input {
+  width: 100%;
+  min-height: 420rpx;
+  padding: 16rpx 18rpx;
+  border: 1rpx solid var(--resume-border, #e5e7eb);
+  border-radius: 8rpx;
+  background: var(--resume-surface, #ffffff);
+  color: var(--resume-text, #111827);
+  font-family: Consolas, Monaco, monospace;
+  font-size: 22rpx;
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+
 .choice-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -164,7 +178,8 @@
   line-height: 1.35;
 }
 
-.preference-actions {
+.preference-actions,
+.data-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14rpx;

@@ -120,10 +120,14 @@
             </view>
             <resume-preference-settings
               preference-state="{{preferenceState}}"
+              resume-data-state="{{resumeDataState}}"
               bind:profileinput="onPreferenceProfileInput"
               bind:displaychange="onPreferenceDisplayChange"
               bind:savepreferences="onSaveResumePreferences"
               bind:resetpreferences="onResetResumePreferences"
+              bind:resumedatainput="onResumeDataInput"
+              bind:saveresumedata="onSaveResumeData"
+              bind:resetresumedata="onResetResumeData"
             ></resume-preference-settings>
           </view>
 

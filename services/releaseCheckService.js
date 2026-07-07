@@ -24,7 +24,9 @@ function hasPage(appConfig, pagePath) {
 }
 
 function isPlaceholderEmail(email) {
-  return email === 'name@example.com' || email === 'example@example.com';
+  return email === 'name@example.com'
+    || email === 'example@example.com'
+    || email === 'user@example.com';
 }
 
 function getProjectImages(resume) {

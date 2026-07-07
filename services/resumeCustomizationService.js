@@ -1,12 +1,14 @@
 const resumeMapper = require('../modules/resume/resumeMapper');
 const resumeService = require('./resumeService');
+const localResumeDataService = require('./localResumeDataService');
 const resumePreferenceService = require('./resumePreferenceService');
 const profileAssetService = require('./profileAssetService');
 
 function getCustomizationContext(wxApi) {
-  const baseResume = resumeService.getResume();
+  const baseResume = resumeService.getResume(wxApi);
   const preferences = resumePreferenceService.readResumePreferences(wxApi);
   const profileAssets = profileAssetService.readProfileAssets(wxApi);
+  const resumeDataState = localResumeDataService.readResumeDataState(wxApi);
   const displayPreferences = resumePreferenceService.normalizeDisplayPreferences(
     preferences.display
   );
@@ -19,6 +21,7 @@ function getCustomizationContext(wxApi) {
   return {
     baseResume,
     resume,
+    resumeDataState,
     preferences,
     profileAssets,
     displayPreferences
@@ -27,6 +30,14 @@ function getCustomizationContext(wxApi) {
 
 function getResume(wxApi) {
   return getCustomizationContext(wxApi).resume;
+}
+
+function getProjectById(wxApi, projectId) {
+  if (typeof projectId !== 'string' || projectId.trim().length === 0) {
+    return null;
+  }
+
+  return getResume(wxApi).projects.find((project) => project.id === projectId.trim()) || null;
 }
 
 function getHomeResume(wxApi) {
@@ -50,5 +61,6 @@ function getHomeResume(wxApi) {
 module.exports = {
   getCustomizationContext,
   getResume,
+  getProjectById,
   getHomeResume
 };

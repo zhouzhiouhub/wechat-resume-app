@@ -12,7 +12,7 @@ function createPosterModel(resume) {
   const hasWechatQr = Boolean(resume.profile.contact.wechatQr);
 
   return {
-    title: `${resume.profile.name}的前端简历`,
+    title: `${resume.profile.name}的个人简历`,
     profile: {
       name: resume.profile.name,
       title: resume.profile.title,

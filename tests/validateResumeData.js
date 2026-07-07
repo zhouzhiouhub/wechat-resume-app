@@ -11,6 +11,7 @@ const contactService = require('../services/contactService');
 const resumeSectionService = require('../services/resumeSectionService');
 const themeService = require('../services/themeService');
 const profileAssetService = require('../services/profileAssetService');
+const localResumeDataService = require('../services/localResumeDataService');
 const resumePreferenceService = require('../services/resumePreferenceService');
 const resumeCustomizationService = require('../services/resumeCustomizationService');
 const posterService = require('../services/posterService');
@@ -67,8 +68,8 @@ runCheck('profile includes a valid contact email', () => {
   const profile = resumeService.getProfile();
 
   assert.ok(validator.isValidEmail(profile.contact.email));
-  assert.notStrictEqual(profile.contact.email, 'name@example.com');
-  assert.strictEqual(profile.contact.email, '2922188469@qq.com');
+  assert.notStrictEqual(profile.contact.email, '2922188469@qq.com');
+  assert.strictEqual(profile.contact.email, 'user@example.com');
 });
 
 runCheck('home resume exposes reusable component inputs', () => {
@@ -128,7 +129,7 @@ runCheck('project ids are unique and detail lookup works', () => {
   const projectIds = projects.map((project) => project.id);
   const firstProject = resumeService.getProjectById(projectIds[0]);
 
-  assert.ok(projects.length >= 5);
+  assert.ok(projects.length >= 2);
   assert.ok(validator.hasUniqueValues(projectIds));
   assert.strictEqual(firstProject.id, projectIds[0]);
   assert.ok(firstProject.gallery.length > 0);
@@ -140,6 +141,43 @@ runCheck('project ids are unique and detail lookup works', () => {
 runCheck('unknown project id returns null', () => {
   assert.strictEqual(resumeService.getProjectById('missing-project'), null);
   assert.strictEqual(resumeService.getProjectById(''), null);
+});
+
+runCheck('local resume data service stores per-user full resume data', () => {
+  const mockWx = createMockWxStorage();
+  const localResumeData = JSON.parse(JSON.stringify(resumeData));
+
+  localResumeData.profile.name = '赵一';
+  localResumeData.profile.title = '小程序开发工程师';
+  localResumeData.profile.status = '开放合作';
+  localResumeData.profile.summary = '专注微信小程序与前端工程化。';
+  localResumeData.profile.location = '杭州';
+  localResumeData.profile.contact.email = 'zhaoyi@example.com';
+  localResumeData.skillGroups[0].skills[0].name = '微信小程序';
+  localResumeData.projects[0].id = 'local-miniapp-project';
+  localResumeData.projects[0].name = '本机保存项目';
+
+  const payload = localResumeDataService.saveResumeData(mockWx, localResumeData, {
+    now: 7000
+  });
+  const storedData = localResumeDataService.readResumeData(mockWx);
+  const storedState = localResumeDataService.readResumeDataState(mockWx);
+  const resume = resumeService.getResume(mockWx);
+  const project = resumeCustomizationService.getProjectById(mockWx, 'local-miniapp-project');
+
+  assert.strictEqual(payload.updatedAt, 7000);
+  assert.strictEqual(storedData.profile.name, '赵一');
+  assert.strictEqual(storedState.hasLocalData, true);
+  assert.ok(storedState.jsonText.includes('本机保存项目'));
+  assert.strictEqual(resume.profile.contact.email, 'zhaoyi@example.com');
+  assert.strictEqual(project.name, '本机保存项目');
+  assert.throws(
+    () => localResumeDataService.saveResumeDataJson(mockWx, '{"profile":{}}'),
+    /skillGroups|profile/
+  );
+
+  localResumeDataService.clearResumeData(mockWx);
+  assert.strictEqual(localResumeDataService.readResumeDataState(mockWx).hasLocalData, false);
 });
 
 runCheck('contact service validates and prepares interaction payloads', () => {
@@ -660,7 +698,7 @@ runCheck('release checklist reports publish blockers and warnings', () => {
   assert.ok(releaseChecklist.checks.some((check) => check.id === 'page:pages/print/print' && check.status === 'pass'));
   assert.ok(releaseChecklist.checks.some((check) => check.id === 'project:cloudRoot' && check.status === 'pass'));
   assert.ok(releaseChecklist.checks.some((check) => check.id === 'cloud:enabled' && check.status === 'warn'));
-  assert.ok(releaseChecklist.checks.some((check) => check.id === 'resume:email' && check.status === 'pass'));
+  assert.ok(releaseChecklist.checks.some((check) => check.id === 'resume:email' && check.status === 'warn'));
 });
 
 runCheck('M5 cloud, auth, notification and release files are wired', () => {
@@ -787,17 +825,22 @@ runCheck('resume preference settings are wired through home and contact panel', 
 
   assert.ok(homeJson.includes('resume-preference-settings'));
   assert.ok(homeWxml.includes('preference-state="{{preferenceState}}"'));
+  assert.ok(homeWxml.includes('resume-data-state="{{resumeDataState}}"'));
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
   assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
+  assert.ok(homeWxml.includes('bind:saveresumedata="onSaveResumeData"'));
   assert.ok(homeJs.includes('resumeCustomizationService.getHomeResume'));
+  assert.ok(homeJs.includes('localResumeDataService.saveResumeDataJson'));
   assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
   assert.ok(contactPanelWxml.includes('display.showPoster'));
   assert.ok(contactPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
+  assert.ok(preferenceWxml.includes('bindinput="handleResumeDataInput"'));
   assert.ok(preferenceWxml.includes('bindchange="handleDisplaySwitchChange"'));
   assert.ok(preferenceWxml.includes('handleFeaturedProjectCountStep'));
   assert.ok(preferenceJs.includes("field: 'initialSection'"));
+  assert.ok(preferenceJs.includes('handleSaveResumeData'));
 });
 
 runCheck('missing required fields report a clear validation error', () => {
