@@ -1,19 +1,77 @@
-﻿# wechat-resume-app
+# wechat-resume-app
 
-微信小程序简历应用。
+微信小程序个人简历应用，面向求职、作品展示和轻量个人主页场景。项目默认使用中性模板数据，新用户打开后不会看到开发者的真实个人信息；用户可以在小程序内通过可视化设置维护自己的资料，并保存到当前微信用户的本机缓存。
 
-## 项目计划
+## 功能概览
 
-简历小程序功能规划与开发里程碑见 [docs/development-plan.md](./docs/development-plan.md)。
+- 首页简历展示：名片、技能、项目、履历、联系方式和全部内容视图。
+- 可视化设置：个人资料和简历内容通过表单维护，不直接编辑源 JSON。
+- 重复内容模板：技能、项目、履历、资料链接等内容以单项模板为基础，通过新增和删除管理。
+- 本地个性化：个人资料、简历内容、头像、微信二维码和主题可保存到本机缓存。
+- 联系方式：邮箱、手机号点击内容复制；微信二维码点击查看。
+- 工具入口：分享海报、打印版、留言反馈和客服预留集中在工具面板。
+- 项目详情：项目卡片可进入详情页查看角色、技术栈、成果和难点。
+- 留言反馈：访客可提交留言；默认本机保存，开启云开发后可同步云端。
+- 数据看板：支持本地授权进入访问、项目、联系和留言统计看板。
 
-## 云能力样例
+## 设置页规则
 
-M5 云函数与请求样例见 [docs/cloud-api-samples.md](./docs/cloud-api-samples.md)。
+- `个人资料`、`简历内容` 默认只读，需要点击标题右侧的编辑图标后才能修改。
+- 未进入编辑状态时，保存、新增、删除等操作按钮会隐藏，保持界面简洁。
+- `素材`、`主题` 属于选择型设置，不需要编辑图标，可直接选择头像、微信二维码和主题。
+- 保存个人资料或简历内容后，会自动回到只读状态。
 
-## 收尾清单
+## 数据与部署
 
-项目收尾与发布前待补项见 [docs/finalization-checklist.md](./docs/finalization-checklist.md)。
+当前版本默认不依赖自建服务器。
 
-## 开发规范
+- 简历模板数据位于 `modules/resume/resumeData.js`。
+- 用户修改后的简历数据保存在微信本机缓存中，由 `services/localResumeDataService.js` 管理。
+- 头像和微信二维码通过 `services/profileAssetService.js` 保存到本机文件。
+- 云开发默认关闭，配置在 `config/env.js`。
+- 若要正式接收跨设备留言、访问记录和管理员通知，需要开通微信云开发并配置 `cloud.envId`、管理员 openid 和订阅消息模板。
 
-本项目的 AI Coding Agent 与工程开发规范见 [AGENTS.md](./AGENTS.md)。
+## 页面入口
+
+项目已注册以下小程序页面：
+
+- `pages/home/home`：简历首页和设置入口。
+- `pages/project-detail/project-detail`：项目详情。
+- `pages/poster/poster`：分享海报。
+- `pages/print/print`：打印版简历。
+- `pages/feedback/feedback`：留言反馈。
+- `pages/admin-dashboard/admin-dashboard`：管理看板。
+
+管理看板默认通过首页头像隐藏连点授权进入，发布前需要根据实际使用方式补充管理员 openid 或云端鉴权策略。
+
+## 开发与验证
+
+使用微信开发者工具导入本仓库根目录即可预览小程序。仓库当前没有第三方 npm 运行依赖，自动验证需要本机安装 Node.js。
+
+```bash
+npm test
+```
+
+测试会校验简历数据映射、可视化编辑、本地缓存、素材应用、主题、反馈、云函数请求模型、页面注册和包体质量。
+
+## 目录结构
+
+```text
+components/        可复用小程序组件
+config/            环境和发布配置
+cloudfunctions/    云函数样例
+docs/              开发计划、云能力样例和收尾清单
+modules/resume/    默认简历数据和数据映射
+pages/             小程序页面
+services/          业务服务和本地/云端编排
+styles/            公共样式
+tests/             可重复执行的验证脚本
+utils/             通用工具函数
+```
+
+## 相关文档
+
+- [开发计划](./docs/development-plan.md)
+- [云能力样例](./docs/cloud-api-samples.md)
+- [收尾清单](./docs/finalization-checklist.md)
+- [开发规范](./AGENTS.md)
