@@ -65,6 +65,17 @@ runCheck('resume data maps without validation errors', () => {
   assert.ok(resume.projects.length > 0);
 });
 
+runCheck('default resume data keeps one template for repeatable sections', () => {
+  assert.strictEqual(resumeData.skillGroups.length, 1);
+  assert.strictEqual(resumeData.skillGroups[0].skills.length, 1);
+  assert.strictEqual(resumeData.projects.length, 1);
+  assert.strictEqual(resumeData.projects[0].techStack.length, 1);
+  assert.strictEqual(resumeData.projects[0].highlights.length, 1);
+  assert.strictEqual(resumeData.projects[0].metrics.length, 1);
+  assert.strictEqual(resumeData.projects[0].challenges.length, 1);
+  assert.strictEqual(resumeData.timeline.length, 1);
+});
+
 runCheck('profile includes a valid contact email', () => {
   const profile = resumeService.getProfile();
 
@@ -99,7 +110,7 @@ runCheck('home resume exposes reusable component inputs', () => {
 runCheck('timeline items are normalized and sorted by recent date', () => {
   const timeline = resumeService.getTimeline();
 
-  assert.ok(timeline.length >= 2);
+  assert.ok(timeline.length >= 1);
   timeline.forEach((item) => {
     assert.ok(validator.isValidYearMonth(item.startDate));
     assert.ok(item.endDate === '' || validator.isValidYearMonth(item.endDate));
@@ -130,7 +141,7 @@ runCheck('project ids are unique and detail lookup works', () => {
   const projectIds = projects.map((project) => project.id);
   const firstProject = resumeService.getProjectById(projectIds[0]);
 
-  assert.ok(projects.length >= 2);
+  assert.ok(projects.length >= 1);
   assert.ok(validator.hasUniqueValues(projectIds));
   assert.strictEqual(firstProject.id, projectIds[0]);
   assert.ok(firstProject.gallery.length > 0);
@@ -204,12 +215,29 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
     action: 'add',
     section: 'project'
   });
+  const addedProjectIndex = editorState.draft.projects.length - 1;
+  const addedProject = editorState.draft.projects[addedProjectIndex];
+
+  assert.strictEqual(editorState.draft.projects.length, 2);
+  assert.notStrictEqual(addedProject.id, editorState.draft.projects[0].id);
+  assert.deepStrictEqual(addedProject.techStack, editorState.draft.projects[0].techStack);
+  assert.deepStrictEqual(addedProject.challenges, editorState.draft.projects[0].challenges);
+
   editorState = resumeDataEditorService.applyEdit(editorState, {
     action: 'update',
     section: 'project',
-    projectIndex: editorState.draft.projects.length - 1,
+    projectIndex: addedProjectIndex,
     field: 'name',
     value: '可视化简历编辑器'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'add',
+    section: 'skill',
+    groupIndex: 0
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'add',
+    section: 'timeline'
   });
   editorState = resumeDataEditorService.applyEdit(editorState, {
     action: 'add',
@@ -229,9 +257,14 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
     editorState.draft.skillGroups[0].skills[0].tags,
     ['微信小程序', '组件化', '云开发']
   );
+  assert.strictEqual(editorState.draft.skillGroups[0].skills.length, 2);
+  assert.notStrictEqual(
+    editorState.draft.skillGroups[0].skills[1].name,
+    editorState.draft.skillGroups[0].skills[0].name
+  );
   assert.ok(editorState.draft.projects.some((project) => project.name === '可视化简历编辑器'));
   assert.strictEqual(editorState.draft.projects[0].challenges.length, 2);
-  assert.strictEqual(editorState.draft.timeline.length, resumeData.timeline.length - 1);
+  assert.strictEqual(editorState.draft.timeline.length, resumeData.timeline.length);
   assert.ok(normalizedResume.projects.length >= 2);
 });
 
@@ -465,7 +498,10 @@ runCheck('poster model is created from unified resume data', () => {
 
   assert.strictEqual(poster.profile.name, resume.profile.name);
   assert.strictEqual(poster.contact.email, resume.profile.contact.email);
-  assert.strictEqual(poster.skillTags.length, 3);
+  assert.strictEqual(
+    poster.skillTags.length,
+    Math.min(resume.skillGroups.reduce((total, group) => total + group.skills.length, 0), 3)
+  );
   assert.strictEqual(poster.projects.length, Math.min(resume.projects.length, 2));
   assert.strictEqual(renderPlan.canvas.width, 750);
   assert.strictEqual(renderPlan.canvas.height, 1200);
@@ -507,7 +543,7 @@ runCheck('print resume model exposes compact interview-ready sections', () => {
   assert.ok(printResume.topSkills.length > 0);
   assert.ok(printResume.topSkills.length <= 8);
   assert.strictEqual(printResume.projects.length, resume.projects.length);
-  assert.ok(printResume.projects[0].techStackText.includes('/'));
+  assert.ok(printResume.projects[0].techStackText.length > 0);
   assert.strictEqual(printResume.timeline.length, resume.timeline.length);
 });
 
@@ -892,19 +928,23 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(homeWxml.includes('editor-state="{{resumeDataState}}"'));
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
   assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
+  assert.ok(!homeWxml.includes('bind:displaychange="onPreferenceDisplayChange"'));
   assert.ok(homeWxml.includes('bind:saveresumedata="onSaveResumeData"'));
   assert.ok(homeJs.includes('resumeCustomizationService.getHomeResume'));
   assert.ok(homeJs.includes('resumeDataEditorService.applyEdit'));
   assert.ok(homeJs.includes('localResumeDataService.saveResumeData'));
   assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
+  assert.ok(!homeJs.includes('onPreferenceDisplayChange'));
   assert.ok(contactPanelWxml.includes('display.showPoster'));
   assert.ok(contactPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
   assert.ok(!preferenceWxml.includes('json-input'));
-  assert.ok(preferenceWxml.includes('bindchange="handleDisplaySwitchChange"'));
-  assert.ok(preferenceWxml.includes('handleFeaturedProjectCountStep'));
-  assert.ok(preferenceJs.includes("field: 'initialSection'"));
+  assert.ok(!preferenceWxml.includes('展示偏好'));
+  assert.ok(!preferenceWxml.includes('默认栏目'));
+  assert.ok(!preferenceWxml.includes('handleFeaturedProjectCountStep'));
+  assert.ok(!preferenceWxml.includes('handleDisplaySwitchChange'));
+  assert.ok(!preferenceJs.includes("field: 'initialSection'"));
   assert.ok(dataEditorWxml.includes('data-section="project"'));
   assert.ok(dataEditorWxml.includes('data-section="skill"'));
   assert.ok(dataEditorWxml.includes('data-section="timeline"'));

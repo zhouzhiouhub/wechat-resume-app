@@ -87,7 +87,7 @@ function createResumeChecks(resume) {
     ),
     createCheck(
       'resume:projects',
-      projects.length >= 2 ? 'pass' : 'fail',
+      projects.length >= 2 ? 'pass' : (projects.length >= 1 ? 'warn' : 'fail'),
       '项目数量',
       `当前 ${projects.length} 个项目`
     ),

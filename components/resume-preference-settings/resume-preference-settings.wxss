@@ -20,8 +20,7 @@
 
 .preference-title,
 .preference-meta,
-.field-label,
-.switch-label {
+.field-label {
   display: block;
 }
 
@@ -44,8 +43,7 @@
   gap: 14rpx;
 }
 
-.form-field,
-.preference-field {
+.form-field {
   min-width: 0;
 }
 
@@ -82,86 +80,13 @@
   line-height: 1.5;
 }
 
-.choice-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10rpx;
-}
-
-.choice-button,
-.stepper-button,
 .preference-button {
   border-radius: 8rpx;
   font-size: 24rpx;
 }
 
-.choice-button::after,
-.stepper-button::after,
 .preference-button::after {
   border: 0;
-}
-
-.choice-button {
-  min-height: 60rpx;
-  padding: 0 8rpx;
-  background: var(--resume-surface, #ffffff);
-  color: var(--resume-muted, #4b5563);
-  line-height: 60rpx;
-}
-
-.choice-button.is-active {
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
-  font-weight: 800;
-}
-
-.stepper {
-  display: grid;
-  grid-template-columns: 72rpx minmax(0, 1fr) 72rpx;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.stepper-button {
-  min-height: 60rpx;
-  padding: 0;
-  background: var(--resume-surface, #ffffff);
-  color: var(--resume-text, #111827);
-  font-weight: 900;
-  line-height: 60rpx;
-}
-
-.stepper-value {
-  display: block;
-  min-height: 60rpx;
-  border-radius: 8rpx;
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
-  font-size: 24rpx;
-  font-weight: 800;
-  line-height: 60rpx;
-  text-align: center;
-}
-
-.switch-list {
-  display: grid;
-  gap: 10rpx;
-}
-
-.switch-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
-  min-height: 72rpx;
-  padding: 0 4rpx;
-}
-
-.switch-label {
-  color: var(--resume-text, #111827);
-  font-size: 24rpx;
-  font-weight: 700;
-  line-height: 1.35;
 }
 
 .preference-actions {

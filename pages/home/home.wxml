@@ -115,13 +115,12 @@
         <view wx:if="{{showSettings}}" class="content-section settings-section">
           <view class="settings-panel">
             <view class="section-header">
-              <text class="section-heading">资料与展示</text>
+              <text class="section-heading">个人资料</text>
               <text class="section-meta">本机保存</text>
             </view>
             <resume-preference-settings
               preference-state="{{preferenceState}}"
               bind:profileinput="onPreferenceProfileInput"
-              bind:displaychange="onPreferenceDisplayChange"
               bind:savepreferences="onSaveResumePreferences"
               bind:resetpreferences="onResetResumePreferences"
             ></resume-preference-settings>

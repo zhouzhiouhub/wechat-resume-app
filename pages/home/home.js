@@ -187,23 +187,6 @@ Page({
     });
   },
 
-  onPreferenceDisplayChange(event) {
-    const field = event.detail && event.detail.field;
-    const value = event.detail && event.detail.value;
-    const preferenceState = this.data.preferenceState || {};
-    const displayDraft = {
-      ...(preferenceState.displayDraft || {}),
-      [field]: value
-    };
-
-    this.setData({
-      preferenceState: resumePreferenceService.createPreferenceStateFromDraft(
-        preferenceState.profileDraft,
-        displayDraft
-      )
-    });
-  },
-
   onSaveResumePreferences() {
     try {
       const preferences = resumePreferenceService.saveResumePreferences(

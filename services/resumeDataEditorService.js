@@ -124,27 +124,63 @@ function withDraft(state, draft) {
   });
 }
 
-function createSkill() {
-  return {
+function cloneTemplate(template, fallback) {
+  return cloneData(template || fallback);
+}
+
+function createUniqueLabel(items, field, fallback) {
+  const usedLabels = (items || [])
+    .map((item) => normalizeText(item && item[field]))
+    .filter(Boolean);
+  const baseLabel = normalizeText(fallback) || '新内容';
+  let index = usedLabels.length + 1;
+  let label = `${baseLabel} ${index}`;
+
+  while (usedLabels.indexOf(label) !== -1) {
+    index += 1;
+    label = `${baseLabel} ${index}`;
+  }
+
+  return label;
+}
+
+function createSkill(sourceSkill, skills) {
+  const skill = cloneTemplate(sourceSkill, {
     name: '新技能',
     level: 60,
     tags: ['标签']
-  };
+  });
+
+  skill.name = createUniqueLabel(skills, 'name', skill.name);
+
+  return skill;
 }
 
-function createSkillGroup() {
-  return {
+function createSkillGroup(skillGroups) {
+  const template = skillGroups && skillGroups[0];
+  const group = cloneTemplate(template, {
     groupName: '新技能组',
     skills: [createSkill()]
-  };
+  });
+
+  group.groupName = createUniqueLabel(skillGroups, 'groupName', group.groupName);
+  group.skills = Array.isArray(group.skills) && group.skills.length
+    ? group.skills
+    : [createSkill()];
+
+  return group;
 }
 
-function createChallenge() {
-  return {
+function createChallenge(project) {
+  const template = project
+    && Array.isArray(project.challenges)
+    && project.challenges[0];
+
+  return cloneTemplate(template, {
     problem: '问题待填写',
     solution: '方案待填写',
     result: '结果待填写'
-  };
+  });
 }
 
 function createUniqueProjectId(projects) {
@@ -161,8 +197,9 @@ function createUniqueProjectId(projects) {
 }
 
 function createProject(projects) {
-  return {
-    id: createUniqueProjectId(projects),
+  const template = projects && projects[0];
+  const project = cloneTemplate(template, {
+    id: '',
     name: '新项目',
     role: '项目角色',
     cover: '/assets/projects/resume-cover.jpg',
@@ -171,18 +208,34 @@ function createProject(projects) {
     highlights: ['亮点'],
     challenges: [createChallenge()],
     metrics: ['成果']
-  };
+  });
+
+  project.id = createUniqueProjectId(projects);
+  project.name = createUniqueLabel(projects, 'name', project.name);
+  project.screenshots = Array.isArray(project.screenshots) && project.screenshots.length
+    ? project.screenshots
+    : [project.cover].filter(Boolean);
+  project.challenges = Array.isArray(project.challenges) && project.challenges.length
+    ? project.challenges
+    : [createChallenge(project)];
+
+  return project;
 }
 
-function createTimelineItem() {
-  return {
+function createTimelineItem(timeline) {
+  const template = timeline && timeline[0];
+  const item = cloneTemplate(template, {
     type: 'work',
     title: '新经历',
     organization: '组织名称',
     startDate: '2024-01',
     endDate: '',
     description: '经历描述'
-  };
+  });
+
+  item.title = createUniqueLabel(timeline, 'title', item.title);
+
+  return item;
 }
 
 function updateSkillGroup(draft, detail) {
@@ -284,7 +337,7 @@ function updateTimeline(draft, detail) {
 
 function addItem(draft, detail) {
   if (detail.section === 'skillGroup') {
-    draft.skillGroups.push(createSkillGroup());
+    draft.skillGroups.push(createSkillGroup(draft.skillGroups));
   }
 
   if (detail.section === 'skill') {
@@ -292,7 +345,7 @@ function addItem(draft, detail) {
     const group = draft.skillGroups[groupIndex];
 
     if (group) {
-      group.skills.push(createSkill());
+      group.skills.push(createSkill(group.skills && group.skills[0], group.skills));
     }
   }
 
@@ -305,12 +358,12 @@ function addItem(draft, detail) {
     const project = draft.projects[projectIndex];
 
     if (project) {
-      project.challenges.push(createChallenge());
+      project.challenges.push(createChallenge(project));
     }
   }
 
   if (detail.section === 'timeline') {
-    draft.timeline.push(createTimelineItem());
+    draft.timeline.push(createTimelineItem(draft.timeline));
   }
 
   return draft;
