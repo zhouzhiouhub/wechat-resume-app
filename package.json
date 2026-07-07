@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "node tests/validateResumeData.js"
+    "test": "node tests/validateResumeData.js && node tests/validatePackageQuality.js"
   }
 }
