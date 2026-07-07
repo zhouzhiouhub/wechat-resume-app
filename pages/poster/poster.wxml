@@ -49,6 +49,10 @@
           <text class="poster-contact-value">{{poster.contact.email}}</text>
           <text wx:if="{{poster.contact.phone}}" class="poster-contact-label">手机号</text>
           <text wx:if="{{poster.contact.phone}}" class="poster-contact-value">{{poster.contact.phone}}</text>
+          <block wx:for="{{poster.contact.links}}" wx:key="name">
+            <text class="poster-contact-label">{{item.name}}</text>
+            <text class="poster-contact-value">{{item.value}}</text>
+          </block>
         </view>
         <view class="poster-qr">
           <image

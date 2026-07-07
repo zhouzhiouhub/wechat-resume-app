@@ -412,6 +412,84 @@
 
   </view>
 
+  <view wx:if="{{activeTab === 'links'}}" class="editor-section">
+    <view wx:if="{{!editorState.viewData.contactLinks.length}}" class="empty-card">
+      <text class="empty-title">暂无资料项</text>
+    </view>
+
+    <view
+      wx:for="{{editorState.viewData.contactLinks}}"
+      wx:for-item="link"
+      wx:for-index="linkIndex"
+      wx:key="name"
+      class="editor-card"
+    >
+      <view class="card-header">
+        <text class="card-title">资料 {{linkIndex + 1}}</text>
+        <button
+          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
+          data-section="contactLink"
+          data-link-index="{{linkIndex}}"
+          bindtap="handleRemove"
+        >删除</button>
+      </view>
+
+      <view class="type-list settings-button-row">
+        <button
+          wx:for="{{contactLinkTypes}}"
+          wx:for-item="type"
+          wx:for-index="typeIndex"
+          wx:key="id"
+          class="{{link.type === type.id ? 'settings-button settings-button-compact type-button is-active' : 'settings-button settings-button-compact type-button'}}"
+          data-link-index="{{linkIndex}}"
+          data-value="{{type.id}}"
+          bindtap="handleContactLinkTypeTap"
+        >{{type.label}}</button>
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">名称</text>
+        <input
+          class="text-input"
+          value="{{link.name}}"
+          data-section="contactLink"
+          data-link-index="{{linkIndex}}"
+          data-field="name"
+          maxlength="30"
+          bindinput="handleInput"
+        />
+      </view>
+
+      <view class="type-list settings-button-row">
+        <button
+          wx:for="{{contactLinkValueTypes}}"
+          wx:for-item="valueType"
+          wx:for-index="valueTypeIndex"
+          wx:key="id"
+          class="{{link.valueType === valueType.id ? 'settings-button settings-button-compact type-button is-active' : 'settings-button settings-button-compact type-button'}}"
+          data-link-index="{{linkIndex}}"
+          data-value="{{valueType.id}}"
+          bindtap="handleContactLinkValueTypeTap"
+        >{{valueType.label}}</button>
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">内容</text>
+        <textarea
+          class="textarea-input"
+          value="{{link.value}}"
+          data-section="contactLink"
+          data-link-index="{{linkIndex}}"
+          data-field="value"
+          maxlength="160"
+          auto-height
+          bindinput="handleInput"
+        ></textarea>
+      </view>
+    </view>
+
+  </view>
+
   <view class="editor-actions settings-button-row is-between">
     <button
       wx:if="{{activeTab === 'skills'}}"
@@ -429,6 +507,12 @@
       wx:if="{{activeTab === 'timeline'}}"
       class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="timeline"
+      bindtap="handleAdd"
+    >新增</button>
+    <button
+      wx:if="{{activeTab === 'links'}}"
+      class="settings-button settings-button-action settings-button-neutral editor-button action-button"
+      data-section="contactLink"
       bindtap="handleAdd"
     >新增</button>
     <button class="settings-button settings-button-action settings-button-primary editor-button primary-button" bindtap="handleSave">保存</button>

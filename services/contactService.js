@@ -2,11 +2,20 @@ const validator = require('../utils/validator');
 
 function normalizeContact(contact) {
   const source = contact || {};
+  const links = Array.isArray(source.links)
+    ? source.links.map((link) => ({
+      type: typeof link.type === 'string' ? link.type.trim() : 'other',
+      name: typeof link.name === 'string' ? link.name.trim() : '',
+      valueType: link.valueType === 'url' ? 'url' : 'text',
+      value: typeof link.value === 'string' ? link.value.trim() : ''
+    })).filter((link) => link.name && link.value)
+    : [];
 
   return {
     email: typeof source.email === 'string' ? source.email.trim() : '',
     phone: typeof source.phone === 'string' ? source.phone.trim() : '',
-    wechatQr: typeof source.wechatQr === 'string' ? source.wechatQr.trim() : ''
+    wechatQr: typeof source.wechatQr === 'string' ? source.wechatQr.trim() : '',
+    links
   };
 }
 
@@ -40,6 +49,39 @@ function copyEmail(wxApi, email) {
 
   try {
     payload = createClipboardPayload(email);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  return new Promise((resolve, reject) => {
+    if (!wxApi || typeof wxApi.setClipboardData !== 'function') {
+      reject(new Error('wx.setClipboardData is not available'));
+      return;
+    }
+
+    wxApi.setClipboardData({
+      data: payload.data,
+      success: resolve,
+      fail: reject
+    });
+  });
+}
+
+function createTextClipboardPayload(value) {
+  if (!validator.isNonEmptyString(value)) {
+    throw new Error('contact.value must be provided before copy');
+  }
+
+  return {
+    data: value.trim()
+  };
+}
+
+function copyText(wxApi, value) {
+  let payload;
+
+  try {
+    payload = createTextClipboardPayload(value);
   } catch (error) {
     return Promise.reject(error);
   }
@@ -133,6 +175,8 @@ module.exports = {
   validateContactInfo,
   createClipboardPayload,
   copyEmail,
+  createTextClipboardPayload,
+  copyText,
   createPhoneCallPayload,
   callPhone,
   createPreviewPayload,

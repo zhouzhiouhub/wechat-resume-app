@@ -389,6 +389,24 @@ Page({
       });
   },
 
+  onCopyContactLink(event) {
+    const value = event.detail && event.detail.value;
+
+    contactService.copyText(wx, value)
+      .then(() => {
+        wx.showToast({
+          title: '内容已复制',
+          icon: 'success'
+        });
+      })
+      .catch(() => {
+        wx.showToast({
+          title: '复制失败',
+          icon: 'none'
+        });
+      });
+  },
+
   onShowWechatQr(event) {
     const wechatQr = event.detail && event.detail.wechatQr;
 

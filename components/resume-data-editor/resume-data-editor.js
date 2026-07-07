@@ -11,13 +11,26 @@ Component({
     tabs: [
       { id: 'skills', label: '技能' },
       { id: 'projects', label: '项目' },
-      { id: 'timeline', label: '履历' }
+      { id: 'timeline', label: '履历' },
+      { id: 'links', label: '资料' }
     ],
     timelineTypes: [
       { id: 'work', label: '工作' },
       { id: 'education', label: '教育' },
       { id: 'internship', label: '实习' },
       { id: 'project', label: '项目' }
+    ],
+    contactLinkTypes: [
+      { id: 'code', label: '代码主页' },
+      { id: 'blog', label: '个人博客' },
+      { id: 'portfolio', label: '作品集' },
+      { id: 'social', label: '社交账号' },
+      { id: 'certificate', label: '证书' },
+      { id: 'other', label: '其他' }
+    ],
+    contactLinkValueTypes: [
+      { id: 'url', label: '链接' },
+      { id: 'text', label: '文本' }
     ]
   },
 
@@ -43,6 +56,7 @@ Component({
         projectIndex: dataset.projectIndex,
         challengeIndex: dataset.challengeIndex,
         timelineIndex: dataset.timelineIndex,
+        linkIndex: dataset.linkIndex,
         field: dataset.field,
         value: event.detail.value
       });
@@ -56,6 +70,30 @@ Component({
         section: 'timeline',
         timelineIndex: dataset.timelineIndex,
         field: 'type',
+        value: dataset.value
+      });
+    },
+
+    handleContactLinkTypeTap(event) {
+      const dataset = event.currentTarget.dataset;
+
+      this.emitEdit({
+        action: 'update',
+        section: 'contactLink',
+        linkIndex: dataset.linkIndex,
+        field: 'type',
+        value: dataset.value
+      });
+    },
+
+    handleContactLinkValueTypeTap(event) {
+      const dataset = event.currentTarget.dataset;
+
+      this.emitEdit({
+        action: 'update',
+        section: 'contactLink',
+        linkIndex: dataset.linkIndex,
+        field: 'valueType',
         value: dataset.value
       });
     },
@@ -81,7 +119,8 @@ Component({
         skillIndex: dataset.skillIndex,
         projectIndex: dataset.projectIndex,
         challengeIndex: dataset.challengeIndex,
-        timelineIndex: dataset.timelineIndex
+        timelineIndex: dataset.timelineIndex,
+        linkIndex: dataset.linkIndex
       });
     },
 

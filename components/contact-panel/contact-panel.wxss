@@ -34,6 +34,72 @@
   gap: 14rpx;
 }
 
+.contact-links {
+  display: grid;
+  gap: 14rpx;
+  margin-top: 22rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid var(--resume-border, #e5e7eb);
+}
+
+.contact-links-title {
+  color: var(--resume-muted, #4b5563);
+  font-size: 24rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.contact-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 144rpx;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx;
+  background: var(--resume-surface-hover, #f9fafb);
+  border-radius: 8rpx;
+}
+
+.contact-link-main {
+  display: grid;
+  min-width: 0;
+  gap: 4rpx;
+}
+
+.contact-link-type,
+.contact-link-value {
+  color: var(--resume-subtle, #6b7280);
+  font-size: 22rpx;
+  line-height: 1.35;
+}
+
+.contact-link-name {
+  color: var(--resume-text, #111827);
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.contact-link-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link-copy-button {
+  min-height: 64rpx;
+  padding: 0 10rpx;
+  color: var(--resume-accent-text, #3730a3);
+  background: var(--resume-accent-soft, #eef2ff);
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 64rpx;
+}
+
+.link-copy-button::after {
+  border: 0;
+}
+
 .contact-info {
   display: flex;
   align-items: center;

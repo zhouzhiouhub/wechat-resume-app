@@ -31,6 +31,20 @@ function normalizeOptionalString(value) {
   return value ? value.trim() : '';
 }
 
+const CONTACT_LINK_TYPE_LABELS = {
+  code: '代码主页',
+  blog: '个人博客',
+  portfolio: '作品集',
+  social: '社交账号',
+  certificate: '证书',
+  other: '其他'
+};
+
+const CONTACT_LINK_VALUE_TYPE_LABELS = {
+  url: '链接',
+  text: '文本'
+};
+
 function normalizeStringArray(value, path, options) {
   if (!validator.isStringArray(value, options)) {
     throw createError(path, 'must be an array of non-empty strings');
@@ -53,8 +67,38 @@ function normalizeContact(contact) {
   return {
     email: contact.email.trim(),
     phone: normalizeOptionalString(contact.phone),
-    wechatQr: normalizeOptionalString(contact.wechatQr)
+    wechatQr: normalizeOptionalString(contact.wechatQr),
+    links: normalizeContactLinks(contact.links)
   };
+}
+
+function normalizeContactLink(link, index) {
+  const path = `profile.contact.links[${index}]`;
+  assertPlainObject(link, path);
+  assertNonEmptyString(link.name, `${path}.name`);
+  assertNonEmptyString(link.value, `${path}.value`);
+
+  const type = CONTACT_LINK_TYPE_LABELS[link.type] ? link.type : 'other';
+  const valueType = CONTACT_LINK_VALUE_TYPE_LABELS[link.valueType] ? link.valueType : 'text';
+
+  return {
+    type,
+    typeLabel: CONTACT_LINK_TYPE_LABELS[type],
+    name: link.name.trim(),
+    valueType,
+    valueTypeLabel: CONTACT_LINK_VALUE_TYPE_LABELS[valueType],
+    value: link.value.trim(),
+    isUrl: valueType === 'url',
+    actionLabel: valueType === 'url' ? '复制链接' : '复制内容'
+  };
+}
+
+function normalizeContactLinks(links) {
+  if (!Array.isArray(links)) {
+    return [];
+  }
+
+  return links.map(normalizeContactLink);
 }
 
 function normalizeProfile(profile) {

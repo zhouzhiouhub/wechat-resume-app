@@ -336,6 +336,19 @@ function createPosterRenderPlan(posterModel, themeId) {
     });
   }
 
+  const firstLink = posterModel.contact.links && posterModel.contact.links[0];
+
+  if (firstLink) {
+    addText(commands, {
+      text: `${firstLink.name}: ${truncateText(firstLink.value, 28)}`,
+      x: contentX,
+      y: y + 110,
+      color: palette.muted,
+      fontSize: 22,
+      maxWidth: 420
+    });
+  }
+
   addRoundRect(commands, {
     x: 552,
     y: y - 6,

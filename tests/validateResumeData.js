@@ -83,6 +83,7 @@ runCheck('profile includes valid contact methods', () => {
   assert.notStrictEqual(profile.contact.email, '2922188469@qq.com');
   assert.strictEqual(profile.contact.email, 'user@example.com');
   assert.strictEqual(profile.contact.phone, '13800000000');
+  assert.deepStrictEqual(profile.contact.links, []);
 });
 
 runCheck('home resume exposes reusable component inputs', () => {
@@ -91,6 +92,7 @@ runCheck('home resume exposes reusable component inputs', () => {
   assert.ok(homeResume.profile.name);
   assert.ok(homeResume.contact.email);
   assert.ok(homeResume.contact.phone);
+  assert.ok(Array.isArray(homeResume.contact.links));
   assert.ok(homeResume.skillHighlights.length > 0);
   assert.ok(homeResume.skillGroups.length > 0);
   assert.ok(homeResume.featuredProjects.length > 0);
@@ -168,6 +170,14 @@ runCheck('local resume data service stores per-user full resume data', () => {
   localResumeData.profile.location = '杭州';
   localResumeData.profile.contact.email = 'zhaoyi@example.com';
   localResumeData.profile.contact.phone = '13900000000';
+  localResumeData.profile.contact.links = [
+    {
+      type: 'code',
+      name: 'GitHub',
+      valueType: 'url',
+      value: 'https://github.com/zhaoyi'
+    }
+  ];
   localResumeData.skillGroups[0].skills[0].name = '微信小程序';
   localResumeData.projects[0].id = 'local-miniapp-project';
   localResumeData.projects[0].name = '本机保存项目';
@@ -186,6 +196,8 @@ runCheck('local resume data service stores per-user full resume data', () => {
   assert.strictEqual(storedState.resumeData.projects[0].name, '本机保存项目');
   assert.strictEqual(resume.profile.contact.email, 'zhaoyi@example.com');
   assert.strictEqual(resume.profile.contact.phone, '13900000000');
+  assert.strictEqual(resume.profile.contact.links[0].name, 'GitHub');
+  assert.strictEqual(resume.profile.contact.links[0].actionLabel, '复制链接');
   assert.strictEqual(project.name, '本机保存项目');
   assert.throws(
     () => localResumeDataService.saveResumeData(mockWx, { profile: {} }),
@@ -253,6 +265,75 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
     section: 'timeline',
     timelineIndex: 0
   });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'add',
+    section: 'contactLink'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 0,
+    field: 'type',
+    value: 'code'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 0,
+    field: 'name',
+    value: 'GitHub'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 0,
+    field: 'valueType',
+    value: 'url'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 0,
+    field: 'value',
+    value: 'https://github.com/example'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'add',
+    section: 'contactLink'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 1,
+    field: 'type',
+    value: 'certificate'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 1,
+    field: 'name',
+    value: '证书编号'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 1,
+    field: 'valueType',
+    value: 'text'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'contactLink',
+    linkIndex: 1,
+    field: 'value',
+    value: 'ABC-123456'
+  });
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'remove',
+    section: 'contactLink',
+    linkIndex: 0
+  });
 
   const normalizedResume = resumeMapper.mapResumeData(editorState.draft);
 
@@ -269,7 +350,12 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
   assert.ok(editorState.draft.projects.some((project) => project.name === '可视化简历编辑器'));
   assert.strictEqual(editorState.draft.projects[0].challenges.length, 2);
   assert.strictEqual(editorState.draft.timeline.length, resumeData.timeline.length);
+  assert.strictEqual(editorState.draft.profile.contact.links.length, 1);
+  assert.strictEqual(editorState.draft.profile.contact.links[0].name, '证书编号');
+  assert.strictEqual(editorState.draft.profile.contact.links[0].valueType, 'text');
   assert.ok(normalizedResume.projects.length >= 2);
+  assert.strictEqual(normalizedResume.profile.contact.links[0].typeLabel, '证书');
+  assert.strictEqual(normalizedResume.profile.contact.links[0].actionLabel, '复制内容');
 });
 
 runCheck('contact service validates and prepares interaction payloads', () => {
@@ -277,13 +363,16 @@ runCheck('contact service validates and prepares interaction payloads', () => {
   const validation = contactService.validateContactInfo(contact);
   const clipboardPayload = contactService.createClipboardPayload(contact.email);
   const phonePayload = contactService.createPhoneCallPayload(contact.phone);
+  const textPayload = contactService.createTextClipboardPayload(' https://github.com/example ');
 
   assert.strictEqual(validation.isValid, true);
   assert.strictEqual(validation.contact.phone, contact.phone);
   assert.strictEqual(clipboardPayload.data, contact.email);
   assert.strictEqual(phonePayload.phoneNumber, contact.phone);
+  assert.strictEqual(textPayload.data, 'https://github.com/example');
   assert.throws(() => contactService.createClipboardPayload('bad-email'), /valid email/);
   assert.throws(() => contactService.createPhoneCallPayload(''), /phone/);
+  assert.throws(() => contactService.createTextClipboardPayload(''), /value/);
   assert.throws(() => contactService.createPreviewPayload(''), /wechatQr/);
 });
 
@@ -509,12 +598,27 @@ runCheck('resume customization service combines preferences, assets and home dis
 
 runCheck('poster model is created from unified resume data', () => {
   const resume = resumeService.getResume();
+  const resumeWithLink = JSON.parse(JSON.stringify(resume));
+
+  resumeWithLink.profile.contact.links = [
+    {
+      type: 'code',
+      name: 'GitHub',
+      valueType: 'url',
+      value: 'https://github.com/example'
+    }
+  ];
+
   const poster = posterService.createPosterModel(resume);
+  const posterWithLink = posterService.createPosterModel(resumeWithLink);
   const renderPlan = posterService.createPosterRenderPlan(poster, 'dark');
+  const renderPlanWithLink = posterService.createPosterRenderPlan(posterWithLink, 'dark');
 
   assert.strictEqual(poster.profile.name, resume.profile.name);
   assert.strictEqual(poster.contact.email, resume.profile.contact.email);
   assert.strictEqual(poster.contact.phone, resume.profile.contact.phone);
+  assert.deepStrictEqual(poster.contact.links, []);
+  assert.strictEqual(posterWithLink.contact.links[0].name, 'GitHub');
   assert.strictEqual(
     poster.skillTags.length,
     Math.min(resume.skillGroups.reduce((total, group) => total + group.skills.length, 0), 3)
@@ -527,6 +631,7 @@ runCheck('poster model is created from unified resume data', () => {
   assert.ok(renderPlan.commands.length > 10);
   assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.name));
   assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.contact.phone));
+  assert.ok(renderPlanWithLink.commands.some((command) => command.type === 'text' && command.text.indexOf('GitHub') !== -1));
   assert.ok(renderPlan.commands.some((command) => command.type === 'roundRect'));
   assert.ok(renderPlan.commands.every((command) => ['roundRect', 'text', 'image'].includes(command.type)));
   assert.deepStrictEqual(
@@ -559,6 +664,7 @@ runCheck('print resume model exposes compact interview-ready sections', () => {
   assert.strictEqual(printResume.profile.name, resume.profile.name);
   assert.strictEqual(printResume.contact.email, resume.profile.contact.email);
   assert.strictEqual(printResume.contact.phone, resume.profile.contact.phone);
+  assert.ok(Array.isArray(printResume.contact.links));
   assert.ok(printResume.topSkills.length > 0);
   assert.ok(printResume.topSkills.length <= 8);
   assert.strictEqual(printResume.projects.length, resume.projects.length);
@@ -978,6 +1084,7 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeWxml.includes('editor-state="{{resumeDataState}}"'));
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
   assert.ok(homeWxml.includes('bind:callphone="onCallPhone"'));
+  assert.ok(homeWxml.includes('bind:copylink="onCopyContactLink"'));
   assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
   assert.ok(!homeWxml.includes('bind:displaychange="onPreferenceDisplayChange"'));
   assert.ok(homeWxml.includes('bind:saveresumedata="onSaveResumeData"'));
@@ -987,9 +1094,13 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
   assert.ok(homeJs.includes('contactService.callPhone'));
+  assert.ok(homeJs.includes('contactService.copyText'));
   assert.ok(!homeJs.includes('onPreferenceDisplayChange'));
   assert.ok(contactPanelWxml.includes('{{contact.phone}}'));
   assert.ok(contactPanelWxml.includes('bindtap="handleCallPhone"'));
+  assert.ok(contactPanelWxml.includes('contact.links'));
+  assert.ok(contactPanelWxml.includes('bindtap="handleCopyLink"'));
+  assert.ok(contactPanelWxml.includes('{{link.actionLabel}}'));
   assert.ok(!contactPanelWxml.includes('display.showPoster'));
   assert.ok(!contactPanelWxml.includes('display.showCustomerService'));
   assert.ok(!contactPanelWxml.includes('handleOpenPrint'));
@@ -1018,6 +1129,13 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(dataEditorWxml.includes('data-section="project"'));
   assert.ok(dataEditorWxml.includes('data-section="skill"'));
   assert.ok(dataEditorWxml.includes('data-section="timeline"'));
+  assert.ok(dataEditorWxml.includes('data-section="contactLink"'));
+  assert.ok(dataEditorWxml.includes("activeTab === 'links'"));
+  assert.ok(dataEditorWxml.includes('contactLinkTypes'));
+  assert.ok(dataEditorWxml.includes('contactLinkValueTypes'));
+  assert.ok(dataEditorJs.includes("id: 'links'"));
+  assert.ok(dataEditorJs.includes('handleContactLinkTypeTap'));
+  assert.ok(dataEditorJs.includes('handleContactLinkValueTypeTap'));
   assert.ok(dataEditorWxml.includes('class="editor-actions settings-button-row is-between"'));
   assert.ok(!dataEditorWxml.includes('block-add-button'));
   assert.ok(dataEditorWxml.includes('>新增</button>'));

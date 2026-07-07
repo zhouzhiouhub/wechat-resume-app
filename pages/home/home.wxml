@@ -106,6 +106,7 @@
             bind:copyemail="onCopyEmail"
             bind:callphone="onCallPhone"
             bind:showwechatqr="onShowWechatQr"
+            bind:copylink="onCopyContactLink"
           ></contact-panel>
         </view>
 

@@ -25,6 +25,7 @@ function createPosterModel(resume) {
     contact: {
       email: resume.profile.contact.email,
       phone: resume.profile.contact.phone,
+      links: (resume.profile.contact.links || []).slice(0, 1),
       wechatQr: resume.profile.contact.wechatQr,
       hasWechatQr
     },

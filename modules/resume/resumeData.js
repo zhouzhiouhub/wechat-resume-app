@@ -9,7 +9,8 @@ const resumeData = {
     contact: {
       email: 'user@example.com',
       phone: '13800000000',
-      wechatQr: ''
+      wechatQr: '',
+      links: []
     }
   },
   skillGroups: [

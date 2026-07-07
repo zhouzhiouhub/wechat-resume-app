@@ -39,11 +39,17 @@
   gap: 16rpx;
 }
 
-.editor-card {
+.editor-card,
+.empty-card {
   padding: 18rpx;
   border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
   background: var(--resume-surface, #ffffff);
+}
+
+.empty-card {
+  justify-items: center;
+  color: var(--resume-subtle, #6b7280);
 }
 
 .nested-card {
@@ -54,6 +60,7 @@
 
 .card-title,
 .nested-title,
+.empty-title,
 .field-label {
   display: block;
 }
@@ -69,6 +76,12 @@
   color: var(--resume-muted, #4b5563);
   font-size: 24rpx;
   font-weight: 800;
+  line-height: 1.35;
+}
+
+.empty-title {
+  font-size: 24rpx;
+  font-weight: 700;
   line-height: 1.35;
 }
 

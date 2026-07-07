@@ -16,6 +16,28 @@
       </view>
     </view>
 
+    <view wx:if="{{contact.links.length}}" class="contact-links">
+      <text class="contact-links-title">个人资料</text>
+      <view
+        wx:for="{{contact.links}}"
+        wx:for-item="link"
+        wx:for-index="linkIndex"
+        wx:key="name"
+        class="contact-link"
+      >
+        <view class="contact-link-main">
+          <text class="contact-link-type">{{link.typeLabel}}</text>
+          <text class="contact-link-name">{{link.name}}</text>
+          <text class="contact-link-value">{{link.value}}</text>
+        </view>
+        <button
+          class="link-copy-button"
+          data-link-index="{{linkIndex}}"
+          bindtap="handleCopyLink"
+        >{{link.actionLabel}}</button>
+      </view>
+    </view>
+
     <view class="contact-actions">
       <button class="action-button primary-button" bindtap="handleCopyEmail">复制邮箱</button>
       <button

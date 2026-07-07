@@ -29,6 +29,18 @@ Component({
       this.triggerEvent('callphone', {
         phone: contact.phone
       });
+    },
+
+    handleCopyLink(event) {
+      const contact = this.data.contact || {};
+      const links = Array.isArray(contact.links) ? contact.links : [];
+      const link = links[event.currentTarget.dataset.linkIndex] || {};
+
+      this.triggerEvent('copylink', {
+        name: link.name,
+        value: link.value,
+        valueType: link.valueType
+      });
     }
   }
 });

@@ -9,6 +9,20 @@ const TIMELINE_TYPES = [
   { id: 'project', label: '项目' }
 ];
 
+const CONTACT_LINK_TYPES = [
+  { id: 'code', label: '代码主页' },
+  { id: 'blog', label: '个人博客' },
+  { id: 'portfolio', label: '作品集' },
+  { id: 'social', label: '社交账号' },
+  { id: 'certificate', label: '证书' },
+  { id: 'other', label: '其他' }
+];
+
+const CONTACT_LINK_VALUE_TYPES = [
+  { id: 'url', label: '链接' },
+  { id: 'text', label: '文本' }
+];
+
 function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -97,11 +111,31 @@ function createViewTimelineItem(item) {
   };
 }
 
+function getContactLinks(draft) {
+  const contact = draft.profile && draft.profile.contact ? draft.profile.contact : {};
+
+  return Array.isArray(contact.links) ? contact.links : [];
+}
+
+function createViewContactLink(link) {
+  const typeIndex = CONTACT_LINK_TYPES.findIndex((type) => type.id === link.type);
+  const valueTypeIndex = CONTACT_LINK_VALUE_TYPES.findIndex((type) => type.id === link.valueType);
+
+  return {
+    ...link,
+    type: typeIndex >= 0 ? link.type : 'other',
+    typeLabel: typeIndex >= 0 ? CONTACT_LINK_TYPES[typeIndex].label : '其他',
+    valueType: valueTypeIndex >= 0 ? link.valueType : 'text',
+    valueTypeLabel: valueTypeIndex >= 0 ? CONTACT_LINK_VALUE_TYPES[valueTypeIndex].label : '文本'
+  };
+}
+
 function createViewData(draft) {
   return {
     skillGroups: (draft.skillGroups || []).map(createViewSkillGroup),
     projects: (draft.projects || []).map(createViewProject),
-    timeline: (draft.timeline || []).map(createViewTimelineItem)
+    timeline: (draft.timeline || []).map(createViewTimelineItem),
+    contactLinks: getContactLinks(draft).map(createViewContactLink)
   };
 }
 
@@ -238,6 +272,31 @@ function createTimelineItem(timeline) {
   return item;
 }
 
+function createContactLink(links) {
+  return {
+    type: 'code',
+    name: createUniqueLabel(links, 'name', '代码主页'),
+    valueType: 'url',
+    value: ''
+  };
+}
+
+function ensureContactLinks(draft) {
+  if (!draft.profile) {
+    draft.profile = {};
+  }
+
+  if (!draft.profile.contact) {
+    draft.profile.contact = {};
+  }
+
+  if (!Array.isArray(draft.profile.contact.links)) {
+    draft.profile.contact.links = [];
+  }
+
+  return draft.profile.contact.links;
+}
+
 function updateSkillGroup(draft, detail) {
   const groupIndex = getIndex(detail.groupIndex);
   const group = draft.skillGroups[groupIndex];
@@ -335,6 +394,32 @@ function updateTimeline(draft, detail) {
   return draft;
 }
 
+function updateContactLink(draft, detail) {
+  const linkIndex = getIndex(detail.linkIndex);
+  const link = ensureContactLinks(draft)[linkIndex];
+
+  if (!link) {
+    return draft;
+  }
+
+  if (detail.field === 'type') {
+    link.type = CONTACT_LINK_TYPES.some((type) => type.id === detail.value)
+      ? detail.value
+      : 'other';
+    return draft;
+  }
+
+  if (detail.field === 'valueType') {
+    link.valueType = CONTACT_LINK_VALUE_TYPES.some((type) => type.id === detail.value)
+      ? detail.value
+      : 'text';
+    return draft;
+  }
+
+  link[detail.field] = detail.value;
+  return draft;
+}
+
 function addItem(draft, detail) {
   if (detail.section === 'skillGroup') {
     draft.skillGroups.push(createSkillGroup(draft.skillGroups));
@@ -364,6 +449,12 @@ function addItem(draft, detail) {
 
   if (detail.section === 'timeline') {
     draft.timeline.push(createTimelineItem(draft.timeline));
+  }
+
+  if (detail.section === 'contactLink') {
+    const links = ensureContactLinks(draft);
+
+    links.push(createContactLink(links));
   }
 
   return draft;
@@ -409,6 +500,10 @@ function removeItem(draft, detail) {
     removeByIndex(draft.timeline, getIndex(detail.timelineIndex), 0);
   }
 
+  if (detail.section === 'contactLink') {
+    removeByIndex(ensureContactLinks(draft), getIndex(detail.linkIndex), 0);
+  }
+
   return draft;
 }
 
@@ -443,11 +538,17 @@ function applyEdit(state, detail = {}) {
     return withDraft(state, updateTimeline(draft, detail));
   }
 
+  if (detail.section === 'contactLink') {
+    return withDraft(state, updateContactLink(draft, detail));
+  }
+
   return createEditorState(state);
 }
 
 module.exports = {
   TIMELINE_TYPES,
+  CONTACT_LINK_TYPES,
+  CONTACT_LINK_VALUE_TYPES,
   parseListText,
   createEditorState,
   applyEdit
