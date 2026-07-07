@@ -8,6 +8,7 @@ const localResumeDataService = require('../../services/localResumeDataService');
 const resumeDataEditorService = require('../../services/resumeDataEditorService');
 const resumePreferenceService = require('../../services/resumePreferenceService');
 const resumeCustomizationService = require('../../services/resumeCustomizationService');
+const settingsAutosaveService = require('../../services/settingsAutosaveService');
 const tapCounter = require('../../utils/tapCounter');
 
 Page({
@@ -188,12 +189,18 @@ Page({
       return;
     }
 
+    const isClosingEditor = this.canEditSetting(sectionId);
+
     this.setData({
       settingsEditState: {
         ...(this.data.settingsEditState || {}),
         [sectionId]: !this.canEditSetting(sectionId)
       }
     });
+
+    if (isClosingEditor) {
+      this.refreshResumeCustomization();
+    }
   },
 
   onChangeTheme(event) {
@@ -217,13 +224,38 @@ Page({
       ...(preferenceState.profileDraft || {}),
       [field]: value
     };
+    const nextPreferenceState = resumePreferenceService.createPreferenceStateFromDraft(
+      profileDraft,
+      preferenceState.displayDraft
+    );
 
     this.setData({
-      preferenceState: resumePreferenceService.createPreferenceStateFromDraft(
-        profileDraft,
-        preferenceState.displayDraft
-      )
+      preferenceState: nextPreferenceState
     });
+    this.saveProfileSettingsDraft(nextPreferenceState, {
+      silent: true
+    });
+  },
+
+  saveProfileSettingsDraft(preferenceState, options = {}) {
+    try {
+      const result = settingsAutosaveService.saveProfileSettingsDraft(wx, preferenceState);
+
+      if (options.refresh) {
+        this.refreshResumeCustomization();
+      }
+
+      return result;
+    } catch (error) {
+      if (!options.silent) {
+        wx.showToast({
+          title: error.message || '保存失败',
+          icon: 'none'
+        });
+      }
+
+      return null;
+    }
   },
 
   onSaveResumePreferences() {
@@ -235,29 +267,19 @@ Page({
       return;
     }
 
-    try {
-      const preferences = resumePreferenceService.saveResumePreferences(
-        wx,
-        resumePreferenceService.createPreferencesFromState(this.data.preferenceState)
-      );
-      const nextResumeData = localResumeDataService.applyProfileDraftToResumeData(
-        localResumeDataService.readResumeData(wx),
-        preferences.profile
-      );
+    const result = this.saveProfileSettingsDraft(this.data.preferenceState, {
+      refresh: true
+    });
 
-      localResumeDataService.saveResumeData(wx, nextResumeData);
-      this.refreshResumeCustomization();
-      this.closeSettingEditor('profile');
-      wx.showToast({
-        title: '已保存',
-        icon: 'success'
-      });
-    } catch (error) {
-      wx.showToast({
-        title: error.message || '保存失败',
-        icon: 'none'
-      });
+    if (!result) {
+      return;
     }
+
+    this.closeSettingEditor('profile');
+    wx.showToast({
+      title: '已保存',
+      icon: 'success'
+    });
   },
 
   onResetResumePreferences() {
@@ -279,22 +301,7 @@ Page({
   },
 
   syncProfilePreferencesFromResumeData(resumeData) {
-    const preferences = resumePreferenceService.readResumePreferences(wx);
-    const profile = resumeData.profile || {};
-    const contact = profile.contact || {};
-
-    resumePreferenceService.saveResumePreferences(wx, {
-      profile: {
-        name: profile.name,
-        title: profile.title,
-        status: profile.status,
-        summary: profile.summary,
-        location: profile.location,
-        email: contact.email,
-        phone: contact.phone
-      },
-      display: preferences.display
-    });
+    settingsAutosaveService.syncProfilePreferencesFromResumeData(wx, resumeData);
   },
 
   onEditResumeData(event) {
@@ -302,12 +309,58 @@ Page({
       return;
     }
 
+    const nextResumeDataState = resumeDataEditorService.applyEdit(
+      this.data.resumeDataState,
+      event.detail
+    );
+
     this.setData({
-      resumeDataState: resumeDataEditorService.applyEdit(
-        this.data.resumeDataState,
-        event.detail
-      )
+      resumeDataState: nextResumeDataState
     });
+    this.saveResumeContentDraft(nextResumeDataState, {
+      silent: true
+    });
+  },
+
+  updateResumeDataSavedStatus(resumeDataState, payload) {
+    const savedState = localResumeDataService.createResumeDataState(payload.resumeData, {
+      hasLocalData: true,
+      updatedAt: payload.updatedAt
+    });
+
+    this.setData({
+      resumeDataState: {
+        ...resumeDataState,
+        hasLocalData: true,
+        updatedAt: payload.updatedAt,
+        statusText: savedState.statusText
+      }
+    });
+  },
+
+  saveResumeContentDraft(resumeDataState, options = {}) {
+    try {
+      const result = settingsAutosaveService.saveResumeContentDraft(wx, resumeDataState);
+
+      if (options.updateStatus !== false) {
+        this.updateResumeDataSavedStatus(resumeDataState, result.payload);
+      }
+
+      if (options.refresh) {
+        this.refreshResumeCustomization();
+      }
+
+      return result;
+    } catch (error) {
+      if (!options.silent) {
+        wx.showToast({
+          title: error.message || '保存失败',
+          icon: 'none'
+        });
+      }
+
+      return null;
+    }
   },
 
   onSaveResumeData() {
@@ -319,25 +372,20 @@ Page({
       return;
     }
 
-    try {
-      const payload = localResumeDataService.saveResumeData(
-        wx,
-        this.data.resumeDataState && this.data.resumeDataState.draft
-      );
+    const result = this.saveResumeContentDraft(this.data.resumeDataState, {
+      refresh: true,
+      updateStatus: false
+    });
 
-      this.syncProfilePreferencesFromResumeData(payload.resumeData);
-      this.refreshResumeCustomization();
-      this.closeSettingEditor('content');
-      wx.showToast({
-        title: '已保存',
-        icon: 'success'
-      });
-    } catch (error) {
-      wx.showToast({
-        title: error.message || '保存失败',
-        icon: 'none'
-      });
+    if (!result) {
+      return;
     }
+
+    this.closeSettingEditor('content');
+    wx.showToast({
+      title: '已保存',
+      icon: 'success'
+    });
   },
 
   onResetResumeData() {

@@ -15,6 +15,7 @@ const localResumeDataService = require('../services/localResumeDataService');
 const resumeDataEditorService = require('../services/resumeDataEditorService');
 const resumePreferenceService = require('../services/resumePreferenceService');
 const resumeCustomizationService = require('../services/resumeCustomizationService');
+const settingsAutosaveService = require('../services/settingsAutosaveService');
 const posterService = require('../services/posterService');
 const printResumeService = require('../services/printResumeService');
 const analyticsService = require('../services/analyticsService');
@@ -545,6 +546,71 @@ runCheck('resume preference service stores profile and display overrides', () =>
   assert.strictEqual(
     resumePreferenceService.readResumePreferences(mockWx).display.featuredProjectCount,
     3
+  );
+});
+
+runCheck('settings autosave service persists profile and content drafts', () => {
+  const mockWx = createMockWxStorage();
+  const preferenceState = resumePreferenceService.createPreferenceStateFromDraft(
+    {
+      name: 'Auto Save User',
+      title: 'Frontend Engineer',
+      status: 'Open to roles',
+      summary: 'Builds mini programs and resume tools.',
+      location: 'Shanghai',
+      email: 'autosave@example.com',
+      phone: '13822223333'
+    },
+    resumePreferenceService.DISPLAY_DEFAULTS
+  );
+  const profileResult = settingsAutosaveService.saveProfileSettingsDraft(
+    mockWx,
+    preferenceState,
+    { now: 8000 }
+  );
+  const profilePreferences = resumePreferenceService.readResumePreferences(mockWx);
+  const profileResumeData = localResumeDataService.readResumeData(mockWx);
+
+  assert.strictEqual(profileResult.payload.updatedAt, 8000);
+  assert.strictEqual(profilePreferences.profile.name, 'Auto Save User');
+  assert.strictEqual(profileResumeData.profile.name, 'Auto Save User');
+  assert.strictEqual(profileResumeData.profile.contact.email, 'autosave@example.com');
+
+  let editorState = resumeDataEditorService.createEditorState(
+    localResumeDataService.readResumeDataState(mockWx)
+  );
+
+  editorState = resumeDataEditorService.applyEdit(editorState, {
+    action: 'update',
+    section: 'project',
+    projectIndex: 0,
+    field: 'name',
+    value: 'Auto Saved Project'
+  });
+
+  const contentResult = settingsAutosaveService.saveResumeContentDraft(
+    mockWx,
+    editorState,
+    { now: 9000 }
+  );
+  const contentResumeData = localResumeDataService.readResumeData(mockWx);
+  const syncedPreferences = resumePreferenceService.readResumePreferences(mockWx);
+
+  assert.strictEqual(contentResult.payload.updatedAt, 9000);
+  assert.strictEqual(contentResumeData.projects[0].name, 'Auto Saved Project');
+  assert.strictEqual(syncedPreferences.profile.name, contentResumeData.profile.name);
+  assert.throws(
+    () => settingsAutosaveService.saveProfileSettingsDraft(
+      mockWx,
+      resumePreferenceService.createPreferenceStateFromDraft(
+        {
+          ...preferenceState.profileDraft,
+          email: 'bad-email'
+        },
+        preferenceState.displayDraft
+      )
+    ),
+    /邮箱格式不正确/
   );
 });
 
@@ -1153,8 +1219,11 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(!homeWxml.includes('bind:resetresumedata="onResetResumeData"'));
   assert.ok(homeJs.includes('resumeCustomizationService.getHomeResume'));
   assert.ok(homeJs.includes('resumeDataEditorService.applyEdit'));
-  assert.ok(homeJs.includes('localResumeDataService.saveResumeData'));
-  assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
+  assert.ok(homeJs.includes('settingsAutosaveService.saveProfileSettingsDraft'));
+  assert.ok(homeJs.includes('settingsAutosaveService.saveResumeContentDraft'));
+  assert.ok(homeJs.includes('settingsAutosaveService.syncProfilePreferencesFromResumeData'));
+  assert.ok(homeJs.includes('this.saveProfileSettingsDraft(nextPreferenceState'));
+  assert.ok(homeJs.includes('this.saveResumeContentDraft(nextResumeDataState'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
   assert.ok(homeJs.includes('settingsEditState'));
   assert.ok(homeJs.includes('canEditSetting'));
