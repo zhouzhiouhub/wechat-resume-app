@@ -13,30 +13,8 @@
   background: var(--resume-surface-hover, #f9fafb);
 }
 
-.preference-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
-}
-
-.preference-title,
-.preference-meta,
 .field-label {
   display: block;
-}
-
-.preference-title {
-  color: var(--resume-text, #111827);
-  font-size: 26rpx;
-  font-weight: 800;
-  line-height: 1.35;
-}
-
-.preference-meta {
-  color: var(--resume-subtle, #6b7280);
-  font-size: 22rpx;
-  line-height: 1.35;
 }
 
 .form-grid {

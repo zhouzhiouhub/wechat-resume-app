@@ -1,10 +1,5 @@
 <view class="resume-preference-settings">
   <view class="preference-block">
-    <view class="preference-title-row">
-      <text class="preference-title">个人资料</text>
-      <text class="preference-meta">本机保存</text>
-    </view>
-
     <view class="form-grid">
       <view class="form-field">
         <text class="field-label">姓名</text>

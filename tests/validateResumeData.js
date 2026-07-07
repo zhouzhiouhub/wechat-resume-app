@@ -1112,6 +1112,8 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(toolPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
   assert.ok(preferenceWxml.includes('data-field="phone"'));
+  assert.ok(!preferenceWxml.includes('preference-title-row'));
+  assert.ok(!preferenceWxml.includes('preference-meta'));
   assert.ok(!preferenceWxml.includes('json-input'));
   assert.ok(!preferenceWxml.includes('展示偏好'));
   assert.ok(!preferenceWxml.includes('默认栏目'));
