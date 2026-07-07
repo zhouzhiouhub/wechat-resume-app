@@ -905,6 +905,10 @@ runCheck('resume preference settings are wired through home and contact panel', 
     path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
     'utf8'
   );
+  const assetSettingsWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'profile-asset-settings', 'profile-asset-settings.wxml'),
+    'utf8'
+  );
   const preferenceWxml = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'resume-preference-settings', 'resume-preference-settings.wxml'),
     'utf8'
@@ -933,6 +937,10 @@ runCheck('resume preference settings are wired through home and contact panel', 
     path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.wxss'),
     'utf8'
   );
+  const settingsButtonsWxss = fs.readFileSync(
+    path.join(__dirname, '..', 'styles', 'settings-buttons.wxss'),
+    'utf8'
+  );
 
   assert.ok(homeJson.includes('resume-preference-settings'));
   assert.ok(homeJson.includes('resume-data-editor'));
@@ -957,14 +965,19 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(!preferenceWxml.includes('handleFeaturedProjectCountStep'));
   assert.ok(!preferenceWxml.includes('handleDisplaySwitchChange'));
   assert.ok(!preferenceJs.includes("field: 'initialSection'"));
-  assert.ok(preferenceWxss.includes('justify-content: center'));
-  assert.ok(preferenceWxss.includes('text-align: center'));
-  assert.ok(assetSettingsWxss.includes('justify-content: center'));
-  assert.ok(assetSettingsWxss.includes('white-space: nowrap'));
+  assert.ok(preferenceWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(assetSettingsWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(dataEditorWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(preferenceWxml.includes('preference-actions settings-button-row is-between'));
+  assert.ok(preferenceWxml.includes('settings-button settings-button-action settings-button-primary'));
+  assert.ok(preferenceWxml.includes('settings-button settings-button-action settings-button-secondary'));
+  assert.ok(assetSettingsWxml.includes('asset-actions settings-button-row'));
+  assert.ok(assetSettingsWxml.includes('settings-button settings-button-action settings-button-primary'));
+  assert.ok(assetSettingsWxml.includes('settings-button settings-button-action settings-button-secondary'));
   assert.ok(dataEditorWxml.includes('data-section="project"'));
   assert.ok(dataEditorWxml.includes('data-section="skill"'));
   assert.ok(dataEditorWxml.includes('data-section="timeline"'));
-  assert.ok(dataEditorWxml.includes('class="editor-actions"'));
+  assert.ok(dataEditorWxml.includes('class="editor-actions settings-button-row is-between"'));
   assert.ok(!dataEditorWxml.includes('block-add-button'));
   assert.ok(!dataEditorWxml.includes('新增技能组</button>'));
   assert.ok(!dataEditorWxml.includes('新增项目</button>'));
@@ -974,13 +987,32 @@ runCheck('resume preference settings are wired through home and contact panel', 
   assert.ok(dataEditorWxml.includes('>新增</button>'));
   assert.ok(dataEditorWxml.includes('>保存</button>'));
   assert.ok(dataEditorWxml.includes('>重置</button>'));
-  assert.ok(dataEditorWxss.includes('grid-template-columns: repeat(3, minmax(0, 1fr))'));
-  assert.ok(dataEditorWxss.includes('width: 100%'));
-  assert.ok(dataEditorWxss.includes('margin: 0'));
-  assert.ok(dataEditorWxss.includes('flex: 0 0 88rpx'));
-  assert.ok(dataEditorWxss.includes('width: 180rpx'));
-  assert.ok(dataEditorWxss.includes('height: 60rpx'));
-  assert.ok(dataEditorWxss.includes('text-align: center'));
+  assert.ok(dataEditorWxml.includes('settings-button settings-button-compact tab-button'));
+  assert.ok(dataEditorWxml.includes('settings-button settings-button-inline settings-button-secondary'));
+  assert.ok(dataEditorWxml.includes('settings-button settings-button-ghost settings-button-danger'));
+  assert.ok(!dataEditorWxss.includes('grid-template-columns: repeat(3, minmax(0, 1fr))'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-row'));
+  assert.ok(settingsButtonsWxss.includes('flex-wrap: wrap'));
+  assert.ok(settingsButtonsWxss.includes('max-width: 100%'));
+  assert.ok(settingsButtonsWxss.includes('justify-content: space-between'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button'));
+  assert.ok(settingsButtonsWxss.includes('border: 1rpx solid var(--resume-border, #d1d5db)'));
+  assert.ok(settingsButtonsWxss.includes('border-radius: 8rpx'));
+  assert.ok(settingsButtonsWxss.includes('text-align: center'));
+  assert.ok(settingsButtonsWxss.includes('white-space: nowrap'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-compact'));
+  assert.ok(settingsButtonsWxss.includes('flex: 0 1 116rpx'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-action'));
+  assert.ok(settingsButtonsWxss.includes('flex: 1 1 112rpx'));
+  assert.ok(settingsButtonsWxss.includes('max-width: 168rpx'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-inline'));
+  assert.ok(settingsButtonsWxss.includes('min-width: 180rpx'));
+  assert.ok(settingsButtonsWxss.includes('max-width: 260rpx'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-primary'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-secondary'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button-danger'));
+  assert.ok(settingsButtonsWxss.includes('.settings-button.is-active'));
+  assert.ok(settingsButtonsWxss.includes('var(--resume-danger'));
   assert.ok(dataEditorJs.includes("this.triggerEvent('editresumedata'"));
 });
 

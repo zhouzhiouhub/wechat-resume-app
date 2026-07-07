@@ -1,3 +1,5 @@
+@import "../../styles/settings-buttons.wxss";
+
 .asset-settings {
   display: grid;
   gap: 16rpx;
@@ -77,40 +79,7 @@
 }
 
 .asset-actions {
-  display: grid;
-  gap: 8rpx;
-  width: 100%;
-}
-
-.asset-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-width: 0;
-  height: 54rpx;
-  margin: 0;
-  padding: 0;
-  border-radius: 8rpx;
-  box-sizing: border-box;
-  font-size: 22rpx;
-  line-height: 1.2;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.asset-button::after {
-  border: 0;
-}
-
-.primary-asset-button {
-  background: var(--resume-text, #111827);
-  color: var(--resume-inverse, #ffffff);
-}
-
-.plain-asset-button {
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
+  justify-content: flex-end;
 }
 
 @media (max-width: 420px) {
@@ -120,7 +89,7 @@
 
   .asset-actions {
     grid-column: 1 / -1;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: flex-start;
   }
 
   .asset-preview,

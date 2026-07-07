@@ -1,3 +1,5 @@
+@import "../../styles/settings-buttons.wxss";
+
 .resume-data-editor {
   display: grid;
   gap: 18rpx;
@@ -16,63 +18,8 @@
   align-items: flex-start;
 }
 
-.tab-list,
-.type-list {
-  display: grid;
-  gap: 10rpx;
-  width: 100%;
-}
-
-.tab-list {
-  flex: 1;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.type-list {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.tab-button,
-.type-button,
-.text-button,
-.inline-add-button,
-.editor-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border-radius: 8rpx;
-  box-sizing: border-box;
-  font-size: 24rpx;
-  line-height: 1.2;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.tab-button::after,
-.type-button::after,
-.text-button::after,
-.inline-add-button::after,
-.editor-button::after {
-  border: 0;
-}
-
-.tab-button,
 .type-button {
-  width: 100%;
-  height: 60rpx;
-  padding: 0 8rpx;
-  background: var(--resume-surface, #ffffff);
-  color: var(--resume-muted, #4b5563);
-}
-
-.tab-button.is-active,
-.type-button.is-active {
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
-  font-weight: 800;
+  max-width: 124rpx;
 }
 
 .editor-status {
@@ -123,16 +70,7 @@
 }
 
 .text-button {
-  flex: 0 0 88rpx;
-  width: 88rpx;
-  height: 52rpx;
-  padding: 0 12rpx;
-  background: transparent;
-  font-size: 22rpx;
-}
-
-.danger-button {
-  color: #dc2626;
+  max-width: 80rpx;
 }
 
 .form-grid {
@@ -175,53 +113,12 @@
 }
 
 .inline-add-button {
-  justify-self: end;
-  width: 180rpx;
-  height: 56rpx;
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
-  font-size: 22rpx;
-  font-weight: 800;
-}
-
-.editor-actions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8rpx;
-  align-items: center;
-  width: 100%;
-}
-
-.editor-button {
-  width: 100%;
-  height: 60rpx;
-  font-size: 22rpx;
-  font-weight: 800;
-  text-align: center;
-}
-
-.action-button {
-  background: var(--resume-surface-hover, #f9fafb);
-  color: var(--resume-text, #111827);
-}
-
-.primary-button {
-  background: var(--resume-text, #111827);
-  color: var(--resume-inverse, #ffffff);
-}
-
-.secondary-button {
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
+  justify-self: center;
 }
 
 @media (max-width: 420px) {
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .type-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .editor-top {

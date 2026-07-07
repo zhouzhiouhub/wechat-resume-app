@@ -1,3 +1,5 @@
+@import "../../styles/settings-buttons.wxss";
+
 .resume-preference-settings {
   display: grid;
   gap: 18rpx;
@@ -78,47 +80,6 @@
   padding-top: 16rpx;
   padding-bottom: 16rpx;
   line-height: 1.5;
-}
-
-.preference-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border-radius: 8rpx;
-  box-sizing: border-box;
-  font-size: 24rpx;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.preference-button::after {
-  border: 0;
-}
-
-.preference-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14rpx;
-  width: 100%;
-}
-
-.preference-button {
-  height: 68rpx;
-  line-height: 1.2;
-}
-
-.primary-button {
-  background: var(--resume-text, #111827);
-  color: var(--resume-inverse, #ffffff);
-}
-
-.secondary-button {
-  background: var(--resume-accent-soft, #eef2ff);
-  color: var(--resume-accent-text, #3730a3);
 }
 
 @media (max-width: 420px) {

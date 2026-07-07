@@ -1,10 +1,10 @@
 <view class="resume-data-editor">
   <view class="editor-top">
-    <view class="tab-list">
+    <view class="tab-list settings-button-row is-segmented">
       <button
         wx:for="{{tabs}}"
         wx:key="id"
-        class="{{activeTab === item.id ? 'tab-button is-active' : 'tab-button'}}"
+        class="{{activeTab === item.id ? 'settings-button settings-button-segment tab-button is-active' : 'settings-button settings-button-segment tab-button'}}"
         data-tab="{{item.id}}"
         bindtap="handleTabChange"
       >{{item.label}}</button>
@@ -24,7 +24,7 @@
         <text class="card-title">技能组 {{groupIndex + 1}}</text>
         <button
           wx:if="{{editorState.viewData.skillGroups.length > 1}}"
-          class="text-button danger-button"
+          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
           data-section="skillGroup"
           data-group-index="{{groupIndex}}"
           bindtap="handleRemove"
@@ -55,7 +55,7 @@
           <text class="nested-title">技能 {{skillIndex + 1}}</text>
           <button
             wx:if="{{group.skills.length > 1}}"
-            class="text-button danger-button"
+            class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
             data-section="skill"
             data-group-index="{{groupIndex}}"
             data-skill-index="{{skillIndex}}"
@@ -109,7 +109,7 @@
       </view>
 
       <button
-        class="inline-add-button"
+        class="settings-button settings-button-inline settings-button-secondary inline-add-button"
         data-section="skill"
         data-group-index="{{groupIndex}}"
         bindtap="handleAdd"
@@ -130,7 +130,7 @@
         <text class="card-title">项目 {{projectIndex + 1}}</text>
         <button
           wx:if="{{editorState.viewData.projects.length > 1}}"
-          class="text-button danger-button"
+          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
           data-section="project"
           data-project-index="{{projectIndex}}"
           bindtap="handleRemove"
@@ -230,7 +230,7 @@
           <text class="nested-title">难点 {{challengeIndex + 1}}</text>
           <button
             wx:if="{{project.challenges.length > 1}}"
-            class="text-button danger-button"
+            class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
             data-section="challenge"
             data-project-index="{{projectIndex}}"
             data-challenge-index="{{challengeIndex}}"
@@ -285,7 +285,7 @@
       </view>
 
       <button
-        class="inline-add-button"
+        class="settings-button settings-button-inline settings-button-secondary inline-add-button"
         data-section="challenge"
         data-project-index="{{projectIndex}}"
         bindtap="handleAdd"
@@ -319,20 +319,20 @@
       <view class="card-header">
         <text class="card-title">经历 {{timelineIndex + 1}}</text>
         <button
-          class="text-button danger-button"
+          class="settings-button settings-button-ghost settings-button-danger text-button danger-button"
           data-section="timeline"
           data-timeline-index="{{timelineIndex}}"
           bindtap="handleRemove"
         >删除</button>
       </view>
 
-      <view class="type-list">
+      <view class="type-list settings-button-row">
         <button
           wx:for="{{timelineTypes}}"
           wx:for-item="type"
           wx:for-index="typeIndex"
           wx:key="id"
-          class="{{item.type === type.id ? 'type-button is-active' : 'type-button'}}"
+          class="{{item.type === type.id ? 'settings-button settings-button-compact type-button is-active' : 'settings-button settings-button-compact type-button'}}"
           data-timeline-index="{{timelineIndex}}"
           data-value="{{type.id}}"
           bindtap="handleTypeTap"
@@ -412,26 +412,26 @@
 
   </view>
 
-  <view class="editor-actions">
+  <view class="editor-actions settings-button-row is-between">
     <button
       wx:if="{{activeTab === 'skills'}}"
-      class="editor-button action-button"
+      class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="skillGroup"
       bindtap="handleAdd"
     >新增</button>
     <button
       wx:if="{{activeTab === 'projects'}}"
-      class="editor-button action-button"
+      class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="project"
       bindtap="handleAdd"
     >新增</button>
     <button
       wx:if="{{activeTab === 'timeline'}}"
-      class="editor-button action-button"
+      class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="timeline"
       bindtap="handleAdd"
     >新增</button>
-    <button class="editor-button primary-button" bindtap="handleSave">保存</button>
-    <button class="editor-button secondary-button" bindtap="handleReset">重置</button>
+    <button class="settings-button settings-button-action settings-button-primary editor-button primary-button" bindtap="handleSave">保存</button>
+    <button class="settings-button settings-button-action settings-button-secondary editor-button secondary-button" bindtap="handleReset">重置</button>
   </view>
 </view>
