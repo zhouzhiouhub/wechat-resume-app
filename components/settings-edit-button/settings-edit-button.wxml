@@ -1,0 +1,11 @@
+<button
+  class="{{isEditing ? 'settings-edit-button is-active' : 'settings-edit-button'}}"
+  aria-label="{{isEditing ? '退出编辑' : '编辑'}}"
+  data-section-id="{{sectionId}}"
+  bindtap="handleTap"
+>
+  <view class="edit-icon">
+    <view class="edit-icon-body"></view>
+    <view class="edit-icon-tip"></view>
+  </view>
+</button>

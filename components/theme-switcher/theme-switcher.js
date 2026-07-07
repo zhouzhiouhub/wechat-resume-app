@@ -6,6 +6,17 @@ Component({
       observer(options) {
         this.syncOptions(options);
       }
+    },
+    isEditing: {
+      type: Boolean,
+      value: false,
+      observer(isEditing) {
+        if (!isEditing) {
+          this.setData({
+            isOpen: false
+          });
+        }
+      }
     }
   },
 
@@ -43,12 +54,20 @@ Component({
     },
 
     onToggleDropdown() {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       this.setData({
         isOpen: !this.data.isOpen
       });
     },
 
     onSelectTheme(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const themeId = event.currentTarget.dataset.themeId;
       const normalizedOptions = Array.isArray(this.data.options) ? this.data.options : [];
       const selectedIndex = normalizedOptions.findIndex((option) => option && option.id === themeId);

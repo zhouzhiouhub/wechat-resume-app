@@ -34,6 +34,11 @@
   box-shadow: 0 0 0 4rpx var(--resume-accent-soft, #eef2ff);
 }
 
+.is-readonly .theme-select {
+  color: var(--resume-subtle, #6b7280);
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
 .theme-label {
   color: var(--resume-text, #111827);
   font-size: 24rpx;

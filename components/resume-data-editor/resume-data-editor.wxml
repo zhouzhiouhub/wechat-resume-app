@@ -1,4 +1,4 @@
-<view class="resume-data-editor">
+<view class="{{isEditing ? 'resume-data-editor' : 'resume-data-editor is-readonly'}}">
   <view class="editor-top">
     <view class="tab-list settings-button-row is-between">
       <button
@@ -36,6 +36,7 @@
           data-group-index="{{groupIndex}}"
           data-field="groupName"
           maxlength="30"
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         />
       </view>
@@ -62,6 +63,7 @@
               data-skill-index="{{skillIndex}}"
               data-field="name"
               maxlength="30"
+              disabled="{{!isEditing}}"
               bindinput="handleInput"
             />
           </view>
@@ -76,6 +78,7 @@
               data-group-index="{{groupIndex}}"
               data-skill-index="{{skillIndex}}"
               data-field="level"
+              disabled="{{!isEditing}}"
               bindinput="handleInput"
             />
           </view>
@@ -91,6 +94,7 @@
             data-skill-index="{{skillIndex}}"
             data-field="tagsText"
             maxlength="80"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -101,6 +105,7 @@
           data-section="skill"
           data-group-index="{{groupIndex}}"
           data-skill-index="{{skillIndex}}"
+          disabled="{{!isEditing}}"
           bindtap="handleRemove"
         >删除</button>
       </view>
@@ -109,6 +114,7 @@
         class="settings-button settings-button-inline settings-button-secondary inline-add-button"
         data-section="skill"
         data-group-index="{{groupIndex}}"
+        disabled="{{!isEditing}}"
         bindtap="handleAdd"
       >新增技能</button>
     </view>
@@ -140,6 +146,7 @@
             data-project-index="{{projectIndex}}"
             data-field="name"
             maxlength="40"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -153,6 +160,7 @@
             data-project-index="{{projectIndex}}"
             data-field="id"
             maxlength="50"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -167,6 +175,7 @@
           data-project-index="{{projectIndex}}"
           data-field="role"
           maxlength="50"
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         />
       </view>
@@ -180,6 +189,7 @@
           data-project-index="{{projectIndex}}"
           data-field="cover"
           maxlength="120"
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         />
       </view>
@@ -194,6 +204,7 @@
           data-field="techStackText"
           maxlength="200"
           auto-height
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         ></textarea>
       </view>
@@ -208,6 +219,7 @@
           data-field="highlightsText"
           maxlength="300"
           auto-height
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         ></textarea>
       </view>
@@ -234,6 +246,7 @@
             data-field="problem"
             maxlength="220"
             auto-height
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           ></textarea>
         </view>
@@ -249,6 +262,7 @@
             data-field="solution"
             maxlength="260"
             auto-height
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           ></textarea>
         </view>
@@ -264,6 +278,7 @@
             data-field="result"
             maxlength="220"
             auto-height
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           ></textarea>
         </view>
@@ -274,6 +289,7 @@
           data-section="challenge"
           data-project-index="{{projectIndex}}"
           data-challenge-index="{{challengeIndex}}"
+          disabled="{{!isEditing}}"
           bindtap="handleRemove"
         >删除</button>
       </view>
@@ -282,6 +298,7 @@
         class="settings-button settings-button-inline settings-button-secondary inline-add-button"
         data-section="challenge"
         data-project-index="{{projectIndex}}"
+        disabled="{{!isEditing}}"
         bindtap="handleAdd"
       >新增难点</button>
 
@@ -295,6 +312,7 @@
           data-field="metricsText"
           maxlength="300"
           auto-height
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         ></textarea>
       </view>
@@ -326,6 +344,7 @@
           class="{{item.type === type.id ? 'settings-button settings-button-compact type-button is-active' : 'settings-button settings-button-compact type-button'}}"
           data-timeline-index="{{timelineIndex}}"
           data-value="{{type.id}}"
+          disabled="{{!isEditing}}"
           bindtap="handleTypeTap"
         >{{type.label}}</button>
       </view>
@@ -340,6 +359,7 @@
             data-timeline-index="{{timelineIndex}}"
             data-field="title"
             maxlength="50"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -353,6 +373,7 @@
             data-timeline-index="{{timelineIndex}}"
             data-field="organization"
             maxlength="50"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -368,6 +389,7 @@
             data-timeline-index="{{timelineIndex}}"
             data-field="startDate"
             maxlength="7"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -381,6 +403,7 @@
             data-timeline-index="{{timelineIndex}}"
             data-field="endDate"
             maxlength="7"
+            disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
         </view>
@@ -396,6 +419,7 @@
           data-field="description"
           maxlength="220"
           auto-height
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         ></textarea>
       </view>
@@ -431,6 +455,7 @@
           class="{{link.type === type.id ? 'settings-button settings-button-compact type-button is-active' : 'settings-button settings-button-compact type-button'}}"
           data-link-index="{{linkIndex}}"
           data-value="{{type.id}}"
+          disabled="{{!isEditing}}"
           bindtap="handleContactLinkTypeTap"
         >{{type.label}}</button>
       </view>
@@ -444,6 +469,7 @@
           data-link-index="{{linkIndex}}"
           data-field="name"
           maxlength="30"
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         />
       </view>
@@ -457,6 +483,7 @@
           class="{{link.valueType === valueType.id ? 'settings-button settings-button-compact type-button is-active' : 'settings-button settings-button-compact type-button'}}"
           data-link-index="{{linkIndex}}"
           data-value="{{valueType.id}}"
+          disabled="{{!isEditing}}"
           bindtap="handleContactLinkValueTypeTap"
         >{{valueType.label}}</button>
       </view>
@@ -471,6 +498,7 @@
           data-field="value"
           maxlength="160"
           auto-height
+          disabled="{{!isEditing}}"
           bindinput="handleInput"
         ></textarea>
       </view>
@@ -483,27 +511,31 @@
       wx:if="{{activeTab === 'skills'}}"
       class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="skillGroup"
+      disabled="{{!isEditing}}"
       bindtap="handleAdd"
     >新增</button>
     <button
       wx:if="{{activeTab === 'projects'}}"
       class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="project"
+      disabled="{{!isEditing}}"
       bindtap="handleAdd"
     >新增</button>
     <button
       wx:if="{{activeTab === 'timeline'}}"
       class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="timeline"
+      disabled="{{!isEditing}}"
       bindtap="handleAdd"
     >新增</button>
     <button
       wx:if="{{activeTab === 'links'}}"
       class="settings-button settings-button-action settings-button-neutral editor-button action-button"
       data-section="contactLink"
+      disabled="{{!isEditing}}"
       bindtap="handleAdd"
     >新增</button>
-    <button class="settings-button settings-button-action settings-button-primary editor-button primary-button" bindtap="handleSave">保存</button>
-    <button class="settings-button settings-button-action settings-button-danger editor-button danger-button" bindtap="handleRemoveActive">删除</button>
+    <button class="settings-button settings-button-action settings-button-primary editor-button primary-button" disabled="{{!isEditing}}" bindtap="handleSave">保存</button>
+    <button class="settings-button settings-button-action settings-button-danger editor-button danger-button" disabled="{{!isEditing}}" bindtap="handleRemoveActive">删除</button>
   </view>
 </view>

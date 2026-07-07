@@ -78,6 +78,11 @@
   color: var(--resume-success, #047857);
 }
 
+.is-readonly .settings-button {
+  color: var(--resume-subtle, #6b7280);
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
 .asset-actions {
   justify-content: flex-end;
 }

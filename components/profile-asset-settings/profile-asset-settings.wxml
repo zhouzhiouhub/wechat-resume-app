@@ -1,4 +1,4 @@
-<view class="asset-settings">
+<view class="{{isEditing ? 'asset-settings' : 'asset-settings is-readonly'}}">
   <view
     wx:for="{{assetState.items}}"
     wx:key="field"
@@ -24,12 +24,14 @@
       <button
         class="settings-button settings-button-action settings-button-primary asset-button primary-asset-button"
         data-field="{{item.field}}"
+        disabled="{{!isEditing}}"
         bindtap="handleSelectAsset"
       >{{item.hasAsset ? '更换' : '选择'}}</button>
       <button
         wx:if="{{item.hasAsset}}"
         class="settings-button settings-button-action settings-button-secondary asset-button plain-asset-button"
         data-field="{{item.field}}"
+        disabled="{{!isEditing}}"
         bindtap="handleClearAsset"
       >清除</button>
     </view>

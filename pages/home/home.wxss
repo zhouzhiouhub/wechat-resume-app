@@ -222,11 +222,6 @@
   font-weight: 700;
 }
 
-.section-meta {
-  color: var(--resume-muted, #4b5563);
-  font-size: 24rpx;
-}
-
 .error-panel {
   margin-top: 16rpx;
   padding: 24rpx;

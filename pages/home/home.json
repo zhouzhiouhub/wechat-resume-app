@@ -10,6 +10,7 @@
     "tool-panel": "/components/tool-panel/tool-panel",
     "profile-asset-settings": "/components/profile-asset-settings/profile-asset-settings",
     "resume-preference-settings": "/components/resume-preference-settings/resume-preference-settings",
-    "resume-data-editor": "/components/resume-data-editor/resume-data-editor"
+    "resume-data-editor": "/components/resume-data-editor/resume-data-editor",
+    "settings-edit-button": "/components/settings-edit-button/settings-edit-button"
   }
 }

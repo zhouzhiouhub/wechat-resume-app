@@ -3,6 +3,10 @@ Component({
     editorState: {
       type: Object,
       value: {}
+    },
+    isEditing: {
+      type: Boolean,
+      value: false
     }
   },
 
@@ -46,6 +50,10 @@ Component({
     },
 
     emitEdit(detail) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       this.triggerEvent('editresumedata', detail);
     },
 
@@ -88,6 +96,10 @@ Component({
     },
 
     handleInput(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const dataset = event.currentTarget.dataset;
 
       this.setActiveFromDataset(dataset);
@@ -106,6 +118,10 @@ Component({
     },
 
     handleTypeTap(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const dataset = event.currentTarget.dataset;
 
       this.setActiveFromDataset({
@@ -122,6 +138,10 @@ Component({
     },
 
     handleContactLinkTypeTap(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const dataset = event.currentTarget.dataset;
 
       this.setActiveFromDataset({
@@ -138,6 +158,10 @@ Component({
     },
 
     handleContactLinkValueTypeTap(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const dataset = event.currentTarget.dataset;
 
       this.setActiveFromDataset({
@@ -154,6 +178,10 @@ Component({
     },
 
     handleAdd(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const dataset = event.currentTarget.dataset;
       const viewData = (this.data.editorState && this.data.editorState.viewData) || {};
 
@@ -192,6 +220,10 @@ Component({
     },
 
     handleRemove(event) {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const dataset = event.currentTarget.dataset;
 
       this.setActiveFromDataset(dataset);
@@ -208,6 +240,10 @@ Component({
     },
 
     handleRemoveActive() {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       const nextIndex = (value) => Math.max(this.getSafeIndex(value) - 1, 0);
 
       if (this.data.activeTab === 'skills') {
@@ -256,6 +292,10 @@ Component({
     },
 
     handleSave() {
+      if (!this.data.isEditing) {
+        return;
+      }
+
       this.triggerEvent('saveresumedata');
     }
   }

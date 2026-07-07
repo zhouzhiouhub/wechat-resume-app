@@ -148,6 +148,18 @@
   justify-content: space-between;
 }
 
+.is-readonly .text-input,
+.is-readonly .textarea-input {
+  color: var(--resume-muted, #4b5563);
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
+.is-readonly .editor-section .settings-button,
+.is-readonly .editor-actions .settings-button {
+  color: var(--resume-subtle, #6b7280);
+  background: var(--resume-surface-hover, #f9fafb);
+}
+
 @media (max-width: 420px) {
   .form-grid {
     grid-template-columns: minmax(0, 1fr);

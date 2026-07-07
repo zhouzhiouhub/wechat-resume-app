@@ -121,10 +121,15 @@
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">个人资料</text>
-              <text class="section-meta">本机保存</text>
+              <settings-edit-button
+                section-id="profile"
+                is-editing="{{settingsEditState.profile}}"
+                bind:toggle="onToggleSettingsEdit"
+              ></settings-edit-button>
             </view>
             <resume-preference-settings
               preference-state="{{preferenceState}}"
+              is-editing="{{settingsEditState.profile}}"
               bind:profileinput="onPreferenceProfileInput"
               bind:savepreferences="onSaveResumePreferences"
               bind:resetpreferences="onResetResumePreferences"
@@ -134,10 +139,15 @@
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">简历内容</text>
-              <text class="section-meta">本机保存</text>
+              <settings-edit-button
+                section-id="content"
+                is-editing="{{settingsEditState.content}}"
+                bind:toggle="onToggleSettingsEdit"
+              ></settings-edit-button>
             </view>
             <resume-data-editor
               editor-state="{{resumeDataState}}"
+              is-editing="{{settingsEditState.content}}"
               bind:editresumedata="onEditResumeData"
               bind:saveresumedata="onSaveResumeData"
             ></resume-data-editor>
@@ -146,10 +156,15 @@
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">素材</text>
-              <text class="section-meta">本机保存</text>
+              <settings-edit-button
+                section-id="assets"
+                is-editing="{{settingsEditState.assets}}"
+                bind:toggle="onToggleSettingsEdit"
+              ></settings-edit-button>
             </view>
             <profile-asset-settings
               asset-state="{{profileAssetState}}"
+              is-editing="{{settingsEditState.assets}}"
               bind:selectasset="onSelectProfileAsset"
               bind:clearasset="onClearProfileAsset"
             ></profile-asset-settings>
@@ -158,9 +173,15 @@
           <view class="settings-panel">
             <view class="section-header">
               <text class="section-heading">主题</text>
+              <settings-edit-button
+                section-id="theme"
+                is-editing="{{settingsEditState.theme}}"
+                bind:toggle="onToggleSettingsEdit"
+              ></settings-edit-button>
             </view>
             <theme-switcher
               options="{{themeOptions}}"
+              is-editing="{{settingsEditState.theme}}"
               bind:change="onChangeTheme"
             ></theme-switcher>
           </view>

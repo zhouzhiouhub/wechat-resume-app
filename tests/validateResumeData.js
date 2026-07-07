@@ -1057,12 +1057,24 @@ runCheck('resume preference settings are wired through home contact and tool pan
     path.join(__dirname, '..', 'components', 'contact-panel', 'contact-panel.wxml'),
     'utf8'
   );
+  const settingsEditButtonWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'settings-edit-button', 'settings-edit-button.wxml'),
+    'utf8'
+  );
+  const settingsEditButtonJs = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'settings-edit-button', 'settings-edit-button.js'),
+    'utf8'
+  );
   const toolPanelWxml = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'tool-panel', 'tool-panel.wxml'),
     'utf8'
   );
   const assetSettingsWxml = fs.readFileSync(
     path.join(__dirname, '..', 'components', 'profile-asset-settings', 'profile-asset-settings.wxml'),
+    'utf8'
+  );
+  const assetSettingsJs = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'profile-asset-settings', 'profile-asset-settings.js'),
     'utf8'
   );
   const preferenceWxml = fs.readFileSync(
@@ -1093,6 +1105,14 @@ runCheck('resume preference settings are wired through home contact and tool pan
     path.join(__dirname, '..', 'components', 'resume-data-editor', 'resume-data-editor.wxss'),
     'utf8'
   );
+  const themeSwitcherWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'theme-switcher', 'theme-switcher.wxml'),
+    'utf8'
+  );
+  const themeSwitcherJs = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'theme-switcher', 'theme-switcher.js'),
+    'utf8'
+  );
   const settingsButtonsWxss = fs.readFileSync(
     path.join(__dirname, '..', 'styles', 'settings-buttons.wxss'),
     'utf8'
@@ -1101,9 +1121,20 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeJson.includes('resume-preference-settings'));
   assert.ok(homeJson.includes('resume-data-editor'));
   assert.ok(homeJson.includes('tool-panel'));
+  assert.ok(homeJson.includes('settings-edit-button'));
   assert.ok(homeWxml.includes('preference-state="{{preferenceState}}"'));
   assert.ok(homeWxml.includes('editor-state="{{resumeDataState}}"'));
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
+  assert.ok(homeWxml.includes('<settings-edit-button'));
+  assert.ok(homeWxml.includes('section-id="profile"'));
+  assert.ok(homeWxml.includes('is-editing="{{settingsEditState.profile}}"'));
+  assert.ok(homeWxml.includes('section-id="content"'));
+  assert.ok(homeWxml.includes('is-editing="{{settingsEditState.content}}"'));
+  assert.ok(homeWxml.includes('section-id="assets"'));
+  assert.ok(homeWxml.includes('is-editing="{{settingsEditState.assets}}"'));
+  assert.ok(homeWxml.includes('section-id="theme"'));
+  assert.ok(homeWxml.includes('is-editing="{{settingsEditState.theme}}"'));
+  assert.ok(!homeWxml.includes('本机保存'));
   assert.ok(homeWxml.includes('bind:copyphone="onCopyPhone"'));
   assert.ok(!homeWxml.includes('bind:callphone="onCallPhone"'));
   assert.ok(homeWxml.includes('bind:copylink="onCopyContactLink"'));
@@ -1118,9 +1149,15 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeJs.includes('localResumeDataService.saveResumeData'));
   assert.ok(homeJs.includes('resumePreferenceService.saveResumePreferences'));
   assert.ok(homeJs.includes('resumePreferenceService.clearResumePreferences'));
+  assert.ok(homeJs.includes('settingsEditState'));
+  assert.ok(homeJs.includes('canEditSetting'));
+  assert.ok(homeJs.includes('onToggleSettingsEdit'));
+  assert.ok(homeJs.includes("title: '请先点击编辑'"));
   assert.ok(homeJs.includes('contactService.copyText'));
   assert.ok(homeJs.includes('onCopyPhone'));
   assert.ok(!homeJs.includes('onPreferenceDisplayChange'));
+  assert.ok(settingsEditButtonWxml.includes('edit-icon'));
+  assert.ok(settingsEditButtonJs.includes("this.triggerEvent('toggle'"));
   assert.ok(contactPanelWxml.includes('{{contact.phone}}'));
   assert.ok(contactPanelWxml.includes('bindtap="handleCopyPhone"'));
   assert.ok(!contactPanelWxml.includes('handleCallPhone'));
@@ -1137,6 +1174,7 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(toolPanelWxml.includes('display.showFeedback'));
   assert.ok(toolPanelWxml.includes('display.showCustomerService'));
   assert.ok(preferenceWxml.includes('bindinput="handleProfileInput"'));
+  assert.ok(preferenceWxml.includes('disabled="{{!isEditing}}"'));
   assert.ok(preferenceWxml.includes('data-field="phone"'));
   assert.ok(!preferenceWxml.includes('preference-title-row'));
   assert.ok(!preferenceWxml.includes('preference-meta'));
@@ -1145,10 +1183,18 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(!preferenceWxml.includes('默认栏目'));
   assert.ok(!preferenceWxml.includes('handleFeaturedProjectCountStep'));
   assert.ok(!preferenceWxml.includes('handleDisplaySwitchChange'));
+  assert.ok(preferenceJs.includes('if (!this.data.isEditing)'));
   assert.ok(!preferenceJs.includes("field: 'initialSection'"));
   assert.ok(preferenceWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(preferenceWxss.includes('.is-readonly .text-input'));
   assert.ok(assetSettingsWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(assetSettingsWxml.includes('disabled="{{!isEditing}}"'));
+  assert.ok(assetSettingsJs.includes('if (!this.data.isEditing)'));
   assert.ok(dataEditorWxss.includes('@import "../../styles/settings-buttons.wxss";'));
+  assert.ok(dataEditorWxml.includes('disabled="{{!isEditing}}"'));
+  assert.ok(dataEditorJs.includes('if (!this.data.isEditing)'));
+  assert.ok(themeSwitcherWxml.includes('theme-switcher is-readonly'));
+  assert.ok(themeSwitcherJs.includes('if (!this.data.isEditing)'));
   assert.ok(preferenceWxml.includes('preference-actions settings-button-row is-between'));
   assert.ok(preferenceWxml.includes('settings-button settings-button-action settings-button-primary'));
   assert.ok(preferenceWxml.includes('settings-button settings-button-action settings-button-secondary'));

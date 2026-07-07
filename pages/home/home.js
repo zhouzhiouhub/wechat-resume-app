@@ -15,6 +15,12 @@ Page({
     themeClass: '',
     themeOptions: [],
     activeTheme: '',
+    settingsEditState: {
+      profile: false,
+      content: false,
+      assets: false,
+      theme: false
+    },
     profileAssetState: profileAssetService.createProfileAssetState(null),
     preferenceState: resumePreferenceService.createPreferenceStateFromDraft({}, {}),
     resumeDataState: resumeDataEditorService.createEditorState(),
@@ -162,16 +168,64 @@ Page({
     });
   },
 
+  canEditSetting(sectionId) {
+    const settingsEditState = this.data.settingsEditState || {};
+
+    return Boolean(settingsEditState[sectionId]);
+  },
+
+  closeSettingEditor(sectionId) {
+    this.setData({
+      settingsEditState: {
+        ...(this.data.settingsEditState || {}),
+        [sectionId]: false
+      }
+    });
+  },
+
+  onToggleSettingsEdit(event) {
+    const sectionId = event.detail && event.detail.sectionId;
+
+    if (!sectionId) {
+      return;
+    }
+
+    this.setData({
+      settingsEditState: {
+        ...(this.data.settingsEditState || {}),
+        [sectionId]: !this.canEditSetting(sectionId)
+      }
+    });
+  },
+
   onChangeTheme(event) {
+    if (!this.canEditSetting('theme')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     const themeId = event.detail && event.detail.themeId;
     const savedThemeId = themeService.saveThemeId(wx, themeId);
     const themeState = themeService.createThemeState(savedThemeId);
 
     themeService.applyNavigationBar(wx, themeState.activeTheme);
-    this.setData(themeState);
+    this.setData({
+      ...themeState,
+      settingsEditState: {
+        ...(this.data.settingsEditState || {}),
+        theme: false
+      }
+    });
   },
 
   onPreferenceProfileInput(event) {
+    if (!this.canEditSetting('profile')) {
+      return;
+    }
+
     const field = event.detail && event.detail.field;
     const value = event.detail && event.detail.value;
     const preferenceState = this.data.preferenceState || {};
@@ -189,6 +243,14 @@ Page({
   },
 
   onSaveResumePreferences() {
+    if (!this.canEditSetting('profile')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     try {
       const preferences = resumePreferenceService.saveResumePreferences(
         wx,
@@ -201,6 +263,7 @@ Page({
 
       localResumeDataService.saveResumeData(wx, nextResumeData);
       this.refreshResumeCustomization();
+      this.closeSettingEditor('profile');
       wx.showToast({
         title: '已保存',
         icon: 'success'
@@ -214,8 +277,17 @@ Page({
   },
 
   onResetResumePreferences() {
+    if (!this.canEditSetting('profile')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     resumePreferenceService.clearResumePreferences(wx);
     this.refreshResumeCustomization();
+    this.closeSettingEditor('profile');
     wx.showToast({
       title: '已恢复',
       icon: 'success'
@@ -242,6 +314,10 @@ Page({
   },
 
   onEditResumeData(event) {
+    if (!this.canEditSetting('content')) {
+      return;
+    }
+
     this.setData({
       resumeDataState: resumeDataEditorService.applyEdit(
         this.data.resumeDataState,
@@ -251,6 +327,14 @@ Page({
   },
 
   onSaveResumeData() {
+    if (!this.canEditSetting('content')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     try {
       const payload = localResumeDataService.saveResumeData(
         wx,
@@ -259,6 +343,7 @@ Page({
 
       this.syncProfilePreferencesFromResumeData(payload.resumeData);
       this.refreshResumeCustomization();
+      this.closeSettingEditor('content');
       wx.showToast({
         title: '已保存',
         icon: 'success'
@@ -272,11 +357,20 @@ Page({
   },
 
   onResetResumeData() {
+    if (!this.canEditSetting('content')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     try {
       const resumeData = localResumeDataService.clearResumeData(wx);
 
       this.syncProfilePreferencesFromResumeData(resumeData);
       this.refreshResumeCustomization();
+      this.closeSettingEditor('content');
       wx.showToast({
         title: '已恢复模板',
         icon: 'success'
@@ -290,11 +384,20 @@ Page({
   },
 
   onSelectProfileAsset(event) {
+    if (!this.canEditSetting('assets')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     const field = event.detail && event.detail.field;
 
     profileAssetService.chooseAndSaveProfileAsset(wx, field)
       .then(() => {
         this.refreshResumeCustomization();
+        this.closeSettingEditor('assets');
         wx.showToast({
           title: '已选择',
           icon: 'success'
@@ -309,12 +412,21 @@ Page({
   },
 
   onClearProfileAsset(event) {
+    if (!this.canEditSetting('assets')) {
+      wx.showToast({
+        title: '请先点击编辑',
+        icon: 'none'
+      });
+      return;
+    }
+
     const field = event.detail && event.detail.field;
 
     try {
       profileAssetService.clearProfileAsset(wx, field);
 
       this.refreshResumeCustomization();
+      this.closeSettingEditor('assets');
       wx.showToast({
         title: '已清除',
         icon: 'success'
