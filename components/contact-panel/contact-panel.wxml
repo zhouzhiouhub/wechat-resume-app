@@ -4,14 +4,36 @@
   </view>
 
   <view class="contact-card">
-    <view class="contact-list">
-      <view class="contact-info">
+    <view class="contact-rows">
+      <view class="contact-row">
         <text class="contact-label">邮箱</text>
-        <text class="contact-value">{{contact.email}}</text>
+        <view
+          class="contact-value contact-value-action"
+          aria-role="button"
+          bindtap="handleCopyEmail"
+        >
+          <text>{{contact.email}}</text>
+        </view>
       </view>
-      <view wx:if="{{contact.phone}}" class="contact-info">
+      <view wx:if="{{contact.phone}}" class="contact-row">
         <text class="contact-label">手机号</text>
-        <text class="contact-value">{{contact.phone}}</text>
+        <view
+          class="contact-value contact-value-action"
+          aria-role="button"
+          bindtap="handleCopyPhone"
+        >
+          <text>{{contact.phone}}</text>
+        </view>
+      </view>
+      <view class="contact-row">
+        <text class="contact-label">微信</text>
+        <view
+          class="contact-value contact-value-action"
+          aria-role="button"
+          bindtap="handleShowWechatQr"
+        >
+          <text>{{contact.wechatQr ? '二维码已配置' : '二维码待补充'}}</text>
+        </view>
       </view>
     </view>
 
@@ -24,36 +46,17 @@
         wx:key="name"
         class="contact-link"
       >
-        <view class="contact-link-main">
+        <view
+          class="contact-link-main"
+          aria-role="button"
+          data-link-index="{{linkIndex}}"
+          bindtap="handleCopyLink"
+        >
           <text class="contact-link-type">{{link.typeLabel}}</text>
           <text class="contact-link-name">{{link.name}}</text>
           <text class="contact-link-value">{{link.value}}</text>
         </view>
-        <button
-          class="link-copy-button"
-          data-link-index="{{linkIndex}}"
-          bindtap="handleCopyLink"
-        >{{link.actionLabel}}</button>
       </view>
-    </view>
-
-    <view class="contact-actions">
-      <button class="action-button primary-button" bindtap="handleCopyEmail">复制邮箱</button>
-      <button
-        wx:if="{{contact.phone}}"
-        class="action-button secondary-button"
-        bindtap="handleCallPhone"
-      >拨打电话</button>
-      <button
-        wx:if="{{contact.wechatQr}}"
-        class="action-button secondary-button"
-        bindtap="handleShowWechatQr"
-      >查看微信二维码</button>
-      <button
-        wx:else
-        class="action-button secondary-button muted-button"
-        bindtap="handleShowWechatQr"
-      >二维码待补充</button>
     </view>
   </view>
 </view>

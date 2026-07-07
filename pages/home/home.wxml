@@ -102,7 +102,7 @@
           <contact-panel
             contact="{{contact}}"
             bind:copyemail="onCopyEmail"
-            bind:callphone="onCallPhone"
+            bind:copyphone="onCopyPhone"
             bind:showwechatqr="onShowWechatQr"
             bind:copylink="onCopyContactLink"
           ></contact-panel>

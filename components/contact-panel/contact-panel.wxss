@@ -18,15 +18,23 @@
 }
 
 .contact-card {
-  padding: 24rpx;
+  padding: 22rpx 24rpx;
   background: var(--resume-surface, #ffffff);
   border: 1rpx solid var(--resume-border, #e5e7eb);
   border-radius: 8rpx;
 }
 
-.contact-list {
+.contact-rows {
   display: grid;
-  gap: 14rpx;
+  gap: 18rpx;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 88rpx minmax(0, 1fr);
+  align-items: center;
+  gap: 18rpx;
+  min-width: 0;
 }
 
 .contact-links {
@@ -45,10 +53,6 @@
 }
 
 .contact-link {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 144rpx;
-  align-items: center;
-  gap: 12rpx;
   padding: 16rpx;
   background: var(--resume-surface-hover, #f9fafb);
   border-radius: 8rpx;
@@ -80,74 +84,46 @@
   white-space: nowrap;
 }
 
-.link-copy-button {
-  min-height: 64rpx;
-  padding: 0 10rpx;
-  color: var(--resume-accent-text, #3730a3);
-  background: var(--resume-accent-soft, #eef2ff);
-  border-radius: 8rpx;
-  font-size: 22rpx;
-  font-weight: 700;
-  line-height: 64rpx;
-}
-
-.link-copy-button::after {
-  border: 0;
-}
-
-.contact-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20rpx;
-}
-
 .contact-label {
-  color: var(--resume-subtle, #6b7280);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 42rpx;
+  padding: 0 8rpx;
+  color: var(--resume-text, #111827);
+  background: var(--resume-surface, #ffffff);
+  border: 1rpx solid var(--resume-border, #d1d5db);
+  border-radius: 4rpx;
   font-size: 24rpx;
+  font-weight: 700;
+  line-height: 42rpx;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .contact-value {
-  flex: 1;
+  box-sizing: border-box;
   min-width: 0;
-  color: var(--resume-text, #111827);
-  font-size: 28rpx;
+  color: var(--resume-muted, #374151);
+  font-size: 26rpx;
   font-weight: 600;
-  line-height: 1.4;
-  text-align: right;
-  word-break: break-all;
+  line-height: 44rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.contact-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12rpx;
-  margin-top: 20rpx;
+.contact-value-action {
+  min-height: 44rpx;
+  padding: 0 4rpx;
+  color: var(--resume-text, #111827);
+  border-radius: 4rpx;
 }
 
-.action-button {
-  min-height: 72rpx;
-  padding: 0 12rpx;
-  border-radius: 8rpx;
-  font-size: 24rpx;
-  line-height: 72rpx;
-}
-
-.action-button::after {
-  border: 0;
-}
-
-.primary-button {
-  background: var(--resume-text, #111827);
-  color: var(--resume-inverse, #ffffff);
-}
-
-.secondary-button {
-  background: var(--resume-success-soft, #ecfdf5);
-  color: var(--resume-success, #047857);
-}
-
-.muted-button {
-  background: var(--resume-accent-soft, #f3f4f6);
-  color: var(--resume-subtle, #6b7280);
+.contact-value text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

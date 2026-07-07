@@ -15,19 +15,19 @@ Component({
       });
     },
 
+    handleCopyPhone() {
+      const contact = this.data.contact || {};
+
+      this.triggerEvent('copyphone', {
+        phone: contact.phone
+      });
+    },
+
     handleShowWechatQr() {
       const contact = this.data.contact || {};
 
       this.triggerEvent('showwechatqr', {
         wechatQr: contact.wechatQr
-      });
-    },
-
-    handleCallPhone() {
-      const contact = this.data.contact || {};
-
-      this.triggerEvent('callphone', {
-        phone: contact.phone
       });
     },
 

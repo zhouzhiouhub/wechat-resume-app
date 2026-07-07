@@ -369,7 +369,7 @@ Page({
       });
   },
 
-  onCallPhone(event) {
+  onCopyPhone(event) {
     const phone = event.detail && event.detail.phone;
 
     if (!phone) {
@@ -380,10 +380,21 @@ Page({
       return;
     }
 
-    contactService.callPhone(wx, phone)
+    this.recordAnalyticsEvent(analyticsService.EVENT_NAMES.CONTACT_COPY, {
+      page: 'home',
+      field: 'phone'
+    });
+
+    contactService.copyText(wx, phone)
+      .then(() => {
+        wx.showToast({
+          title: '手机号已复制',
+          icon: 'success'
+        });
+      })
       .catch(() => {
         wx.showToast({
-          title: '拨打失败',
+          title: '复制失败，请稍后再试',
           icon: 'none'
         });
       });
