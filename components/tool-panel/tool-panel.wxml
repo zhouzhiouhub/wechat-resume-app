@@ -1,7 +1,6 @@
 <view class="tool-panel">
   <view class="section-header">
     <text class="section-heading">工具</text>
-    <text class="section-meta">分享与辅助操作</text>
   </view>
 
   <view class="tool-grid">

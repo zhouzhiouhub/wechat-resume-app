@@ -1,7 +1,6 @@
 <view class="timeline">
   <view class="section-header">
     <text class="section-heading">履历时间轴</text>
-    <text class="section-meta">按时间倒序</text>
   </view>
 
   <view class="timeline-list">

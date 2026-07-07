@@ -16,11 +16,6 @@
   font-weight: 700;
 }
 
-.section-meta {
-  color: var(--resume-muted, #4b5563);
-  font-size: 24rpx;
-}
-
 .highlight-list {
   display: flex;
   flex-wrap: wrap;

@@ -393,7 +393,8 @@ runCheck('home section service keeps all content as the quick scan entry', () =>
   assert.strictEqual(defaultState.showProjects, true);
   assert.strictEqual(defaultState.showTimeline, true);
   assert.strictEqual(defaultState.showContact, true);
-  assert.strictEqual(defaultState.showTools, true);
+  assert.strictEqual(defaultState.showTools, false);
+  assert.ok(defaultState.activeSectionMeta.indexOf('工具') === -1);
   assert.strictEqual(defaultState.showSettings, false);
   assert.strictEqual(projectState.showProfile, false);
   assert.strictEqual(projectState.showProjects, true);
@@ -795,6 +796,14 @@ runCheck('M4 pages are registered and wired through isolated entries', () => {
     path.join(__dirname, '..', 'components', 'tool-panel', 'tool-panel.wxml'),
     'utf8'
   );
+  const skillOverviewWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'skill-overview', 'skill-overview.wxml'),
+    'utf8'
+  );
+  const timelineWxml = fs.readFileSync(
+    path.join(__dirname, '..', 'components', 'timeline', 'timeline.wxml'),
+    'utf8'
+  );
   const dashboardJs = fs.readFileSync(
     path.join(__dirname, '..', 'pages', 'admin-dashboard', 'admin-dashboard.js'),
     'utf8'
@@ -813,6 +822,11 @@ runCheck('M4 pages are registered and wired through isolated entries', () => {
   assert.ok(homeJs.includes('/pages/admin-dashboard/admin-dashboard'));
   assert.ok(contactPanelWxml.includes('bindtap="handleCallPhone"'));
   assert.ok(toolPanelWxml.includes('bindtap="handleOpenFeedback"'));
+  assert.ok(!homeWxml.includes('精选 {{featuredProjectCount}} 项'));
+  assert.ok(!skillOverviewWxml.includes('按能力场景归类'));
+  assert.ok(!timelineWxml.includes('按时间倒序'));
+  assert.ok(!contactPanelWxml.includes('邮箱 / 手机 / 微信'));
+  assert.ok(!toolPanelWxml.includes('分享与辅助操作'));
   assert.ok(dashboardJs.includes('analyticsService.createDashboardState'));
   assert.ok(dashboardJs.includes('feedbackService.getFeedbackSummary'));
   assert.ok(feedbackJs.includes('feedbackService.submitFeedback'));
@@ -959,7 +973,7 @@ runCheck('M5 cloud, auth, notification and release files are wired', () => {
   assert.ok(appJs.includes('wxApi.cloud.init'));
   assert.ok(homeJs.includes('authService.grantAdminAccess'));
   assert.ok(homeJs.includes('/pages/print/print'));
-  assert.ok(homeWxml.includes('精选 {{featuredProjectCount}} 项'));
+  assert.ok(!homeWxml.includes('精选 {{featuredProjectCount}} 项'));
   assert.ok(homeWxml.includes('bind:openprint="onOpenPrint"'));
   assert.ok(projectCardWxml.includes('lazy-load="{{true}}"'));
   assert.ok(projectDetailWxml.includes('lazy-load="{{true}}"'));
@@ -1085,6 +1099,8 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(homeWxml.includes('display="{{displayPreferences}}"'));
   assert.ok(homeWxml.includes('bind:callphone="onCallPhone"'));
   assert.ok(homeWxml.includes('bind:copylink="onCopyContactLink"'));
+  assert.ok(!homeWxml.includes('content-meta'));
+  assert.ok(!homeWxml.includes('{{activeSectionMeta}}'));
   assert.ok(homeWxml.includes('bind:savepreferences="onSaveResumePreferences"'));
   assert.ok(!homeWxml.includes('bind:displaychange="onPreferenceDisplayChange"'));
   assert.ok(homeWxml.includes('bind:saveresumedata="onSaveResumeData"'));

@@ -1,7 +1,6 @@
 <view class="skill-overview">
   <view class="section-header">
     <text class="section-heading">核心技能</text>
-    <text class="section-meta">按能力场景归类</text>
   </view>
 
   <view class="highlight-list">

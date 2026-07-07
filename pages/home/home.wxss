@@ -200,15 +200,6 @@
   text-align: center;
 }
 
-.content-meta {
-  display: block;
-  margin-top: 8rpx;
-  color: var(--resume-muted, #4b5563);
-  font-size: 24rpx;
-  line-height: 1.4;
-  text-align: center;
-}
-
 .content-section {
   margin-bottom: 28rpx;
 }
@@ -297,7 +288,4 @@
     font-size: 34rpx;
   }
 
-  .content-meta {
-    font-size: 22rpx;
-  }
 }

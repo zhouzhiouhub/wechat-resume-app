@@ -1,7 +1,6 @@
 <view class="contact-panel">
   <view class="section-header">
     <text class="section-heading">联系我</text>
-    <text class="section-meta">邮箱 / 手机 / 微信</text>
   </view>
 
   <view class="contact-card">

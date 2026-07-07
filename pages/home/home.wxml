@@ -20,7 +20,6 @@
 
         <view class="content-heading">
           <text class="content-title">{{activeSectionTitle}}</text>
-          <text class="content-meta">{{activeSectionMeta}}</text>
         </view>
 
       </view>
@@ -86,7 +85,6 @@
         <view wx:if="{{showProjects}}" class="content-section section">
           <view class="section-header">
             <text class="section-heading">重点项目</text>
-            <text class="section-meta">精选 {{featuredProjectCount}} 项</text>
           </view>
           <project-card
             wx:for="{{featuredProjects}}"
