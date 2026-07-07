@@ -52,51 +52,35 @@
           <text class="nested-title">技能 {{skillIndex + 1}}</text>
         </view>
 
-        <view class="form-grid">
-          <view class="form-field">
-            <text class="field-label">名称</text>
-            <input
-              class="text-input"
-              value="{{skill.name}}"
-              data-section="skill"
-              data-group-index="{{groupIndex}}"
-              data-skill-index="{{skillIndex}}"
-              data-field="name"
-              maxlength="30"
-              disabled="{{!isEditing}}"
-              bindinput="handleInput"
-            />
-          </view>
-
-          <view class="form-field">
-            <text class="field-label">熟练度</text>
-            <input
-              class="text-input"
-              value="{{skill.level}}"
-              type="number"
-              data-section="skill"
-              data-group-index="{{groupIndex}}"
-              data-skill-index="{{skillIndex}}"
-              data-field="level"
-              disabled="{{!isEditing}}"
-              bindinput="handleInput"
-            />
-          </view>
-        </view>
-
         <view class="form-field">
-          <text class="field-label">标签</text>
+          <text class="field-label">名称</text>
           <input
             class="text-input"
-            value="{{skill.tagsText}}"
+            value="{{skill.name}}"
             data-section="skill"
             data-group-index="{{groupIndex}}"
             data-skill-index="{{skillIndex}}"
-            data-field="tagsText"
-            maxlength="80"
+            data-field="name"
+            maxlength="30"
             disabled="{{!isEditing}}"
             bindinput="handleInput"
           />
+        </view>
+
+        <view class="form-field">
+          <text class="field-label">描述</text>
+          <textarea
+            class="textarea-input"
+            value="{{skill.description}}"
+            data-section="skill"
+            data-group-index="{{groupIndex}}"
+            data-skill-index="{{skillIndex}}"
+            data-field="description"
+            maxlength="160"
+            auto-height
+            disabled="{{!isEditing}}"
+            bindinput="handleInput"
+          ></textarea>
         </view>
 
         <button

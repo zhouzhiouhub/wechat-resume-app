@@ -17,7 +17,7 @@ const resumeData = {
     {
       groupName: '技能组模板',
       skills: [
-        { name: '技能模板', level: 70, tags: ['标签模板'] }
+        { name: '技能模板', description: '这里填写技能能力、使用场景或代表经验。' }
       ]
     }
   ],

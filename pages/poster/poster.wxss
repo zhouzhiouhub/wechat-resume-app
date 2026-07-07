@@ -84,13 +84,20 @@
 
 .poster-skill {
   display: flex;
+  flex-wrap: wrap;
   gap: 8rpx;
+  max-width: 100%;
   padding: 10rpx 16rpx;
   border-radius: 8rpx;
   background: var(--resume-accent-soft, #eef2ff);
   color: var(--resume-accent-text, #3730a3);
   font-size: 24rpx;
   font-weight: 700;
+}
+
+.poster-skill-description {
+  font-weight: 400;
+  word-break: break-all;
 }
 
 .poster-project {

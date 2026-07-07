@@ -10,7 +10,7 @@
       class="highlight-tag"
     >
       <text class="highlight-name">{{item.name}}</text>
-      <text class="highlight-level">{{item.level}}%</text>
+      <text class="highlight-description">{{item.description}}</text>
     </view>
   </view>
 
@@ -29,13 +29,7 @@
       >
         <view class="skill-main">
           <text class="skill-name">{{skill.name}}</text>
-          <text class="skill-tags">{{skill.tagText}}</text>
-        </view>
-        <view class="skill-meter">
-          <view class="skill-track">
-            <view class="skill-progress" style="width: {{skill.level}}%;"></view>
-          </view>
-          <text class="skill-level">{{skill.level}}%</text>
+          <text class="skill-tags">{{skill.description}}</text>
         </view>
       </view>
     </view>

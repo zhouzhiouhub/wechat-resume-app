@@ -101,7 +101,9 @@ runCheck('home resume exposes reusable component inputs', () => {
 
   homeResume.skillGroups.forEach((group) => {
     group.skills.forEach((skill) => {
+      assert.strictEqual(typeof skill.description, 'string');
       assert.strictEqual(typeof skill.tagText, 'string');
+      assert.ok(skill.description.length > 0);
     });
   });
 
@@ -131,14 +133,33 @@ runCheck('timeline items are normalized and sorted by recent date', () => {
   }
 });
 
-runCheck('skill levels stay within 0-100', () => {
+runCheck('skill descriptions are normalized without proficiency percentages', () => {
   const skillGroups = resumeService.getSkillGroups();
+  const legacyResumeData = JSON.parse(JSON.stringify(resumeData));
 
   skillGroups.forEach((group) => {
     group.skills.forEach((skill) => {
-      assert.ok(validator.isValidSkillLevel(skill.level), `${skill.name} level is invalid`);
+      assert.ok(validator.isNonEmptyString(skill.description), `${skill.name} description is missing`);
+      assert.strictEqual(skill.tagText, skill.description);
+      assert.strictEqual(Object.prototype.hasOwnProperty.call(skill, 'level'), false);
     });
   });
+
+  legacyResumeData.skillGroups[0].skills[0] = {
+    name: 'Legacy Skill',
+    level: 80
+  };
+
+  const normalizedLegacyResume = resumeMapper.mapResumeData(legacyResumeData);
+
+  assert.strictEqual(
+    normalizedLegacyResume.skillGroups[0].skills[0].description,
+    '补充技能描述'
+  );
+  assert.strictEqual(
+    Object.prototype.hasOwnProperty.call(normalizedLegacyResume.skillGroups[0].skills[0], 'level'),
+    false
+  );
 });
 
 runCheck('project ids are unique and detail lookup works', () => {
@@ -225,8 +246,8 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
     section: 'skill',
     groupIndex: 0,
     skillIndex: 0,
-    field: 'tagsText',
-    value: '微信小程序、组件化、云开发'
+    field: 'description',
+    value: '微信小程序组件化、云开发与发布优化。'
   });
   editorState = resumeDataEditorService.applyEdit(editorState, {
     action: 'add',
@@ -339,9 +360,9 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
   const normalizedResume = resumeMapper.mapResumeData(editorState.draft);
 
   assert.strictEqual(editorState.draft.skillGroups[0].groupName, '小程序能力');
-  assert.deepStrictEqual(
-    editorState.draft.skillGroups[0].skills[0].tags,
-    ['微信小程序', '组件化', '云开发']
+  assert.strictEqual(
+    editorState.draft.skillGroups[0].skills[0].description,
+    '微信小程序组件化、云开发与发布优化。'
   );
   assert.strictEqual(editorState.draft.skillGroups[0].skills.length, 2);
   assert.notStrictEqual(
@@ -355,6 +376,10 @@ runCheck('resume data editor service supports visual CRUD operations', () => {
   assert.strictEqual(editorState.draft.profile.contact.links[0].name, '证书编号');
   assert.strictEqual(editorState.draft.profile.contact.links[0].valueType, 'text');
   assert.ok(normalizedResume.projects.length >= 2);
+  assert.strictEqual(
+    normalizedResume.skillGroups[0].skills[0].description,
+    '微信小程序组件化、云开发与发布优化。'
+  );
   assert.strictEqual(normalizedResume.profile.contact.links[0].typeLabel, '证书');
   assert.strictEqual(normalizedResume.profile.contact.links[0].actionLabel, '复制内容');
 });
@@ -690,6 +715,7 @@ runCheck('poster model is created from unified resume data', () => {
     poster.skillTags.length,
     Math.min(resume.skillGroups.reduce((total, group) => total + group.skills.length, 0), 3)
   );
+  assert.ok(poster.skillTags.every((skill) => validator.isNonEmptyString(skill.description)));
   assert.strictEqual(poster.projects.length, Math.min(resume.projects.length, 2));
   assert.strictEqual(renderPlan.canvas.width, 750);
   assert.strictEqual(renderPlan.canvas.height, 1200);
@@ -698,6 +724,7 @@ runCheck('poster model is created from unified resume data', () => {
   assert.ok(renderPlan.commands.length > 10);
   assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.name));
   assert.ok(renderPlan.commands.some((command) => command.type === 'text' && command.text === resume.profile.contact.phone));
+  assert.ok(!renderPlan.commands.some((command) => command.type === 'text' && /\d+%/.test(command.text)));
   assert.ok(renderPlanWithLink.commands.some((command) => command.type === 'text' && command.text.indexOf('GitHub') !== -1));
   assert.ok(renderPlan.commands.some((command) => command.type === 'roundRect'));
   assert.ok(renderPlan.commands.every((command) => ['roundRect', 'text', 'image'].includes(command.type)));
@@ -1279,6 +1306,9 @@ runCheck('resume preference settings are wired through home contact and tool pan
   assert.ok(assetSettingsJs.includes('if (!this.data.isEditing)'));
   assert.ok(dataEditorWxss.includes('@import "../../styles/settings-buttons.wxss";'));
   assert.ok(dataEditorWxml.includes('disabled="{{!isEditing}}"'));
+  assert.ok(dataEditorWxml.includes('data-field="description"'));
+  assert.ok(!dataEditorWxml.includes('data-field="level"'));
+  assert.ok(!dataEditorWxml.includes('熟练度'));
   assert.ok(dataEditorWxml.includes('<view wx:if="{{isEditing}}" class="tab-list settings-button-row is-between">'));
   assert.ok(dataEditorWxml.includes('<view wx:if="{{isEditing}}" class="editor-actions settings-button-row is-between">'));
   assert.ok(dataEditorWxml.includes('wx:if="{{isEditing && group.skills.length > 1}}"'));

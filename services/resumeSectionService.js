@@ -20,7 +20,7 @@ const HOME_SECTIONS = [
     id: HOME_SECTION_IDS.SKILLS,
     label: '技能',
     title: '技能能力',
-    meta: '技术栈与熟练度'
+    meta: '技术栈与能力描述'
   },
   {
     id: HOME_SECTION_IDS.PROJECTS,

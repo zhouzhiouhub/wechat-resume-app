@@ -127,17 +127,16 @@ function normalizeSkill(skill, groupPath, index) {
   assertPlainObject(skill, path);
   assertNonEmptyString(skill.name, `${path}.name`);
 
-  if (!validator.isValidSkillLevel(skill.level)) {
-    throw createError(`${path}.level`, 'must be a number between 0 and 100');
-  }
-
   const tags = normalizeStringArray(skill.tags || [], `${path}.tags`, { allowEmpty: true });
+  const description = normalizeOptionalString(skill.description)
+    || tags.join(' / ')
+    || '补充技能描述';
 
   return {
     name: skill.name.trim(),
-    level: skill.level,
+    description,
     tags,
-    tagText: tags.join(' / ')
+    tagText: description
   };
 }
 
@@ -300,11 +299,11 @@ function normalizeTimeline(timeline) {
 function getSkillHighlights(skillGroups, limit) {
   return skillGroups
     .reduce((skills, group) => skills.concat(group.skills), [])
-    .sort((left, right) => right.level - left.level)
     .slice(0, limit)
     .map((skill) => ({
       name: skill.name,
-      level: skill.level
+      description: skill.description,
+      tagText: skill.tagText
     }));
 }
 

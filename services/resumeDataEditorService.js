@@ -42,16 +42,6 @@ function formatListText(items) {
   return Array.isArray(items) ? items.join('、') : '';
 }
 
-function normalizeSkillLevel(value) {
-  const level = Number(value);
-
-  if (!Number.isFinite(level)) {
-    return 0;
-  }
-
-  return Math.min(Math.max(Math.round(level), 0), 100);
-}
-
 function getDraftFromState(state) {
   if (state && state.draft) {
     return cloneData(state.draft);
@@ -71,9 +61,12 @@ function getIndex(value) {
 }
 
 function createViewSkill(skill) {
+  const tagsText = formatListText(skill.tags);
+
   return {
     ...skill,
-    tagsText: formatListText(skill.tags)
+    description: normalizeText(skill.description) || tagsText,
+    tagsText
   };
 }
 
@@ -181,11 +174,14 @@ function createUniqueLabel(items, field, fallback) {
 function createSkill(sourceSkill, skills) {
   const skill = cloneTemplate(sourceSkill, {
     name: '新技能',
-    level: 60,
-    tags: ['标签']
+    description: '补充技能能力、使用场景或代表经验。'
   });
 
   skill.name = createUniqueLabel(skills, 'name', skill.name);
+  skill.description = normalizeText(skill.description)
+    || formatListText(skill.tags)
+    || '补充技能能力、使用场景或代表经验。';
+  delete skill.level;
 
   return skill;
 }
@@ -317,11 +313,6 @@ function updateSkill(draft, detail) {
     && draft.skillGroups[groupIndex].skills[skillIndex];
 
   if (!skill) {
-    return draft;
-  }
-
-  if (detail.field === 'level') {
-    skill.level = normalizeSkillLevel(detail.value);
     return draft;
   }
 

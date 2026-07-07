@@ -25,7 +25,9 @@
 .highlight-tag {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8rpx;
+  max-width: 100%;
   padding: 8rpx 14rpx;
   border-radius: 8rpx;
   background: var(--resume-accent-soft, #eef2ff);
@@ -38,8 +40,9 @@
   font-weight: 600;
 }
 
-.highlight-level {
+.highlight-description {
   color: var(--resume-accent, #4f46e5);
+  font-weight: 400;
 }
 
 .skill-group {
@@ -90,33 +93,4 @@
   color: var(--resume-subtle, #6b7280);
   font-size: 22rpx;
   line-height: 1.4;
-}
-
-.skill-meter {
-  flex: 0 0 188rpx;
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-}
-
-.skill-track {
-  flex: 1;
-  height: 10rpx;
-  overflow: hidden;
-  border-radius: 999rpx;
-  background: var(--resume-track, #e5e7eb);
-}
-
-.skill-progress {
-  height: 100%;
-  border-radius: 999rpx;
-  background: var(--resume-accent, #2563eb);
-}
-
-.skill-level {
-  flex: 0 0 54rpx;
-  color: var(--resume-muted, #4b5563);
-  font-size: 22rpx;
-  line-height: 1.4;
-  text-align: right;
 }

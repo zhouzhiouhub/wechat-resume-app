@@ -226,8 +226,8 @@ function createPosterRenderPlan(posterModel, themeId) {
   const chipHeight = 50;
 
   posterModel.skillTags.forEach((skill) => {
-    const chipText = `${skill.name} ${skill.level}%`;
-    const chipWidth = getTextBoxWidth(chipText, 24, 20, 250);
+    const chipText = truncateText(`${skill.name}: ${skill.description || skill.tagText}`, 22);
+    const chipWidth = getTextBoxWidth(chipText, 24, 20, 360);
 
     if (chipX + chipWidth > contentX + contentWidth) {
       chipX = contentX;

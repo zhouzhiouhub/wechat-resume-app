@@ -1,11 +1,10 @@
 function getTopSkills(skillGroups, limit = 8) {
   return skillGroups
     .reduce((skills, group) => skills.concat(group.skills), [])
-    .sort((left, right) => right.level - left.level)
     .slice(0, limit)
     .map((skill) => ({
       name: skill.name,
-      level: skill.level,
+      description: skill.description,
       tagText: skill.tagText
     }));
 }
